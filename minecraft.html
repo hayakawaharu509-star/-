@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Minecraft-like Voxel Game</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; overflow: hidden; touch-action: none; user-select: none; }
+  canvas { display: block; }
+  #ui {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: center; align-items: center;
+    padding-bottom: 8px; pointer-events: none; z-index: 10;
+  }
+  #hotbar {
+    display: flex; gap: 4px; background: rgba(0,0,0,0.55);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 8px; padding: 4px 6px;
+  }
+  .slot {
+    width: 44px; height: 44px; border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 6px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-size: 20px; cursor: pointer; pointer-events: all;
+    background: rgba(80,80,80,0.4); transition: border-color 0.1s;
+  }
+  .slot.active { border-color: #fff; background: rgba(150,150,100,0.5); }
+  .slot-num { font-size: 9px; color: #ccc; line-height: 1; }
+  #crosshair {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 20px; height: 20px; pointer-events: none; z-index: 10;
+  }
+  #crosshair::before, #crosshair::after {
+    content: ''; position: absolute; background: rgba(255,255,255,0.85);
+  }
+  #crosshair::before { width: 2px; height: 100%; left: 50%; top: 0; transform: translateX(-50%); }
+  #crosshair::after  { width: 100%; height: 2px; top: 50%; left: 0; transform: translateY(-50%); }
+  #info {
+    position: fixed; top: 8px; left: 8px; color: #fff;
+    font: 12px/1.6 monospace; text-shadow: 1px 1px 2px #000;
+    pointer-events: none; z-index: 10;
+  }
+  #lockMsg {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    color: #fff; font: 18px sans-serif; text-shadow: 2px 2px 4px #000;
+    text-align: center; pointer-events: none; z-index: 20;
+    background: rgba(0,0,0,0.5); padding: 16px 24px; border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crosshair"></div>
+<div id="ui">
+  <div id="hotbar"></div>
+</div>
+<div id="info"></div>
+<div id="lockMsg">Click to play<br><small>WASD=move, Space=jump, Mouse=look<br>LClick=break, RClick=place, 1-8=hotbar</small></div>
+
+<script>
+// ─── Constants ───────────────────────────────────────────────────────────────
+const W_SIZE = 32;
+const AIR = 0, GRASS = 1, DIRT = 2, STONE = 3, WOOD = 4,
+      LEAVES = 5, SAND = 6, PLANKS = 7, COBBLE = 8;
+
+const BLOCK_COLORS = [
+  null,
+  ['#55a030','#7d4c1c','#6b3f14'], // GRASS
+  ['#7d4c1c','#7d4c1c','#6b3f14'], // DIRT
+  ['#858585','#757575','#656565'], // STONE
+  ['#5c381c','#5c381c','#4c2e14'], // WOOD
+  ['#2d8018','#247014','#1c600f'], // LEAVES
+  ['#ccb865','#c0ac5c','#b4a052'], // SAND
+  ['#a87530','#a87530','#906528'], // PLANKS
+  ['#7e7e7e','#6e6e6e','#5e5e5e'], // COBBLE
+];
+const BLOCK_NAMES = ['Air','Grass','Dirt','Stone','Wood','Leaves','Sand','Planks','Cobblestone'];
+const BLOCK_EMOJIS = ['','🌿','🟫','🪨','🪵','🍃','🏖','🪵','🧱'];
+
+// Face definitions: [vertices, normal, neighbor_offset]
+const FACES = [
+  { verts: [[0,1,0],[1,1,0],[1,1,1],[0,1,1]], norm: [0,1,0],  nb: [0,1,0],  shade: 0 }, // top
+  { verts: [[0,0,1],[1,0,1],[1,0,0],[0,0,0]], norm: [0,-1,0], nb: [0,-1,0], shade: 2 }, // bottom
+  { verts: [[0,0,1],[1,0,1],[1,1,1],[0,1,1]], norm: [0,0,1],  nb: [0,0,1],  shade: 1 }, // south +Z
+  { verts: [[1,0,0],[0,0,0],[0,1,0],[1,1,0]], norm: [0,0,-1], nb: [0,0,-1], shade: 1 }, // north -Z
+  { verts: [[1,0,1],[1,0,0],[1,1,0],[1,1,1]], norm: [1,0,0],  nb: [1,0,0],  shade: 1 }, // east +X
+  { verts: [[0,0,0],[0,0,1],[0,1,1],[0,1,0]], norm: [-1,0,0], nb: [-1,0,0], shade: 1 }, // west -X
+];
+const SHADE_MULTS = [1.0, 0.76, 0.52];
+
+// ─── Noise ───────────────────────────────────────────────────────────────────
+function makeNoise() {
+  const p = new Uint8Array(512);
+  const base = new Uint8Array(256);
+  for (let i = 0; i < 256; i++) base[i] = i;
+  for (let i = 255; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [base[i], base[j]] = [base[j], base[i]];
+  }
+  for (let i = 0; i < 512; i++) p[i] = base[i & 255];
+
+  function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+  function lerp(a, b, t) { return a + t * (b - a); }
+  function grad(hash, x, y) {
+    const h = hash & 3;
+    const u = h < 2 ? x : y;
+    const v = h < 2 ? y : x;
+    return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
+  }
+  function noise2d(x, y) {
+    const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+    x -= Math.floor(x); y -= Math.floor(y);
+    const u = fade(x), v = fade(y);
+    const a = p[X] + Y, b = p[X+1] + Y;
+    return (lerp(lerp(grad(p[a],x,y), grad(p[b],x-1,y),u),
+                 lerp(grad(p[a+1],x,y-1), grad(p[b+1],x-1,y-1),u), v) + 1) * 0.5;
+  }
+  return noise2d;
+}
+const noise = makeNoise();
+
+// ─── World ───────────────────────────────────────────────────────────────────
+const world = new Uint8Array(W_SIZE * W_SIZE * W_SIZE);
+
+function idx(x, y, z) {
+  if (x < 0 || x >= W_SIZE || y < 0 || y >= W_SIZE || z < 0 || z >= W_SIZE) return -1;
+  return x * W_SIZE * W_SIZE + y * W_SIZE + z;
+}
+function getBlock(x, y, z) {
+  const i = idx(x, y, z);
+  return i < 0 ? AIR : world[i];
+}
+function setBlock(x, y, z, t) {
+  const i = idx(x, y, z);
+  if (i >= 0) world[i] = t;
+}
+
+function generateWorld() {
+  // Terrain
+  for (let x = 0; x < W_SIZE; x++) {
+    for (let z = 0; z < W_SIZE; z++) {
+      const fbm = noise(x * 0.09, z * 0.09) * 0.6 + noise(x * 0.22 + 50, z * 0.22 + 50) * 0.4;
+      const h = Math.max(2, Math.floor(fbm * 10 + 5));
+      for (let y = 0; y <= h && y < W_SIZE; y++) {
+        if (y === 0) setBlock(x, y, z, STONE);
+        else if (y < h - 3) setBlock(x, y, z, STONE);
+        else if (y < h) setBlock(x, y, z, DIRT);
+        else setBlock(x, y, z, GRASS);
+      }
+    }
+  }
+
+  // Trees at fixed positions
+  const treePositions = [
+    [5,5],[8,22],[14,8],[22,14],[26,6],[6,26],[18,24],[24,20],[10,16],[28,28]
+  ];
+  for (const [tx, tz] of treePositions) {
+    if (tx < 2 || tx >= W_SIZE-2 || tz < 2 || tz >= W_SIZE-2) continue;
+    // Find ground height
+    let gh = 0;
+    for (let y = W_SIZE - 1; y >= 0; y--) {
+      if (getBlock(tx, y, tz) !== AIR) { gh = y; break; }
+    }
+    if (gh < 1 || gh >= W_SIZE - 7) continue;
+    // Trunk
+    for (let y = gh + 1; y <= gh + 4 && y < W_SIZE; y++) {
+      setBlock(tx, y, tz, WOOD);
+    }
+    // Leaves sphere (manhattan distance ~2)
+    const ly = gh + 5;
+    for (let dx = -2; dx <= 2; dx++) {
+      for (let dy = -1; dy <= 2; dy++) {
+        for (let dz = -2; dz <= 2; dz++) {
+          if (Math.abs(dx) + Math.abs(dy) + Math.abs(dz) <= 3) {
+            const lx = tx + dx, lyy = ly + dy, lz = tz + dz;
+            if (lx >= 0 && lx < W_SIZE && lyy >= 0 && lyy < W_SIZE && lz >= 0 && lz < W_SIZE) {
+              if (getBlock(lx, lyy, lz) === AIR) setBlock(lx, lyy, lz, LEAVES);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+generateWorld();
+
+// ─── Player ───────────────────────────────────────────────────────────────────
+const P = { x: 16.5, y: 10, z: 16.5, vx: 0, vy: 0, vz: 0 };
+let yaw = 0, pitch = 0;
+let onGround = false;
+
+const GRAVITY = 26;
+const JUMP_V = 8.5;
+const MAX_FALL = 40;
+const P_HALF = 0.28;
+const P_HEIGHT = 1.75;
+const MOVE_SPEED = 5;
+
+function solid(x, y, z) {
+  return getBlock(Math.floor(x), Math.floor(y), Math.floor(z)) !== AIR;
+}
+
+function tryMoveX(dx) {
+  const nx = P.x + dx;
+  const sign = dx > 0 ? P_HALF : -P_HALF;
+  const ex = nx + sign;
+  const ys = [P.y, P.y + 0.5, P.y + 1.0, P.y + P_HEIGHT - 0.01];
+  const zs = [P.z - P_HALF, P.z + P_HALF];
+  for (const y of ys) {
+    for (const z of zs) {
+      if (solid(ex, y, z)) return false;
+    }
+  }
+  P.x = nx;
+  return true;
+}
+
+function tryMoveZ(dz) {
+  const nz = P.z + dz;
+  const sign = dz > 0 ? P_HALF : -P_HALF;
+  const ez = nz + sign;
+  const ys = [P.y, P.y + 0.5, P.y + 1.0, P.y + P_HEIGHT - 0.01];
+  const xs = [P.x - P_HALF, P.x + P_HALF];
+  for (const y of ys) {
+    for (const x of xs) {
+      if (solid(x, y, ez)) return false;
+    }
+  }
+  P.z = nz;
+  return true;
+}
+
+// ─── Canvas & Rendering ───────────────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let SW = 0, SH = 0, FOV = 1;
+
+function resize() {
+  SW = canvas.width = window.innerWidth;
+  SH = canvas.height = window.innerHeight;
+  FOV = Math.min(SW, SH) * 0.72;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function proj(wx, wy, wz) {
+  // World -> camera (eye at P.x, P.y+0.65, P.z)
+  const ex = wx - P.x, ey = wy - (P.y + 0.65), ez = wz - P.z;
+  // Yaw rotation (Y axis)
+  const cy = Math.cos(-yaw), sy = Math.sin(-yaw);
+  let rx = ex * cy - ez * sy;
+  let ry = ey;
+  let rz = ex * sy + ez * cy;
+  // Pitch rotation (X axis)
+  const cp = Math.cos(-pitch), sp = Math.sin(-pitch);
+  const fy = ry * cp - rz * sp;
+  const fz = ry * sp + rz * cp;
+  rx = rx;
+  // Perspective
+  if (fz <= 0.01) return null;
+  const sx = SW / 2 + (rx / fz) * FOV;
+  const sy2 = SH / 2 - (fy / fz) * FOV;
+  return { x: sx, y: sy2, z: fz };
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return [r,g,b];
+}
+
+function applyFog(r,g,b,dist,maxDist) {
+  const t = Math.min(1, dist / maxDist);
+  const fog = t * t;
+  // Sky color ~#87ceeb
+  const sr=135,sg=206,sb=235;
+  return [
+    Math.round(r + (sr-r)*fog),
+    Math.round(g + (sg-g)*fog),
+    Math.round(b + (sb-b)*fog)
+  ];
+}
+
+function colorWithShadeAndFog(blockType, shadeIdx, dist) {
+  const cols = BLOCK_COLORS[blockType];
+  if (!cols) return '#f0f';
+  const hex = cols[shadeIdx];
+  let [r,g,b] = hexToRgb(hex);
+  const sm = SHADE_MULTS[shadeIdx];
+  r = Math.round(r * sm); g = Math.round(g * sm); b = Math.round(b * sm);
+  [r,g,b] = applyFog(r,g,b,dist,18);
+  return `rgb(${r},${g},${b})`;
+}
+
+// ─── Raycasting ───────────────────────────────────────────────────────────────
+function raycast() {
+  const dx = Math.sin(yaw) * Math.cos(pitch);
+  const dy = Math.sin(-pitch);
+  const dz = Math.cos(yaw) * Math.cos(pitch);
+  const steps = 60;
+  const maxDist = 5.5;
+  let prevX = null, prevY = null, prevZ = null;
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * maxDist;
+    const wx = P.x + dx * t;
+    const wy = P.y + 0.65 + dy * t;
+    const wz = P.z + dz * t;
+    const bx = Math.floor(wx), by = Math.floor(wy), bz = Math.floor(wz);
+    if (getBlock(bx, by, bz) !== AIR) {
+      return { bx, by, bz, px: prevX, py: prevY, pz: prevZ };
+    }
+    prevX = bx; prevY = by; prevZ = bz;
+  }
+  return null;
+}
+
+// ─── Rendering ────────────────────────────────────────────────────────────────
+function drawSkyGradient() {
+  const grad = ctx.createLinearGradient(0, 0, 0, SH);
+  grad.addColorStop(0, '#1a6db5');
+  grad.addColorStop(0.5, '#87ceeb');
+  grad.addColorStop(1, '#c9e8f5');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, SW, SH);
+}
+
+function renderWorld() {
+  drawSkyGradient();
+
+  const eyeX = P.x, eyeY = P.y + 0.65, eyeZ = P.z;
+  const faces = [];
+  const target = raycast();
+  const targetKey = target ? `${target.bx},${target.by},${target.bz}` : null;
+
+  // Collect visible faces
+  const renderDist = 20;
+  const minX = Math.max(0, Math.floor(eyeX) - renderDist);
+  const maxX = Math.min(W_SIZE - 1, Math.floor(eyeX) + renderDist);
+  const minY = Math.max(0, Math.floor(eyeY) - renderDist);
+  const maxY = Math.min(W_SIZE - 1, Math.floor(eyeY) + renderDist);
+  const minZ = Math.max(0, Math.floor(eyeZ) - renderDist);
+  const maxZ = Math.min(W_SIZE - 1, Math.floor(eyeZ) + renderDist);
+
+  for (let bx = minX; bx <= maxX; bx++) {
+    for (let by = minY; by <= maxY; by++) {
+      for (let bz = minZ; bz <= maxZ; bz++) {
+        const bt = getBlock(bx, by, bz);
+        if (bt === AIR) continue;
+        const isTarget = `${bx},${by},${bz}` === targetKey;
+
+        for (let fi = 0; fi < 6; fi++) {
+          const face = FACES[fi];
+          // Adjacency culling
+          const nx = bx + face.nb[0], ny = by + face.nb[1], nz = bz + face.nb[2];
+          if (getBlock(nx, ny, nz) !== AIR) continue;
+
+          // Face center
+          let fcx = 0, fcy = 0, fcz = 0;
+          for (const v of face.verts) {
+            fcx += bx + v[0]; fcy += by + v[1]; fcz += bz + v[2];
+          }
+          fcx /= 4; fcy /= 4; fcz /= 4;
+
+          // Backface culling
+          const toCamX = eyeX - fcx, toCamY = eyeY - fcy, toCamZ = eyeZ - fcz;
+          const dot = toCamX * face.norm[0] + toCamY * face.norm[1] + toCamZ * face.norm[2];
+          if (dot <= 0) continue;
+
+          // Project vertices
+          const pts = [];
+          let allVisible = true;
+          let minZ2 = Infinity;
+          for (const v of face.verts) {
+            const p = proj(bx + v[0], by + v[1], bz + v[2]);
+            if (!p) { allVisible = false; break; }
+            pts.push(p);
+            if (p.z < minZ2) minZ2 = p.z;
+          }
+          if (!allVisible) continue;
+
+          // Check if on screen (rough cull)
+          let inScreen = false;
+          for (const p of pts) {
+            if (p.x > -50 && p.x < SW+50 && p.y > -50 && p.y < SH+50) { inScreen = true; break; }
+          }
+          if (!inScreen) continue;
+
+          // Distance from eye to face center
+          const dist = Math.sqrt(toCamX*toCamX + toCamY*toCamY + toCamZ*toCamZ);
+
+          faces.push({ pts, dist, bt, shade: face.shade, isTarget, fcz });
+        }
+      }
+    }
+  }
+
+  // Sort by distance (painter's algorithm)
+  faces.sort((a, b) => b.dist - a.dist);
+
+  // Draw faces
+  for (const f of faces) {
+    const col = colorWithShadeAndFog(f.bt, f.shade, f.dist);
+    ctx.beginPath();
+    ctx.moveTo(f.pts[0].x, f.pts[0].y);
+    for (let i = 1; i < f.pts.length; i++) {
+      ctx.lineTo(f.pts[i].x, f.pts[i].y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = col;
+    ctx.fill();
+
+    if (f.isTarget) {
+      ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  }
+}
+
+// ─── Input ────────────────────────────────────────────────────────────────────
+const keys = {};
+let pointerLocked = false;
+let selectedSlot = 0;
+const hotbarBlocks = [GRASS, DIRT, STONE, WOOD, LEAVES, SAND, PLANKS, COBBLE];
+
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  // Hotbar
+  const n = parseInt(e.key);
+  if (n >= 1 && n <= 8) { selectedSlot = n - 1; updateHotbar(); }
+  if (e.code === 'Space') e.preventDefault();
+});
+document.addEventListener('keyup', e => { keys[e.code] = false; });
+
+canvas.addEventListener('click', e => {
+  if (!pointerLocked) {
+    canvas.requestPointerLock();
+  } else {
+    if (e.button === 0) breakBlock();
+  }
+});
+canvas.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  if (pointerLocked) placeBlock();
+});
+
+document.addEventListener('pointerlockchange', () => {
+  pointerLocked = document.pointerLockElement === canvas;
+  document.getElementById('lockMsg').style.display = pointerLocked ? 'none' : 'block';
+});
+
+document.addEventListener('mousemove', e => {
+  if (!pointerLocked) return;
+  yaw   += e.movementX * 0.002;
+  pitch += e.movementY * 0.002;
+  pitch = Math.max(-Math.PI/2 + 0.01, Math.min(Math.PI/2 - 0.01, pitch));
+});
+
+function breakBlock() {
+  const hit = raycast();
+  if (hit) setBlock(hit.bx, hit.by, hit.bz, AIR);
+}
+function placeBlock() {
+  const hit = raycast();
+  if (!hit || hit.px === null) return;
+  // Don't place inside player
+  const px = hit.px, py = hit.py, pz = hit.pz;
+  const playerBlocks = [];
+  for (let dy = 0; dy < 2; dy++) {
+    playerBlocks.push(`${Math.floor(P.x)},${Math.floor(P.y)+dy},${Math.floor(P.z)}`);
+  }
+  if (playerBlocks.includes(`${px},${py},${pz}`)) return;
+  setBlock(px, py, pz, hotbarBlocks[selectedSlot]);
+}
+
+// ─── Touch Controls ───────────────────────────────────────────────────────────
+const touches = {};
+let joystickTouch = null;
+let lookTouch = null;
+let joystickBase = { x: 0, y: 0 };
+let joystickDelta = { x: 0, y: 0 };
+let lookLast = { x: 0, y: 0 };
+
+function getButtonInfo() {
+  return [
+    { id: 'break',  cx: 0.655*SW, cy: 0.82*SH, r: 36, fn: breakBlock, icon: '⛏' },
+    { id: 'place',  cx: 0.79*SW,  cy: 0.82*SH, r: 36, fn: placeBlock, icon: '📦' },
+    { id: 'jump',   cx: 0.925*SW, cy: 0.82*SH, r: 36, fn: null,       icon: '⬆' },
+  ];
+}
+
+let jumpPressed = false;
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  for (const t of e.changedTouches) {
+    touches[t.identifier] = { x: t.clientX, y: t.clientY };
+    const buttons = getButtonInfo();
+    let hitBtn = false;
+    for (const btn of buttons) {
+      const dx = t.clientX - btn.cx, dy = t.clientY - btn.cy;
+      if (dx*dx + dy*dy < btn.r*btn.r*2.5) {
+        if (btn.id === 'jump') jumpPressed = true;
+        else if (btn.fn) btn.fn();
+        hitBtn = true;
+        break;
+      }
+    }
+    if (!hitBtn) {
+      if (t.clientX < SW * 0.45) {
+        if (!joystickTouch) {
+          joystickTouch = t.identifier;
+          joystickBase = { x: t.clientX, y: t.clientY };
+          joystickDelta = { x: 0, y: 0 };
+        }
+      } else {
+        if (!lookTouch) {
+          lookTouch = t.identifier;
+          lookLast = { x: t.clientX, y: t.clientY };
+        }
+      }
+    }
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  for (const t of e.changedTouches) {
+    if (t.identifier === joystickTouch) {
+      joystickDelta = {
+        x: Math.max(-1, Math.min(1, (t.clientX - joystickBase.x) / 50)),
+        y: Math.max(-1, Math.min(1, (t.clientY - joystickBase.y) / 50))
+      };
+    } else if (t.identifier === lookTouch) {
+      const dx = t.clientX - lookLast.x;
+      const dy = t.clientY - lookLast.y;
+      yaw   += dx * 0.004;
+      pitch += dy * 0.004;
+      pitch = Math.max(-Math.PI/2 + 0.01, Math.min(Math.PI/2 - 0.01, pitch));
+      lookLast = { x: t.clientX, y: t.clientY };
+    }
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  for (const t of e.changedTouches) {
+    if (t.identifier === joystickTouch) {
+      joystickTouch = null;
+      joystickDelta = { x: 0, y: 0 };
+    }
+    if (t.identifier === lookTouch) lookTouch = null;
+    // Check jump button release
+    const buttons = getButtonInfo();
+    for (const btn of buttons) {
+      const dx = t.clientX - btn.cx, dy = t.clientY - btn.cy;
+      if (btn.id === 'jump' && dx*dx + dy*dy < btn.r*btn.r*4) {
+        jumpPressed = false;
+      }
+    }
+    delete touches[t.identifier];
+  }
+}, { passive: false });
+
+// ─── Touch Overlay Drawing ────────────────────────────────────────────────────
+function drawTouchControls() {
+  if (pointerLocked) return;
+  const buttons = getButtonInfo();
+  for (const btn of buttons) {
+    ctx.beginPath();
+    ctx.arc(btn.cx, btn.cy, btn.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.font = '22px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText(btn.icon, btn.cx, btn.cy);
+  }
+  // Joystick
+  if (joystickTouch !== null) {
+    ctx.beginPath();
+    ctx.arc(joystickBase.x, joystickBase.y, 50, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(
+      joystickBase.x + joystickDelta.x * 50,
+      joystickBase.y + joystickDelta.y * 50,
+      22, 0, Math.PI * 2
+    );
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fill();
+  } else {
+    // Static joystick hint (left side)
+    ctx.beginPath();
+    ctx.arc(SW * 0.13, SH * 0.77, 50, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(SW * 0.13, SH * 0.77, 20, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.fill();
+  }
+}
+
+// ─── HUD / Hotbar ─────────────────────────────────────────────────────────────
+function updateHotbar() {
+  const bar = document.getElementById('hotbar');
+  bar.innerHTML = '';
+  for (let i = 0; i < 8; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'slot' + (i === selectedSlot ? ' active' : '');
+    slot.innerHTML = `<span>${BLOCK_EMOJIS[hotbarBlocks[i]]}</span><span class="slot-num">${i+1}</span>`;
+    slot.addEventListener('click', () => { selectedSlot = i; updateHotbar(); });
+    bar.appendChild(slot);
+  }
+}
+updateHotbar();
+
+// ─── Physics Update ──────────────────────────────────────────────────────────
+let lastTime = performance.now();
+
+function update(dt) {
+  dt = Math.min(dt, 0.05);
+
+  // Movement
+  const speed = MOVE_SPEED;
+  const sy = Math.sin(yaw), cy2 = Math.cos(yaw);
+  let mx = 0, mz = 0;
+
+  if (keys['KeyW'] || keys['ArrowUp'])    { mx += sy; mz += cy2; }
+  if (keys['KeyS'] || keys['ArrowDown'])  { mx -= sy; mz -= cy2; }
+  if (keys['KeyA'] || keys['ArrowLeft'])  { mx -= cy2; mz += sy; }
+  if (keys['KeyD'] || keys['ArrowRight']) { mx += cy2; mz -= sy; }
+
+  // Joystick
+  if (joystickTouch !== null) {
+    mx += joystickDelta.x * cy2 + (-joystickDelta.y) * sy;
+    mz += joystickDelta.x * (-sy) + (-joystickDelta.y) * cy2;
+  }
+
+  const len = Math.sqrt(mx*mx + mz*mz);
+  if (len > 1) { mx /= len; mz /= len; }
+
+  tryMoveX(mx * speed * dt);
+  tryMoveZ(mz * speed * dt);
+
+  // Jump
+  if ((keys['Space'] || jumpPressed) && onGround) {
+    P.vy = JUMP_V;
+    onGround = false;
+  }
+
+  // Gravity
+  P.vy -= GRAVITY * dt;
+  if (P.vy < -MAX_FALL) P.vy = -MAX_FALL;
+
+  // Vertical movement & collision
+  const newY = P.y + P.vy * dt;
+  onGround = false;
+
+  if (P.vy < 0) {
+    // Falling - check feet
+    const feetY = newY;
+    const xs2 = [P.x - P_HALF + 0.01, P.x + P_HALF - 0.01];
+    const zs2 = [P.z - P_HALF + 0.01, P.z + P_HALF - 0.01];
+    let hit = false;
+    for (const x2 of xs2) {
+      for (const z2 of zs2) {
+        if (solid(x2, feetY, z2)) { hit = true; break; }
+      }
+      if (hit) break;
+    }
+    if (hit) {
+      P.y = Math.floor(newY) + 1;
+      P.vy = 0;
+      onGround = true;
+    } else {
+      P.y = newY;
+    }
+  } else if (P.vy > 0) {
+    // Rising - check head
+    const headY = newY + P_HEIGHT;
+    const xs2 = [P.x - P_HALF + 0.01, P.x + P_HALF - 0.01];
+    const zs2 = [P.z - P_HALF + 0.01, P.z + P_HALF - 0.01];
+    let hit = false;
+    for (const x2 of xs2) {
+      for (const z2 of zs2) {
+        if (solid(x2, headY, z2)) { hit = true; break; }
+      }
+      if (hit) break;
+    }
+    if (hit) {
+      P.vy = 0;
+      P.y = Math.floor(headY) - P_HEIGHT;
+    } else {
+      P.y = newY;
+    }
+  }
+
+  // World bounds
+  P.x = Math.max(P_HALF, Math.min(W_SIZE - P_HALF, P.x));
+  P.z = Math.max(P_HALF, Math.min(W_SIZE - P_HALF, P.z));
+  if (P.y < 0) { P.y = 0; P.vy = 0; onGround = true; }
+  if (P.y > W_SIZE) { P.y = W_SIZE; P.vy = 0; }
+}
+
+// ─── Debug Info ───────────────────────────────────────────────────────────────
+function updateInfo() {
+  const info = document.getElementById('info');
+  info.textContent = `X:${P.x.toFixed(1)} Y:${P.y.toFixed(1)} Z:${P.z.toFixed(1)}\nBlock: ${BLOCK_NAMES[hotbarBlocks[selectedSlot]]}`;
+}
+
+// ─── Main Loop ────────────────────────────────────────────────────────────────
+function loop(now) {
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+  update(dt);
+  renderWorld();
+  drawTouchControls();
+  updateInfo();
+  requestAnimationFrame(loop);
+}
+
+// Find spawn point
+let spawnY = 5;
+for (let y = W_SIZE - 1; y >= 0; y--) {
+  if (getBlock(Math.floor(P.x), y, Math.floor(P.z)) !== AIR) {
+    spawnY = y + 1;
+    break;
+  }
+}
+P.y = spawnY;
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
