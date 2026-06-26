@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サッカーフォーメーションシミュレーター</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1a1a2e;
+    color: #eee;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    padding: 18px;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #16213e, #0f3460);
+    border-bottom: 2px solid #e94560;
+  }
+  .main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px;
+    justify-content: center;
+  }
+  .panel {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 16px;
+    min-width: 220px;
+  }
+  .panel h2 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #e94560;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  select, input[type=text] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #0f3460;
+    background: #0f3460;
+    color: #eee;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    outline: none;
+  }
+  select:focus, input:focus { border-color: #e94560; }
+  label { font-size: 0.82rem; color: #aaa; display: block; margin-bottom: 4px; }
+  .team-color {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  input[type=color] {
+    width: 36px; height: 36px;
+    border: none; border-radius: 6px;
+    cursor: pointer; background: none;
+    padding: 0;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+  }
+  .stat-bar-wrap {
+    height: 6px;
+    background: #0f3460;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .stat-bar { height: 100%; border-radius: 4px; transition: width 0.4s; }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: #e94560; color: #fff; }
+  .btn-secondary { background: #0f3460; color: #eee; margin-top: 8px; }
+  .btn:hover { opacity: 0.85; }
+
+  /* Pitch */
+  .pitch-wrap {
+    position: relative;
+    width: 340px;
+    flex-shrink: 0;
+  }
+  canvas#pitch {
+    border-radius: 10px;
+    display: block;
+  }
+
+  /* Match log */
+  #log-box {
+    width: 100%;
+    max-width: 720px;
+    background: #16213e;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0 auto 16px;
+  }
+  #log-box h2 { font-size: 1rem; color: #e94560; margin-bottom: 10px; text-transform: uppercase; }
+  #log-list {
+    max-height: 240px;
+    overflow-y: auto;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    padding-right: 4px;
+  }
+  #log-list::-webkit-scrollbar { width: 4px; }
+  #log-list::-webkit-scrollbar-thumb { background: #0f3460; border-radius: 4px; }
+  .log-goal { color: #ffd700; font-weight: bold; }
+  .log-event { color: #aaa; }
+  .log-half { color: #e94560; font-weight: bold; }
+
+  /* Score board */
+  #scoreboard {
+    text-align: center;
+    padding: 14px;
+    background: #16213e;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto 8px;
+  }
+  .score-teams {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+  .score-num { font-size: 2.4rem; font-weight: bold; }
+  .score-sep { font-size: 1.8rem; color: #aaa; }
+  .score-minute { font-size: 0.82rem; color: #aaa; }
+
+  /* Stats comparison */
+  #stats-box {
+    width: 100%;
+    max-width: 720px;
+    background: #16213e;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0 auto 16px;
+  }
+  #stats-box h2 { font-size: 1rem; color: #e94560; margin-bottom: 12px; text-transform: uppercase; }
+  .cmp-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+  }
+  .cmp-label { width: 80px; text-align: center; color: #aaa; }
+  .cmp-bars { flex: 1; display: flex; height: 10px; gap: 2px; border-radius: 4px; overflow: hidden; }
+  .cmp-a { border-radius: 4px 0 0 4px; transition: width 0.5s; }
+  .cmp-b { border-radius: 0 4px 4px 0; transition: width 0.5s; }
+  .cmp-val-a { width: 30px; text-align: right; }
+  .cmp-val-b { width: 30px; }
+  .no-data { color: #555; font-size: 0.85rem; text-align: center; padding: 12px; }
+
+  /* Formation custom editor */
+  #custom-pitch {
+    position: relative;
+    display: none;
+  }
+  .tab-row { display: flex; gap: 4px; margin-bottom: 10px; }
+  .tab {
+    flex: 1; padding: 6px; text-align: center; border-radius: 6px;
+    cursor: pointer; font-size: 0.8rem; background: #0f3460; border: 1px solid transparent;
+  }
+  .tab.active { border-color: #e94560; color: #e94560; }
+
+  .formation-info {
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  #sim-progress {
+    display: none;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  .winner-banner {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+<h1>⚽ サッカーフォーメーションシミュレーター</h1>
+
+<div class="main">
+  <!-- Team A -->
+  <div class="panel" id="panel-a">
+    <h2>🔴 チームA</h2>
+    <label>チーム名</label>
+    <input type="text" id="name-a" value="レッドFC">
+    <div class="team-color">
+      <input type="color" id="color-a" value="#e94560">
+      <span style="font-size:0.82rem;color:#aaa">ユニフォーム色</span>
+    </div>
+    <label>フォーメーション</label>
+    <select id="form-a"></select>
+    <div class="formation-info" id="info-a"></div>
+    <div style="margin-top:10px">
+      <label>攻撃力 <span id="atk-a-val">50</span></label>
+      <input type="range" id="atk-a" min="1" max="100" value="50" style="width:100%;accent-color:#e94560">
+      <label>守備力 <span id="def-a-val">50</span></label>
+      <input type="range" id="def-a" min="1" max="100" value="50" style="width:100%;accent-color:#e94560">
+      <label>プレスの強さ <span id="press-a-val">50</span></label>
+      <input type="range" id="press-a" min="1" max="100" value="50" style="width:100%;accent-color:#e94560">
+    </div>
+  </div>
+
+  <!-- Pitch -->
+  <div class="pitch-wrap">
+    <canvas id="pitch" width="340" height="500"></canvas>
+  </div>
+
+  <!-- Team B -->
+  <div class="panel" id="panel-b">
+    <h2>🔵 チームB</h2>
+    <label>チーム名</label>
+    <input type="text" id="name-b" value="ブルーFC">
+    <div class="team-color">
+      <input type="color" id="color-b" value="#0f7ab0">
+      <span style="font-size:0.82rem;color:#aaa">ユニフォーム色</span>
+    </div>
+    <label>フォーメーション</label>
+    <select id="form-b"></select>
+    <div class="formation-info" id="info-b"></div>
+    <div style="margin-top:10px">
+      <label>攻撃力 <span id="atk-b-val">50</span></label>
+      <input type="range" id="atk-b" min="1" max="100" value="50" style="width:100%;accent-color:#0f7ab0">
+      <label>守備力 <span id="def-b-val">50</span></label>
+      <input type="range" id="def-b" min="1" max="100" value="50" style="width:100%;accent-color:#0f7ab0">
+      <label>プレスの強さ <span id="press-b-val">50</span></label>
+      <input type="range" id="press-b" min="1" max="100" value="50" style="width:100%;accent-color:#0f7ab0">
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div style="text-align:center;padding:0 16px 16px">
+  <div style="max-width:400px;margin:auto">
+    <button class="btn btn-primary" id="btn-sim">▶ 試合シミュレーション開始</button>
+    <button class="btn btn-secondary" id="btn-reset">リセット</button>
+  </div>
+</div>
+
+<div id="sim-progress">シミュレーション中...</div>
+
+<!-- Scoreboard -->
+<div id="scoreboard" style="display:none">
+  <div class="score-teams">
+    <span id="sb-name-a">チームA</span>
+    <span class="score-num" id="sb-score-a">0</span>
+    <span class="score-sep">–</span>
+    <span class="score-num" id="sb-score-b">0</span>
+    <span id="sb-name-b">チームB</span>
+  </div>
+  <div class="score-minute" id="sb-minute"></div>
+  <div class="winner-banner" id="winner-banner"></div>
+</div>
+
+<!-- Stats comparison -->
+<div id="stats-box" style="display:none">
+  <h2>試合統計</h2>
+  <div id="stats-content"></div>
+</div>
+
+<!-- Match log -->
+<div id="log-box" style="display:none">
+  <h2>試合ログ</h2>
+  <div id="log-list"></div>
+</div>
+
+<script>
+// ===== FORMATIONS =====
+const FORMATIONS = {
+  "4-4-2": {
+    positions: [
+      {x:0.5, y:0.92},                              // GK
+      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72}, // DEF
+      {x:0.15,y:0.50},{x:0.38,y:0.50},{x:0.62,y:0.50},{x:0.85,y:0.50}, // MID
+      {x:0.35,y:0.27},{x:0.65,y:0.27}               // FWD
+    ],
+    desc: "バランス型。2トップが基本。守備と攻撃の安定。",
+    atk:50, def:50, mid:50, width:70, press:50
+  },
+  "4-3-3": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
+      {x:0.25,y:0.52},{x:0.5, y:0.48},{x:0.75,y:0.52},
+      {x:0.2, y:0.25},{x:0.5, y:0.20},{x:0.8, y:0.25}
+    ],
+    desc: "攻撃的。3トップで幅を取りポゼッション重視。",
+    atk:70, def:45, mid:55, width:85, press:65
+  },
+  "4-2-3-1": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
+      {x:0.35,y:0.60},{x:0.65,y:0.60},
+      {x:0.15,y:0.42},{x:0.5, y:0.40},{x:0.85,y:0.42},
+      {x:0.5, y:0.22}
+    ],
+    desc: "現代主流。ダブルボランチで中盤を制圧、1トップへ供給。",
+    atk:60, def:60, mid:75, width:75, press:60
+  },
+  "3-5-2": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.25,y:0.75},{x:0.5, y:0.72},{x:0.75,y:0.75},
+      {x:0.10,y:0.52},{x:0.30,y:0.50},{x:0.50,y:0.48},{x:0.70,y:0.50},{x:0.90,y:0.52},
+      {x:0.35,y:0.25},{x:0.65,y:0.25}
+    ],
+    desc: "WBが攻守両面で活躍。中盤の数的優位を作る。",
+    atk:60, def:55, mid:80, width:80, press:55
+  },
+  "3-4-3": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.25,y:0.75},{x:0.5, y:0.72},{x:0.75,y:0.75},
+      {x:0.15,y:0.52},{x:0.38,y:0.52},{x:0.62,y:0.52},{x:0.85,y:0.52},
+      {x:0.2, y:0.25},{x:0.5, y:0.20},{x:0.8, y:0.25}
+    ],
+    desc: "超攻撃型。ゲーゲンプレス向き。守備リスク高。",
+    atk:80, def:35, mid:60, width:85, press:80
+  },
+  "5-3-2": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.10,y:0.70},{x:0.28,y:0.72},{x:0.50,y:0.70},{x:0.72,y:0.72},{x:0.90,y:0.70},
+      {x:0.28,y:0.50},{x:0.50,y:0.48},{x:0.72,y:0.50},
+      {x:0.35,y:0.27},{x:0.65,y:0.27}
+    ],
+    desc: "守備的5バック。カウンター重視。",
+    atk:40, def:80, mid:50, width:50, press:35
+  },
+  "4-1-4-1": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
+      {x:0.5, y:0.62},
+      {x:0.12,y:0.46},{x:0.35,y:0.44},{x:0.65,y:0.44},{x:0.88,y:0.46},
+      {x:0.5, y:0.22}
+    ],
+    desc: "アンカー1枚で守備を安定、4MFで展開。",
+    atk:55, def:65, mid:70, width:75, press:50
+  },
+  "4-4-2ダイヤ": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
+      {x:0.5, y:0.62},
+      {x:0.2, y:0.48},{x:0.8, y:0.48},
+      {x:0.5, y:0.38},
+      {x:0.35,y:0.24},{x:0.65,y:0.24}
+    ],
+    desc: "中盤ダイヤモンド。中央密集、サイド薄め。",
+    atk:60, def:55, mid:75, width:40, press:60
+  },
+  "3-6-1": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.25,y:0.75},{x:0.5, y:0.72},{x:0.75,y:0.75},
+      {x:0.10,y:0.54},{x:0.28,y:0.50},{x:0.50,y:0.48},{x:0.72,y:0.50},{x:0.90,y:0.54},{x:0.50,y:0.38},
+      {x:0.5, y:0.22}
+    ],
+    desc: "6中盤で支配するポゼッション特化型。",
+    atk:50, def:55, mid:90, width:70, press:65
+  },
+  "2-3-5 (WMシステム)": {
+    positions: [
+      {x:0.5, y:0.92},
+      {x:0.3, y:0.78},{x:0.7, y:0.78},
+      {x:0.2, y:0.60},{x:0.5, y:0.58},{x:0.8, y:0.60},
+      {x:0.1, y:0.30},{x:0.3, y:0.22},{x:0.5, y:0.18},{x:0.7, y:0.22},{x:0.9, y:0.30}
+    ],
+    desc: "クラシック攻撃フォーメーション(1920-50年代)。超攻撃的。",
+    atk:90, def:20, mid:55, width:90, press:70
+  },
+};
+
+// ===== DOM =====
+const formSelA = document.getElementById('form-a');
+const formSelB = document.getElementById('form-b');
+const pitchCanvas = document.getElementById('pitch');
+const ctx = pitchCanvas.getContext('2d');
+
+// Populate selects
+Object.keys(FORMATIONS).forEach(k => {
+  [formSelA, formSelB].forEach((sel, i) => {
+    const opt = document.createElement('option');
+    opt.value = k;
+    opt.textContent = k;
+    sel.appendChild(opt);
+  });
+});
+formSelA.value = '4-3-3';
+formSelB.value = '4-4-2';
+
+// Slider live labels
+['a','b'].forEach(t => {
+  ['atk','def','press'].forEach(s => {
+    const el = document.getElementById(`${s}-${t}`);
+    const lbl = document.getElementById(`${s}-${t}-val`);
+    el.addEventListener('input', () => { lbl.textContent = el.value; drawPitch(); });
+  });
+});
+
+// Formation info
+function updateInfo(team) {
+  const sel = document.getElementById(`form-${team}`);
+  const info = document.getElementById(`info-${team}`);
+  const f = FORMATIONS[sel.value];
+  if (f) info.textContent = f.desc;
+}
+formSelA.addEventListener('change', () => { updateInfo('a'); drawPitch(); });
+formSelB.addEventListener('change', () => { updateInfo('b'); drawPitch(); });
+document.getElementById('color-a').addEventListener('change', drawPitch);
+document.getElementById('color-b').addEventListener('change', drawPitch);
+updateInfo('a'); updateInfo('b');
+
+// ===== PITCH DRAWING =====
+function drawPitch() {
+  const W = pitchCanvas.width, H = pitchCanvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Grass
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#1a6b30');
+  grad.addColorStop(0.5, '#1e7a35');
+  grad.addColorStop(1, '#1a6b30');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, W, H, 10);
+  ctx.fill();
+
+  // Stripe pattern
+  ctx.globalAlpha = 0.07;
+  for (let y = 0; y < H; y += 40) {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, y, W, 20);
+  }
+  ctx.globalAlpha = 1;
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = 1.5;
+
+  // Border
+  ctx.strokeRect(16, 12, W-32, H-24);
+
+  // Center line
+  ctx.beginPath();
+  ctx.moveTo(16, H/2);
+  ctx.lineTo(W-16, H/2);
+  ctx.stroke();
+
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, 46, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, 3, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fill();
+
+  // Penalty areas top
+  const paW = 180, paH = 72;
+  ctx.strokeRect((W-paW)/2, 12, paW, paH);
+  const gaW = 90, gaH = 28;
+  ctx.strokeRect((W-gaW)/2, 12, gaW, gaH);
+
+  // Penalty areas bottom
+  ctx.strokeRect((W-paW)/2, H-12-paH, paW, paH);
+  ctx.strokeRect((W-gaW)/2, H-12-gaH, gaW, gaH);
+
+  // Penalty spots
+  [[W/2, 12+54],[W/2, H-12-54]].forEach(([px,py]) => {
+    ctx.beginPath();
+    ctx.arc(px, py, 2.5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fill();
+  });
+
+  // Corner arcs
+  [[16,12],[W-16,12],[16,H-12],[W-16,H-12]].forEach(([cx,cy]) => {
+    ctx.beginPath();
+    const a1 = cx < W/2 ? 0 : Math.PI;
+    const a2 = cy < H/2 ? Math.PI/2 : -Math.PI/2;
+    ctx.arc(cx, cy, 12, a1, a1+Math.PI/2 * (cx<W/2?1:-1) * (cy<H/2?1:-1), false);
+    // simple arc
+  });
+
+  // Draw teams
+  const fA = FORMATIONS[formSelA.value];
+  const fB = FORMATIONS[formSelB.value];
+  const colA = document.getElementById('color-a').value;
+  const colB = document.getElementById('color-b').value;
+
+  if (fA) drawTeam(fA.positions, colA, false, W, H, document.getElementById('name-a').value);
+  if (fB) drawTeam(fB.positions, colB, true, W, H, document.getElementById('name-b').value);
+
+  // Labels
+  ctx.font = 'bold 11px Segoe UI';
+  ctx.fillStyle = colA;
+  ctx.textAlign = 'left';
+  ctx.fillText('▲ ' + (document.getElementById('name-a').value || 'チームA'), 20, H-8);
+  ctx.fillStyle = colB;
+  ctx.textAlign = 'right';
+  ctx.fillText((document.getElementById('name-b').value || 'チームB') + ' ▼', W-20, 22);
+}
+
+function drawTeam(positions, color, flip, W, H) {
+  const pad = 16;
+  positions.forEach((pos, i) => {
+    let x = pos.x * (W - pad*2) + pad;
+    let y = pos.y * (H - 24*2) + 24;
+    if (flip) { y = H - y; }
+
+    // Shadow
+    ctx.beginPath();
+    ctx.arc(x+2, y+2, 11, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fill();
+
+    // Player circle
+    ctx.beginPath();
+    ctx.arc(x, y, 11, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Number
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(i + 1, x, y);
+  });
+  ctx.textBaseline = 'alphabetic';
+}
+
+// ===== SIMULATION ENGINE =====
+function getFormStats(team) {
+  const sel = document.getElementById(`form-${team}`);
+  const f = FORMATIONS[sel.value];
+  const atkSlider = parseInt(document.getElementById(`atk-${team}`).value);
+  const defSlider = parseInt(document.getElementById(`def-${team}`).value);
+  const pressSlider = parseInt(document.getElementById(`press-${team}`).value);
+  return {
+    name: sel.value,
+    atk: (f.atk * 0.5 + atkSlider * 0.5) / 100,
+    def: (f.def * 0.5 + defSlider * 0.5) / 100,
+    mid: f.mid / 100,
+    width: f.width / 100,
+    press: (f.press * 0.5 + pressSlider * 0.5) / 100,
+  };
+}
+
+function rnd(min, max) { return Math.random() * (max - min) + min; }
+function rndInt(min, max) { return Math.floor(rnd(min, max+1)); }
+function chance(p) { return Math.random() < p; }
+
+const EVENT_TYPES = [
+  'コーナーキック','フリーキック','オフサイド','ファウル',
+  'シュート','ドリブル突破','ヘディング','カウンターアタック',
+  'ポゼッション','サイドチェンジ','ロングボール'
+];
+
+function simulate() {
+  const stA = getFormStats('a');
+  const stB = getFormStats('b');
+  const nameA = document.getElementById('name-a').value || 'チームA';
+  const nameB = document.getElementById('name-b').value || 'チームB';
+
+  const log = [];
+  let scoreA = 0, scoreB = 0;
+
+  // Per-minute simulation
+  const stats = {
+    possession_a: 0, possession_b: 0,
+    shots_a: 0, shots_b: 0,
+    shots_on_a: 0, shots_on_b: 0,
+    corners_a: 0, corners_b: 0,
+    fouls_a: 0, fouls_b: 0,
+    offsides_a: 0, offsides_b: 0,
+  };
+
+  // Midfield battle determines possession
+  const midTotal = stA.mid + stB.mid + 0.01;
+  const pressTotal = stA.press + stB.press + 0.01;
+  const basePossA = (stA.mid * 0.6 + stA.width * 0.2 + (1-stB.press)*0.2) / (stA.mid * 0.6 + stA.width * 0.2 + (1-stB.press)*0.2 + stB.mid * 0.6 + stB.width * 0.2 + (1-stA.press)*0.2 + 0.001);
+
+  log.push({type:'half', text: '=== 前半キックオフ ==='});
+
+  for (let min = 1; min <= 90; min++) {
+    if (min === 46) log.push({type:'half', text: '=== 後半キックオフ ==='});
+
+    // Possession this minute
+    const possA = basePossA + rnd(-0.08, 0.08);
+    if (chance(possA)) {
+      stats.possession_a++;
+    } else {
+      stats.possession_b++;
+    }
+
+    // Shot opportunity
+    // Attack strength vs opponent defense + press
+    const shotChanceA = stA.atk * 0.045 * (1 - stB.def * 0.5) * (possA > 0.5 ? 1.3 : 0.8);
+    const shotChanceB = stB.atk * 0.045 * (1 - stA.def * 0.5) * (possA < 0.5 ? 1.3 : 0.8);
+
+    // Counter attack chance when losing possession
+    const counterA = stA.atk * 0.015 * (1 - possA) * stA.press;
+    const counterB = stB.atk * 0.015 * possA * stB.press;
+
+    let scored = false;
+    if (chance(shotChanceA + counterA)) {
+      stats.shots_a++;
+      const onTarget = chance(0.45 + stA.atk * 0.2);
+      if (onTarget) {
+        stats.shots_on_a++;
+        if (chance(0.28 + stA.atk * 0.15 - stB.def * 0.12)) {
+          scoreA++;
+          scored = true;
+          const types = ['右足シュート','左足シュート','ヘディング','直接FK','ペナルティ'];
+          const t = types[Math.floor(Math.random()*types.length)];
+          log.push({type:'goal', text: `⚽ ${min}' ${nameA} が得点！(${t}) [${scoreA}-${scoreB}]`});
+        } else {
+          if (chance(0.5)) log.push({type:'event', text: `${min}' ${nameA} シュートはGKがセーブ`});
+        }
+      } else {
+        if (chance(0.3)) {
+          stats.corners_a++;
+          log.push({type:'event', text: `${min}' ${nameA} コーナーキック`});
+        }
+      }
+    }
+    if (!scored && chance(shotChanceB + counterB)) {
+      stats.shots_b++;
+      const onTarget = chance(0.45 + stB.atk * 0.2);
+      if (onTarget) {
+        stats.shots_on_b++;
+        if (chance(0.28 + stB.atk * 0.15 - stA.def * 0.12)) {
+          scoreB++;
+          const types = ['右足シュート','左足シュート','ヘディング','直接FK','ペナルティ'];
+          const t = types[Math.floor(Math.random()*types.length)];
+          log.push({type:'goal', text: `⚽ ${min}' ${nameB} が得点！(${t}) [${scoreA}-${scoreB}]`});
+        } else {
+          if (chance(0.5)) log.push({type:'event', text: `${min}' ${nameB} シュートはGKがセーブ`});
+        }
+      } else {
+        if (chance(0.3)) {
+          stats.corners_b++;
+          log.push({type:'event', text: `${min}' ${nameB} コーナーキック`});
+        }
+      }
+    }
+
+    // Occasional events
+    if (chance(0.08)) {
+      const isA = chance(0.5);
+      const evName = isA ? nameA : nameB;
+      const foulTarget = isA ? nameB : nameA;
+      if (chance(0.4)) {
+        if (isA) stats.fouls_a++; else stats.fouls_b++;
+        log.push({type:'event', text: `${min}' ${evName} がファウル → ${foulTarget} にFK`});
+      } else if (chance(0.3)) {
+        if (isA) stats.offsides_a++; else stats.offsides_b++;
+        log.push({type:'event', text: `${min}' ${evName} オフサイド`});
+      }
+    }
+
+    // Substitutions at 60-75
+    if ((min === 60 || min === 70 || min === 75) && chance(0.4)) {
+      const isA = chance(0.5);
+      log.push({type:'event', text: `${min}' ${isA ? nameA : nameB} 選手交代`});
+    }
+  }
+
+  log.push({type:'half', text: `=== 試合終了 ${scoreA}-${scoreB} ===`});
+
+  // Final possession %
+  const totalMin = stats.possession_a + stats.possession_b;
+  const possPctA = Math.round(stats.possession_a / totalMin * 100);
+  const possPctB = 100 - possPctA;
+
+  return { scoreA, scoreB, log, stats, possPctA, possPctB, nameA, nameB };
+}
+
+// ===== UI =====
+document.getElementById('btn-sim').addEventListener('click', () => {
+  document.getElementById('sim-progress').style.display = 'block';
+  document.getElementById('scoreboard').style.display = 'none';
+  document.getElementById('stats-box').style.display = 'none';
+  document.getElementById('log-box').style.display = 'none';
+
+  setTimeout(() => {
+    const result = simulate();
+    showResult(result);
+    document.getElementById('sim-progress').style.display = 'none';
+  }, 400);
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  document.getElementById('scoreboard').style.display = 'none';
+  document.getElementById('stats-box').style.display = 'none';
+  document.getElementById('log-box').style.display = 'none';
+  document.getElementById('sim-progress').style.display = 'none';
+  ['atk','def','press'].forEach(s => {
+    ['a','b'].forEach(t => {
+      document.getElementById(`${s}-${t}`).value = 50;
+      document.getElementById(`${s}-${t}-val`).textContent = 50;
+    });
+  });
+  drawPitch();
+});
+
+function showResult(r) {
+  const colA = document.getElementById('color-a').value;
+  const colB = document.getElementById('color-b').value;
+
+  // Scoreboard
+  document.getElementById('sb-name-a').textContent = r.nameA;
+  document.getElementById('sb-name-b').textContent = r.nameB;
+  document.getElementById('sb-score-a').textContent = r.scoreA;
+  document.getElementById('sb-score-b').textContent = r.scoreB;
+  document.getElementById('sb-minute').textContent = '90分 試合終了';
+  document.getElementById('sb-score-a').style.color = colA;
+  document.getElementById('sb-score-b').style.color = colB;
+
+  const banner = document.getElementById('winner-banner');
+  if (r.scoreA > r.scoreB) {
+    banner.textContent = `🏆 ${r.nameA} の勝利！`;
+    banner.style.background = colA + '33';
+    banner.style.color = colA;
+  } else if (r.scoreB > r.scoreA) {
+    banner.textContent = `🏆 ${r.nameB} の勝利！`;
+    banner.style.background = colB + '33';
+    banner.style.color = colB;
+  } else {
+    banner.textContent = '🤝 引き分け';
+    banner.style.background = '#ffffff11';
+    banner.style.color = '#eee';
+  }
+  document.getElementById('scoreboard').style.display = 'block';
+
+  // Stats
+  const statsData = [
+    { label: 'ポゼッション', a: r.possPctA, b: r.possPctB, suffix: '%' },
+    { label: 'シュート', a: r.stats.shots_a, b: r.stats.shots_b },
+    { label: '枠内シュート', a: r.stats.shots_on_a, b: r.stats.shots_on_b },
+    { label: 'コーナー', a: r.stats.corners_a, b: r.stats.corners_b },
+    { label: 'ファウル', a: r.stats.fouls_a, b: r.stats.fouls_b },
+    { label: 'オフサイド', a: r.stats.offsides_a, b: r.stats.offsides_b },
+  ];
+  let statsHtml = '';
+  statsData.forEach(s => {
+    const total = s.a + s.b || 1;
+    const wA = (s.a / total * 100).toFixed(0);
+    const wB = (s.b / total * 100).toFixed(0);
+    statsHtml += `
+    <div class="cmp-stat">
+      <span class="cmp-val-a" style="color:${colA}">${s.a}${s.suffix||''}</span>
+      <div style="flex:1">
+        <div style="font-size:0.75rem;color:#888;text-align:center;margin-bottom:2px">${s.label}</div>
+        <div class="cmp-bars">
+          <div class="cmp-a" style="width:${wA}%;background:${colA}"></div>
+          <div class="cmp-b" style="width:${wB}%;background:${colB}"></div>
+        </div>
+      </div>
+      <span class="cmp-val-b" style="color:${colB}">${s.b}${s.suffix||''}</span>
+    </div>`;
+  });
+
+  // Formation matchup analysis
+  const stA = getFormStats('a');
+  const stB = getFormStats('b');
+  const advantage = [];
+  if (stA.mid > stB.mid + 0.1) advantage.push(`${r.nameA}が中盤を支配`);
+  if (stB.mid > stA.mid + 0.1) advantage.push(`${r.nameB}が中盤を支配`);
+  if (stA.atk > stB.def + 0.15) advantage.push(`${r.nameA}の攻撃が${r.nameB}守備を上回る`);
+  if (stB.atk > stA.def + 0.15) advantage.push(`${r.nameB}の攻撃が${r.nameA}守備を上回る`);
+  if (stA.press > stB.press + 0.1) advantage.push(`${r.nameA}の高プレスが効果的`);
+  if (stB.press > stA.press + 0.1) advantage.push(`${r.nameB}の高プレスが効果的`);
+
+  statsHtml += `<div style="margin-top:12px;font-size:0.78rem;color:#888;border-top:1px solid #0f3460;padding-top:10px">
+    <div style="color:#aaa;margin-bottom:4px">フォーメーション分析</div>
+    <div>${formSelA.value} vs ${formSelB.value}</div>
+    ${advantage.map(a => `<div>・${a}</div>`).join('')}
+    ${advantage.length === 0 ? '<div>・両フォーメーションは均衡している</div>' : ''}
+  </div>`;
+
+  document.getElementById('stats-content').innerHTML = statsHtml;
+  document.getElementById('stats-box').style.display = 'block';
+
+  // Log
+  const logList = document.getElementById('log-list');
+  logList.innerHTML = r.log.map(e => {
+    const cls = e.type === 'goal' ? 'log-goal' : e.type === 'half' ? 'log-half' : 'log-event';
+    return `<div class="${cls}">${e.text}</div>`;
+  }).join('');
+  document.getElementById('log-box').style.display = 'block';
+  logList.scrollTop = logList.scrollHeight;
+
+  // Scroll to results
+  document.getElementById('scoreboard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Initial draw
+drawPitch();
+</script>
+</body>
+</html>
