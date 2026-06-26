@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>サッカーフォーメーションシミュレーター</title>
+<title>サッカー戦術仮想実験室</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -11,296 +11,151 @@
     color: #1f2d3d;
     font-family: 'Segoe UI', 'Hiragino Sans', sans-serif;
     min-height: 100vh;
+    padding-bottom: 30px;
   }
   h1 {
-    text-align: center;
-    padding: 20px;
-    font-size: 1.6rem;
-    letter-spacing: 1px;
-    color: #fff;
+    text-align: center; padding: 20px; font-size: 1.5rem; color: #fff;
     background: linear-gradient(90deg, #00b894, #0984e3, #6c5ce7);
     box-shadow: 0 4px 16px rgba(9,132,227,0.25);
   }
-  .subtitle {
-    text-align: center;
-    color: #5a6a7a;
-    font-size: 0.85rem;
-    padding: 10px 16px 0;
+  .subtitle { text-align: center; color: #5a6a7a; font-size: 0.85rem; padding: 10px 16px 0; line-height:1.6; }
+
+  details.help {
+    max-width: 760px; margin: 14px auto 0; background: #fff; border-radius: 14px;
+    padding: 6px 18px; box-shadow: 0 4px 14px rgba(31,45,61,0.07);
   }
-  .main {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    padding: 18px;
-    justify-content: center;
-    align-items: flex-start;
-  }
+  details.help summary { cursor: pointer; font-weight: 700; color: #0984e3; padding: 10px 0; }
+  details.help .body { font-size: 0.84rem; line-height: 1.8; color: #46586a; padding-bottom: 12px; }
+  details.help .body b { color: #1f2d3d; }
+  details.help .body .pair { background:#f5f9fc; border-radius:8px; padding:8px 12px; margin:6px 0; }
+  details.help .body .pair .pro { color:#1f8f5f; }
+  details.help .body .pair .con { color:#d0392f; }
+
+  .main { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; justify-content: center; align-items: flex-start; }
   .panel {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 18px;
-    min-width: 250px;
-    max-width: 290px;
-    box-shadow: 0 6px 20px rgba(31,45,61,0.08);
-    border: 1px solid rgba(31,45,61,0.05);
+    background: #fff; border-radius: 16px; padding: 16px; width: 300px;
+    box-shadow: 0 6px 20px rgba(31,45,61,0.08); border: 1px solid rgba(31,45,61,0.05);
   }
-  .panel h2 {
-    font-size: 1.05rem;
-    margin-bottom: 14px;
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .panel h2 { font-size: 1.05rem; margin-bottom: 12px; }
   .panel-a h2 { color: #e74c3c; }
   .panel-b h2 { color: #2980d9; }
 
   select, input[type=text] {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1.5px solid #dfe6ec;
-    background: #f7fafc;
-    color: #1f2d3d;
-    font-size: 0.9rem;
-    margin-bottom: 12px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; padding: 9px 11px; border-radius: 10px; border: 1.5px solid #dfe6ec;
+    background: #f7fafc; color: #1f2d3d; font-size: 0.88rem; margin-bottom: 10px; outline: none;
   }
-  select:focus, input:focus {
-    border-color: #0984e3;
-    box-shadow: 0 0 0 3px rgba(9,132,227,0.12);
-  }
+  select:focus, input:focus { border-color: #0984e3; box-shadow: 0 0 0 3px rgba(9,132,227,0.12); }
   option { background: #fff; color: #1f2d3d; }
-  optgroup { color: #888; }
 
-  label {
-    font-size: 0.8rem;
-    color: #5a6a7a;
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-  }
-  label .v { color: #0984e3; font-weight: 700; }
-  .panel-a label .v { color: #e74c3c; }
+  .fld-label { font-size: 0.78rem; color: #5a6a7a; font-weight: 700; margin-bottom: 4px; display:block; }
+  .team-color { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  input[type=color] { width: 38px; height: 38px; border: none; border-radius: 9px; cursor: pointer; background: none; padding: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
 
-  .team-color {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  input[type=color] {
-    width: 40px; height: 40px;
-    border: none; border-radius: 10px;
-    cursor: pointer; background: none;
-    padding: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-  }
-  input[type=range] {
-    width: 100%;
-    margin-bottom: 12px;
-    cursor: pointer;
-  }
-  .panel-a input[type=range] { accent-color: #e74c3c; }
-  .panel-b input[type=range] { accent-color: #2980d9; }
-
-  .preset-box {
-    background: linear-gradient(135deg, #fff9e6, #fff);
-    border: 1.5px solid #ffe08a;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 14px;
-  }
-  .preset-box label { color: #b8860b; margin-bottom: 6px; }
+  .preset-box { background: linear-gradient(135deg, #fff9e6, #fff); border: 1.5px solid #ffe08a; border-radius: 10px; padding: 9px; margin-bottom: 12px; }
+  .preset-box .fld-label { color: #b8860b; }
   .preset-box select { margin-bottom: 0; background:#fff; border-color:#ffe08a; }
 
-  .btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    transition: transform 0.1s, box-shadow 0.2s;
-    color: #fff;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn-primary {
-    background: linear-gradient(90deg, #00b894, #0984e3);
-    box-shadow: 0 6px 18px rgba(9,132,227,0.3);
-  }
-  .btn-primary:hover { box-shadow: 0 8px 24px rgba(9,132,227,0.45); }
-  .btn-secondary {
-    background: #fff;
-    color: #5a6a7a;
-    border: 1.5px solid #dfe6ec;
-    box-shadow: none;
-    margin-top: 10px;
-  }
-  .btn-secondary:hover { background: #f0f4f8; }
+  .formation-info { font-size: 0.76rem; color: #7a8a9a; line-height: 1.5; background: #f7fafc; border-radius: 8px; padding: 7px 9px; margin-bottom: 12px; }
 
-  /* Pitch */
-  .pitch-wrap {
-    position: relative;
-    width: 360px;
-    flex-shrink: 0;
-  }
-  canvas#pitch {
-    border-radius: 14px;
-    display: block;
-    box-shadow: 0 8px 28px rgba(0,80,40,0.25);
-    width: 100%;
-  }
-  .pitch-vs {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: #5a6a7a;
-    font-weight: 600;
-  }
+  .tactic { margin-bottom: 13px; }
+  .tactic .poles { display: flex; justify-content: space-between; font-size: 0.72rem; color: #8a98a6; margin-bottom: 2px; }
+  .tactic .poles .lo { text-align:left; } .tactic .poles .hi { text-align:right; }
+  .tactic input[type=range] { width: 100%; cursor: pointer; }
+  .panel-a .tactic input[type=range] { accent-color: #e74c3c; }
+  .panel-b .tactic input[type=range] { accent-color: #2980d9; }
+  .tactic .hint { font-size: 0.7rem; color: #9aa7b3; line-height: 1.4; margin-top: 1px; }
 
-  .formation-info {
-    font-size: 0.78rem;
-    color: #7a8a9a;
-    margin-top: 4px;
-    line-height: 1.5;
-    background: #f7fafc;
-    border-radius: 8px;
-    padding: 8px 10px;
-  }
+  .quality-box { background:#f0f7ff; border-radius:10px; padding:9px 11px; margin-top:4px; }
+  .quality-box .fld-label{ color:#0984e3; }
+  .quality-box .note{ font-size:0.68rem; color:#9aa7b3; margin-top:2px; }
 
-  /* Scoreboard */
-  #scoreboard {
-    text-align: center;
-    padding: 18px;
-    background: #fff;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 740px;
-    margin: 0 auto 12px;
-    box-shadow: 0 6px 20px rgba(31,45,61,0.08);
-  }
-  .score-teams {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 22px;
-    font-size: 1.15rem;
-    margin-bottom: 4px;
-    font-weight: 700;
-  }
+  .pitch-wrap { position: relative; width: 360px; flex-shrink: 0; }
+  canvas#pitch { border-radius: 14px; display: block; box-shadow: 0 8px 28px rgba(0,80,40,0.25); width: 100%; }
+  .pitch-vs { text-align: center; margin-top: 10px; font-size: 0.85rem; color: #5a6a7a; font-weight: 600; }
+
+  .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.05rem; font-weight: 700; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: linear-gradient(90deg, #00b894, #0984e3); box-shadow: 0 6px 18px rgba(9,132,227,0.3); }
+  .btn-secondary { background: #fff; color: #5a6a7a; border: 1.5px solid #dfe6ec; margin-top: 10px; }
+  .controls-wrap { text-align: center; padding: 0 16px 16px; }
+  .controls-inner { max-width: 420px; margin: auto; }
+
+  #sim-progress { display: none; text-align: center; padding: 12px; color: #0984e3; font-weight: 600; }
+
+  .card { width: 100%; max-width: 760px; background: #fff; border-radius: 16px; padding: 18px; margin: 0 auto 14px; box-shadow: 0 6px 20px rgba(31,45,61,0.08); }
+  .card h2 { font-size: 1.05rem; color: #0984e3; margin-bottom: 14px; }
+
+  #scoreboard { text-align: center; }
+  .score-teams { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 1.1rem; font-weight: 700; }
   .score-num { font-size: 2.8rem; font-weight: 800; }
   .score-sep { font-size: 1.8rem; color: #b0bcc8; }
-  .score-minute { font-size: 0.85rem; color: #7a8a9a; }
-  .winner-banner {
-    text-align: center;
-    font-size: 1.15rem;
-    font-weight: 800;
-    padding: 12px;
-    border-radius: 12px;
-    margin-top: 10px;
-  }
+  .winner-banner { font-size: 1.1rem; font-weight: 800; padding: 11px; border-radius: 12px; margin-top: 10px; }
 
-  /* Stats */
-  #stats-box, #log-box {
-    width: 100%;
-    max-width: 740px;
-    background: #fff;
-    border-radius: 16px;
-    padding: 18px;
-    margin: 0 auto 16px;
-    box-shadow: 0 6px 20px rgba(31,45,61,0.08);
-  }
-  #stats-box h2, #log-box h2 {
-    font-size: 1.05rem;
-    color: #0984e3;
-    margin-bottom: 14px;
-  }
-  .cmp-stat { margin-bottom: 12px; }
-  .cmp-top {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-    font-weight: 700;
-  }
+  .cmp-stat { margin-bottom: 11px; }
+  .cmp-top { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px; font-weight: 700; }
   .cmp-label { color: #7a8a9a; font-weight: 600; }
-  .cmp-bars { display: flex; height: 12px; gap: 3px; }
-  .cmp-a { border-radius: 6px 2px 2px 6px; transition: width 0.6s; }
-  .cmp-b { border-radius: 2px 6px 6px 2px; transition: width 0.6s; }
+  .cmp-bars { display: flex; height: 11px; gap: 3px; }
+  .cmp-a { border-radius: 6px 2px 2px 6px; } .cmp-b { border-radius: 2px 6px 6px 2px; }
 
-  .analysis {
-    margin-top: 14px;
-    font-size: 0.82rem;
-    color: #5a6a7a;
-    border-top: 1px solid #eef2f5;
-    padding-top: 12px;
-    line-height: 1.7;
-  }
-  .analysis .ttl { color: #0984e3; font-weight: 700; margin-bottom: 4px; }
+  .report { display:flex; flex-wrap:wrap; gap:14px; }
+  .report .col { flex:1; min-width:240px; }
+  .report .col h3 { font-size:0.92rem; margin-bottom:8px; }
+  .report .ins { font-size:0.82rem; line-height:1.7; color:#46586a; margin-bottom:5px; padding-left:18px; position:relative; }
+  .report .ins::before { position:absolute; left:0; }
+  .report .ins.good::before { content:'✔'; color:#1f8f5f; }
+  .report .ins.risk::before { content:'⚠'; color:#e08e0b; }
+  .report .ins.neu::before { content:'•'; color:#9aa7b3; }
+  .key-clash { background:#fff7ed; border:1.5px solid #ffd9a8; border-radius:10px; padding:11px 14px; font-size:0.84rem; line-height:1.7; color:#7a5a2a; margin-top:6px; }
+  .key-clash b{ color:#b5651d; }
 
-  /* Log */
-  #log-list {
-    max-height: 280px;
-    overflow-y: auto;
-    font-size: 0.84rem;
-    line-height: 1.8;
-    padding-right: 6px;
-  }
-  #log-list::-webkit-scrollbar { width: 6px; }
-  #log-list::-webkit-scrollbar-thumb { background: #cdd8e2; border-radius: 4px; }
-  .log-goal { color: #e67e22; font-weight: 800; }
-  .log-event { color: #8a98a6; }
-  .log-half { color: #0984e3; font-weight: 700; padding: 4px 0; }
-
-  #sim-progress {
-    display: none;
-    text-align: center;
-    padding: 14px;
-    font-size: 0.95rem;
-    color: #0984e3;
-    font-weight: 600;
-  }
-
-  .controls-wrap { text-align: center; padding: 0 16px 20px; }
-  .controls-inner { max-width: 420px; margin: auto; }
+  #log-list { max-height: 300px; overflow-y: auto; font-size: 0.84rem; line-height: 1.8; padding-right: 6px; }
+  #log-list::-webkit-scrollbar { width: 6px; } #log-list::-webkit-scrollbar-thumb { background: #cdd8e2; border-radius: 4px; }
+  .log-goal { color: #e67e22; font-weight: 800; } .log-event { color: #8a98a6; } .log-half { color: #0984e3; font-weight: 700; padding: 3px 0; }
 </style>
 </head>
 <body>
-<h1>⚽ サッカーフォーメーション仮想実験室</h1>
-<div class="subtitle">現代戦術を参考にしたプリセット、または自作フォーメーションを対戦させて研究しよう</div>
+<h1>⚽ サッカー戦術 仮想実験室</h1>
+<div class="subtitle">フォーメーション × 戦術スタイルを対戦させ、相性を研究するシミュレーター。<br>
+「攻撃力」のような万能パラメータはありません。すべての設定は<b>長所と短所が表裏一体</b>です。</div>
+
+<details class="help">
+  <summary>📖 はじめに ― このシミュレーターの考え方と各設定の意味</summary>
+  <div class="body">
+    実際のサッカーでは、選手の人数は11人で一定。<b>強さは「盤面のどこに人を置き、何を捨てて何を取るか」という選択から生まれます。</b>
+    だからこのツールには「攻撃力を上げる」ような項目はありません。代わりに、現実の戦術分析で使われる5つの軸を調整します。各軸は必ず代償を伴います。<br><br>
+
+    <b>① 守備ライン</b>
+    <div class="pair"><span class="pro">高い＝</span>相手を自陣に押し込み高い位置で奪える／全体がコンパクトに。&nbsp;<span class="con">代償＝</span>DFの背後に広大なスペース。速い攻撃・直線的なロングボールに弱い。</div>
+    <b>② プレス強度</b>
+    <div class="pair"><span class="pro">高い＝</span>相手陣で奪ってショートカウンター。相手の組み立てを破壊。&nbsp;<span class="con">代償＝</span>外されると一気に手薄に。直線的な相手には逆に背後を突かれる。終盤に消耗。</div>
+    <b>③ 横幅</b>
+    <div class="pair"><span class="pro">広い＝</span>サイドを起点に相手を広げて崩す。&nbsp;<span class="con">代償＝</span>中央が薄くなる。&nbsp;|&nbsp;<span class="pro">狭い＝</span>中央を制圧・支配率↑。<span class="con">代償＝</span>サイドが空く。</div>
+    <b>④ 攻撃の型</b>
+    <div class="pair"><span class="pro">直線的＝</span>縦に速くプレスを回避、背後を突く。&nbsp;<span class="con">代償＝</span>ボールを失いやすく支配率↓。&nbsp;|&nbsp;<span class="pro">遅攻＝</span>保持して主導権。<span class="con">代償＝</span>プレスを受けやすく、崩すのに手間。</div>
+    <b>⑤ 攻撃の枚数</b>
+    <div class="pair"><span class="pro">多い＝</span>厚みのある攻撃で得点機↑。&nbsp;<span class="con">代償＝</span>後ろが手薄でカウンターを浴びる。&nbsp;|&nbsp;<span class="pro">自重＝</span>堅実でカウンター耐性。<span class="con">代償＝</span>攻撃が単調に。</div>
+
+    <b>「選手の質」</b>は戦術とは別物（＝個の能力）。戦術だけを比較したいときは<b>両チームの質を同じ値</b>にしてください。格上相手に戦術で対抗できるかを試すときに動かします。<br><br>
+    結果は1試合の偶然に左右されるので、同じ設定で<b>何度か試す</b>と相性の傾向が見えます。
+  </div>
+</details>
 
 <div class="main">
   <!-- Team A -->
   <div class="panel panel-a" id="panel-a">
     <h2>🔴 チームA</h2>
-    <label>チーム名</label>
+    <span class="fld-label">チーム名</span>
     <input type="text" id="name-a" value="レッドFC">
-    <div class="team-color">
-      <input type="color" id="color-a" value="#e74c3c">
-      <span style="font-size:0.82rem;color:#7a8a9a">ユニフォーム色</span>
-    </div>
-
-    <div class="preset-box">
-      <label>⚡ 戦術プリセット（現代モデル）</label>
-      <select id="preset-a"></select>
-    </div>
-
-    <label>フォーメーション</label>
+    <div class="team-color"><input type="color" id="color-a" value="#e74c3c"><span style="font-size:0.8rem;color:#7a8a9a">ユニフォーム色</span></div>
+    <div class="preset-box"><span class="fld-label">⚡ 戦術プリセット（現代モデル）</span><select id="preset-a"></select></div>
+    <span class="fld-label">フォーメーション（盤面の配置）</span>
     <select id="form-a"></select>
     <div class="formation-info" id="info-a"></div>
-
-    <div style="margin-top:14px">
-      <label>攻撃力 <span class="v" id="atk-a-val">50</span></label>
-      <input type="range" id="atk-a" min="1" max="100" value="50">
-      <label>守備力 <span class="v" id="def-a-val">50</span></label>
-      <input type="range" id="def-a" min="1" max="100" value="50">
-      <label>プレス強度 <span class="v" id="press-a-val">50</span></label>
-      <input type="range" id="press-a" min="1" max="100" value="50">
+    <div id="tactics-a"></div>
+    <div class="quality-box">
+      <span class="fld-label">選手の質（個の能力）<span id="quality-a-val">70</span></span>
+      <input type="range" id="quality-a" min="30" max="100" value="70" style="width:100%;accent-color:#e74c3c">
+      <div class="note">※戦術ではなく選手個々の能力。純粋な戦術比較では両チーム同値に。</div>
     </div>
   </div>
 
@@ -313,656 +168,383 @@
   <!-- Team B -->
   <div class="panel panel-b" id="panel-b">
     <h2>🔵 チームB</h2>
-    <label>チーム名</label>
+    <span class="fld-label">チーム名</span>
     <input type="text" id="name-b" value="ブルーFC">
-    <div class="team-color">
-      <input type="color" id="color-b" value="#2980d9">
-      <span style="font-size:0.82rem;color:#7a8a9a">ユニフォーム色</span>
-    </div>
-
-    <div class="preset-box">
-      <label>⚡ 戦術プリセット（現代モデル）</label>
-      <select id="preset-b"></select>
-    </div>
-
-    <label>フォーメーション</label>
+    <div class="team-color"><input type="color" id="color-b" value="#2980d9"><span style="font-size:0.8rem;color:#7a8a9a">ユニフォーム色</span></div>
+    <div class="preset-box"><span class="fld-label">⚡ 戦術プリセット（現代モデル）</span><select id="preset-b"></select></div>
+    <span class="fld-label">フォーメーション（盤面の配置）</span>
     <select id="form-b"></select>
     <div class="formation-info" id="info-b"></div>
-
-    <div style="margin-top:14px">
-      <label>攻撃力 <span class="v" id="atk-b-val">50</span></label>
-      <input type="range" id="atk-b" min="1" max="100" value="50">
-      <label>守備力 <span class="v" id="def-b-val">50</span></label>
-      <input type="range" id="def-b" min="1" max="100" value="50">
-      <label>プレス強度 <span class="v" id="press-b-val">50</span></label>
-      <input type="range" id="press-b" min="1" max="100" value="50">
+    <div id="tactics-b"></div>
+    <div class="quality-box">
+      <span class="fld-label">選手の質（個の能力）<span id="quality-b-val">70</span></span>
+      <input type="range" id="quality-b" min="30" max="100" value="70" style="width:100%;accent-color:#2980d9">
+      <div class="note">※戦術ではなく選手個々の能力。純粋な戦術比較では両チーム同値に。</div>
     </div>
   </div>
 </div>
 
-<!-- Controls -->
-<div class="controls-wrap">
-  <div class="controls-inner">
-    <button class="btn btn-primary" id="btn-sim">▶ 試合シミュレーション開始</button>
-    <button class="btn btn-secondary" id="btn-reset">リセット</button>
-  </div>
-</div>
+<div class="controls-wrap"><div class="controls-inner">
+  <button class="btn btn-primary" id="btn-sim">▶ 試合シミュレーション開始</button>
+  <button class="btn btn-secondary" id="btn-reset">リセット</button>
+</div></div>
 
 <div id="sim-progress">⚽ シミュレーション中...</div>
 
-<!-- Scoreboard -->
-<div id="scoreboard" style="display:none">
+<div id="scoreboard" class="card" style="display:none">
   <div class="score-teams">
-    <span id="sb-name-a">チームA</span>
-    <span class="score-num" id="sb-score-a">0</span>
-    <span class="score-sep">–</span>
-    <span class="score-num" id="sb-score-b">0</span>
-    <span id="sb-name-b">チームB</span>
+    <span id="sb-name-a">A</span><span class="score-num" id="sb-score-a">0</span>
+    <span class="score-sep">–</span><span class="score-num" id="sb-score-b">0</span><span id="sb-name-b">B</span>
   </div>
-  <div class="score-minute" id="sb-minute"></div>
+  <div style="font-size:0.85rem;color:#7a8a9a;margin-top:4px">90分 試合終了</div>
   <div class="winner-banner" id="winner-banner"></div>
 </div>
 
-<!-- Stats -->
-<div id="stats-box" style="display:none">
-  <h2>📊 試合統計</h2>
+<div id="stats-box" class="card" style="display:none">
+  <h2>📊 試合スタッツ</h2>
   <div id="stats-content"></div>
 </div>
 
-<!-- Log -->
-<div id="log-box" style="display:none">
+<div id="report-box" class="card" style="display:none">
+  <h2>🔬 戦術相性レポート（設定から導かれる構造的な分析）</h2>
+  <div id="report-content"></div>
+</div>
+
+<div id="log-box" class="card" style="display:none">
   <h2>📋 試合ログ</h2>
   <div id="log-list"></div>
 </div>
 
 <script>
-// ===== FORMATIONS =====
-// y: 0 = 相手ゴール側(上) / 1 = 自陣ゴール側(下)
+// ============ フォーメーション（描画用の座標 + 説明）============
+// y: 小さい=相手ゴール(攻撃方向) / 大きい=自陣ゴール
 const FORMATIONS = {
-  "4-4-2": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
-      {x:0.15,y:0.50},{x:0.38,y:0.50},{x:0.62,y:0.50},{x:0.85,y:0.50},
-      {x:0.35,y:0.27},{x:0.65,y:0.27}
-    ],
-    desc: "バランス型スタンダード。2トップで前線の起点を作り、守備も安定。",
-    atk:50, def:55, mid:50, width:70, press:50
-  },
-  "4-3-3": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
-      {x:0.25,y:0.52},{x:0.5, y:0.48},{x:0.75,y:0.52},
-      {x:0.2, y:0.25},{x:0.5, y:0.20},{x:0.8, y:0.25}
-    ],
-    desc: "攻撃的ポゼッション。3トップで幅を取り、サイドを起点に崩す。",
-    atk:70, def:45, mid:55, width:85, press:65
-  },
-  "4-2-3-1": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
-      {x:0.35,y:0.60},{x:0.65,y:0.60},
-      {x:0.15,y:0.42},{x:0.5, y:0.40},{x:0.85,y:0.42},
-      {x:0.5, y:0.22}
-    ],
-    desc: "現代主流。ダブルボランチで中盤を制圧し、トップ下が1トップへ供給。",
-    atk:60, def:60, mid:75, width:75, press:60
-  },
-  "3-5-2": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.25,y:0.75},{x:0.5, y:0.72},{x:0.75,y:0.75},
-      {x:0.10,y:0.52},{x:0.30,y:0.50},{x:0.50,y:0.48},{x:0.70,y:0.50},{x:0.90,y:0.52},
-      {x:0.35,y:0.25},{x:0.65,y:0.25}
-    ],
-    desc: "ウイングバックが攻守両面で活躍。中盤の数的優位を作る。",
-    atk:60, def:55, mid:80, width:80, press:55
-  },
-  "3-4-3": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.25,y:0.75},{x:0.5, y:0.72},{x:0.75,y:0.75},
-      {x:0.15,y:0.52},{x:0.38,y:0.52},{x:0.62,y:0.52},{x:0.85,y:0.52},
-      {x:0.2, y:0.25},{x:0.5, y:0.20},{x:0.8, y:0.25}
-    ],
-    desc: "超攻撃型。ハイプレス・ゲーゲンプレス向き。守備のリスクは高い。",
-    atk:80, def:35, mid:60, width:85, press:80
-  },
-  "3-2-4-1": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.22,y:0.74},{x:0.5, y:0.72},{x:0.78,y:0.74},
-      {x:0.38,y:0.56},{x:0.62,y:0.56},
-      {x:0.12,y:0.38},{x:0.40,y:0.36},{x:0.60,y:0.36},{x:0.88,y:0.38},
-      {x:0.5, y:0.20}
-    ],
-    desc: "ポジショナルプレーの可変型。ビルドアップ時に2ボランチが中央を埋める。",
-    atk:72, def:55, mid:80, width:80, press:68
-  },
-  "3-4-2-1": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.25,y:0.75},{x:0.5, y:0.72},{x:0.75,y:0.75},
-      {x:0.12,y:0.54},{x:0.40,y:0.52},{x:0.60,y:0.52},{x:0.88,y:0.54},
-      {x:0.35,y:0.32},{x:0.65,y:0.32},
-      {x:0.5, y:0.18}
-    ],
-    desc: "2シャドーが相手の急所を突く。WBの推進力とコンパクトな守備を両立。",
-    atk:68, def:58, mid:72, width:78, press:62
-  },
-  "5-3-2": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.10,y:0.70},{x:0.28,y:0.72},{x:0.50,y:0.70},{x:0.72,y:0.72},{x:0.90,y:0.70},
-      {x:0.28,y:0.50},{x:0.50,y:0.48},{x:0.72,y:0.50},
-      {x:0.35,y:0.27},{x:0.65,y:0.27}
-    ],
-    desc: "守備的5バック。ブロックを固めてカウンターで仕留める。",
-    atk:40, def:80, mid:50, width:50, press:35
-  },
-  "4-1-4-1": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
-      {x:0.5, y:0.62},
-      {x:0.12,y:0.46},{x:0.35,y:0.44},{x:0.65,y:0.44},{x:0.88,y:0.46},
-      {x:0.5, y:0.22}
-    ],
-    desc: "アンカー1枚で中央を埋めて守備を安定、4MFで横幅を使って展開。",
-    atk:55, def:65, mid:70, width:75, press:50
-  },
-  "4-4-2ダイヤ": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.15,y:0.72},{x:0.38,y:0.72},{x:0.62,y:0.72},{x:0.85,y:0.72},
-      {x:0.5, y:0.62},
-      {x:0.2, y:0.48},{x:0.8, y:0.48},
-      {x:0.5, y:0.38},
-      {x:0.35,y:0.24},{x:0.65,y:0.24}
-    ],
-    desc: "中盤ダイヤモンド。中央を厚くし、トップ下が司令塔に。サイドは薄め。",
-    atk:60, def:55, mid:75, width:40, press:60
-  },
-  "3-6-1": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.25,y:0.75},{x:0.5, y:0.72},{x:0.75,y:0.75},
-      {x:0.10,y:0.54},{x:0.28,y:0.50},{x:0.50,y:0.48},{x:0.72,y:0.50},{x:0.90,y:0.54},{x:0.50,y:0.38},
-      {x:0.5, y:0.22}
-    ],
-    desc: "6中盤で圧倒的にボールを支配するポゼッション特化型。",
-    atk:50, def:55, mid:90, width:70, press:65
-  },
-  "2-3-5 (WMの祖)": {
-    positions: [
-      {x:0.5, y:0.92},
-      {x:0.3, y:0.78},{x:0.7, y:0.78},
-      {x:0.2, y:0.60},{x:0.5, y:0.58},{x:0.8, y:0.60},
-      {x:0.1, y:0.30},{x:0.3, y:0.22},{x:0.5, y:0.18},{x:0.7, y:0.22},{x:0.9, y:0.30}
-    ],
-    desc: "クラシック超攻撃陣形(1920〜30年代)。歴史研究用。守備は手薄。",
-    atk:90, def:20, mid:55, width:90, press:70
-  },
+  "4-4-2":   { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.15,0.50],[0.38,0.50],[0.62,0.50],[0.85,0.50],[0.35,0.27],[0.65,0.27]], desc:"バランス型の基本。2ライン4-4で守り、2トップが起点。" },
+  "4-3-3":   { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.25,0.52],[0.5,0.48],[0.75,0.52],[0.2,0.25],[0.5,0.20],[0.8,0.25]], desc:"3トップで幅を取る。ポゼッション/プレス志向に合う。" },
+  "4-2-3-1": { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.35,0.60],[0.65,0.60],[0.15,0.42],[0.5,0.40],[0.85,0.42],[0.5,0.22]], desc:"ダブルボランチで中盤を安定させる現代主流。" },
+  "3-5-2":   { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.10,0.52],[0.30,0.50],[0.50,0.48],[0.70,0.50],[0.90,0.52],[0.35,0.25],[0.65,0.25]], desc:"中盤5枚で数的優位。WBが幅を作る。" },
+  "3-4-3":   { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.15,0.52],[0.38,0.52],[0.62,0.52],[0.85,0.52],[0.2,0.25],[0.5,0.20],[0.8,0.25]], desc:"超攻撃型。ハイプレスと相性◎、守備の枚数は最少。" },
+  "3-4-2-1": { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.12,0.54],[0.40,0.52],[0.60,0.52],[0.88,0.54],[0.35,0.32],[0.65,0.32],[0.5,0.18]], desc:"2シャドーが相手の急所を突く。WBで幅も確保。" },
+  "5-3-2":   { p:[[0.5,0.92],[0.10,0.70],[0.28,0.72],[0.50,0.70],[0.72,0.72],[0.90,0.70],[0.28,0.50],[0.50,0.48],[0.72,0.50],[0.35,0.27],[0.65,0.27]], desc:"5バックでブロックを固める守備的布陣。" },
+  "4-1-4-1": { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.5,0.62],[0.12,0.46],[0.35,0.44],[0.65,0.44],[0.88,0.46],[0.5,0.22]], desc:"アンカーで中央を封鎖。守備の安定度が高い。" },
+  "4-4-2ダイヤ":{ p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.5,0.62],[0.2,0.48],[0.8,0.48],[0.5,0.38],[0.35,0.24],[0.65,0.24]], desc:"中盤ダイヤで中央を厚く。サイドは手薄。" },
+  "3-6-1":   { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.10,0.54],[0.28,0.50],[0.50,0.48],[0.72,0.50],[0.90,0.54],[0.50,0.38],[0.5,0.22]], desc:"中盤6枚で圧倒的にボールを支配する特化型。" },
+  "5-4-1":   { p:[[0.5,0.92],[0.10,0.70],[0.28,0.72],[0.50,0.70],[0.72,0.72],[0.90,0.70],[0.2,0.50],[0.4,0.48],[0.6,0.48],[0.8,0.50],[0.5,0.25]], desc:"5-4の二重ブロック。極端な堅守・カウンター用。" },
+  "2-3-5(WMの祖)":{ p:[[0.5,0.92],[0.3,0.78],[0.7,0.78],[0.2,0.60],[0.5,0.58],[0.8,0.60],[0.1,0.30],[0.3,0.22],[0.5,0.18],[0.7,0.22],[0.9,0.30]], desc:"歴史的超攻撃陣形(1920-30年代)。研究用。守備は脆い。" },
 };
 
-// ===== TACTICAL PRESETS (現代モデル参考) =====
-// 実在クラブの代表的スタイルを抽象化したモデル。formation + 各能力値を設定。
+// ============ 戦術スタイルの軸（5つ・すべて表裏一体）============
+const TACTICS = [
+  { key:'line',   label:'① 守備ライン', lo:'低い(撤退)',     hi:'高い(ハイライン)', hint:'高い=高い位置で奪える/コンパクト ⇄ 背後を突かれる' },
+  { key:'press',  label:'② プレス強度', lo:'撤退ブロック',   hi:'ハイプレス',       hint:'高い=高い位置で奪取 ⇄ 外されると危険・終盤に消耗' },
+  { key:'width',  label:'③ 横幅',       lo:'狭い(中央密集)', hi:'広い(サイド)',     hint:'広い=サイドで崩す/中央が薄い ⇄ 狭い=中央支配/サイドが空く' },
+  { key:'direct', label:'④ 攻撃の型',   lo:'遅攻ポゼッション',hi:'直線的(速攻)',     hint:'直線=縦に速くプレス回避 ⇄ ボールを失い支配率↓' },
+  { key:'commit', label:'⑤ 攻撃の枚数', lo:'自重(堅実)',     hi:'全員攻撃',         hint:'多い=攻撃に厚み ⇄ 被カウンターのリスク大' },
+];
+const DEFAULT_T = { line:50, press:50, width:50, direct:35, commit:50, quality:70 };
+
+// ============ 戦術プリセット（実在クラブの型を抽象化）============
 const PRESETS = {
   "— 手動設定 —": null,
-  "ポジショナルプレー / 偽SB型 (シティ系)": {
-    form: "3-2-4-1", atk: 82, def: 66, press: 70,
-    note: "高い位置を保ちボールを支配。偽SBが中央化し可変3バックでビルドアップ。"
-  },
-  "ゲーゲンプレッシング (リバプール系)": {
-    form: "4-3-3", atk: 80, def: 58, press: 92,
-    note: "ボールを失った瞬間に即時奪回。前線からの猛烈なプレスと縦に速い攻撃。"
-  },
-  "ティキタカ / ポゼッション (バルサ系)": {
-    form: "4-3-3", atk: 78, def: 52, press: 75,
-    note: "短いパスを連続させ相手を走らせる。圧倒的なボール保持で主導権を握る。"
-  },
-  "堅守速攻ブロック (アトレティコ系)": {
-    form: "4-4-2", atk: 55, def: 88, press: 45,
-    note: "2ラインのコンパクトな4-4-2ブロック。我慢強く守りカウンターで刺す。"
-  },
-  "ウイングバック攻勢 (インテル系)": {
-    form: "3-5-2", atk: 70, def: 70, press: 58,
-    note: "5レーンを使い分ける3-5-2。WBが幅を作り2トップが厚みを生む。"
-  },
-  "現代バランス型 (バイエルン系)": {
-    form: "4-2-3-1", atk: 72, def: 68, press: 70,
-    note: "ダブルボランチで安定しつつ攻撃も強力。穴の少ないオールラウンド型。"
-  },
-  "ハイプレス3シャドー (ナポリ/コンテ系)": {
-    form: "3-4-2-1", atk: 74, def: 64, press: 78,
-    note: "2シャドーとWBで前向きの圧力。奪ってから素早く相手ゴールへ。"
-  },
-  "トータルフットボール (アヤックス系)": {
-    form: "4-3-3", atk: 85, def: 48, press: 80,
-    note: "全選手が流動的にポジションを入れ替える攻撃的哲学。高いライン設定。"
-  },
-  "カテナチオ / 超守備 (伊クラシック)": {
-    form: "5-3-2", atk: 38, def: 92, press: 32,
-    note: "リベロを置いた鉄壁の守備。1点を守り切る伝統的イタリア式。"
-  },
-  "ロングボール / フィジカル (英クラシック)": {
-    form: "4-4-2", atk: 64, def: 60, press: 55,
-    note: "縦に速いダイレクトサッカー。サイドからのクロスと2トップの高さ勝負。"
-  },
+  "ポジショナルプレー / 偽SB (シティ系)": { form:"4-3-3",   line:72, press:68, width:72, direct:22, commit:60, quality:82, note:"高い位置で圧倒的に保持。動かしながら相手のズレを作って崩す。" },
+  "ゲーゲンプレッシング (リバプール系)":   { form:"4-3-3",   line:80, press:92, width:58, direct:52, commit:70, quality:80, note:"ハイライン＋猛プレスで即時奪回。縦に速く畳みかける。背後はリスク。" },
+  "ティキタカ / 遅攻保持 (バルサ系)":      { form:"4-3-3",   line:70, press:78, width:60, direct:16, commit:55, quality:80, note:"短いパスで支配し相手を走らせる。我慢して崩す遅攻。" },
+  "堅守速攻ブロック (アトレティコ系)":     { form:"4-4-2",   line:32, press:38, width:35, direct:70, commit:30, quality:74, note:"中央を締めた撤退ブロック。耐えて直線的なカウンターで仕留める。" },
+  "ウイングバック攻勢 (インテル系)":       { form:"3-5-2",   line:55, press:55, width:82, direct:45, commit:60, quality:76, note:"WBが幅を作る3-5-2。サイドの推進力と2トップの厚み。" },
+  "現代バランス型 (バイエルン系)":         { form:"4-2-3-1", line:62, press:66, width:62, direct:38, commit:55, quality:80, note:"保持もプレスも高水準。穴の少ないオールラウンド。" },
+  "ハイプレス3シャドー (コンテ/ナポリ系)": { form:"3-4-2-1", line:64, press:78, width:70, direct:48, commit:62, quality:76, note:"2シャドーとWBで前向きの圧力。奪って素早く。" },
+  "トータルフットボール (アヤックス系)":   { form:"4-3-3",   line:82, press:80, width:68, direct:28, commit:68, quality:74, note:"極端なハイライン＋保持＋全員攻撃。攻撃的哲学の極致。背後は脆い。" },
+  "カテナチオ / 超守備 (伊クラシック)":    { form:"5-4-1",   line:25, press:30, width:32, direct:62, commit:22, quality:70, note:"二重ブロックで完全撤退。1点を守り切る伝統的堅守。" },
+  "ロングボール / 直線的 (英クラシック)":  { form:"4-4-2",   line:48, press:52, width:72, direct:88, commit:55, quality:66, note:"縦に速いダイレクト。背後とサイドのクロスで勝負。プレスを蹴り飛ばして回避。" },
 };
 
-// ===== DOM =====
-const formSelA = document.getElementById('form-a');
-const formSelB = document.getElementById('form-b');
-const presetSelA = document.getElementById('preset-a');
-const presetSelB = document.getElementById('preset-b');
-const pitchCanvas = document.getElementById('pitch');
-const ctx = pitchCanvas.getContext('2d');
+// ============ DOM 準備 ============
+const $ = id => document.getElementById(id);
+const formSelA=$('form-a'), formSelB=$('form-b'), presetSelA=$('preset-a'), presetSelB=$('preset-b');
+const pitchCanvas=$('pitch'), ctx=pitchCanvas.getContext('2d');
 
-// Populate formation selects
-Object.keys(FORMATIONS).forEach(k => {
-  [formSelA, formSelB].forEach(sel => {
-    const opt = document.createElement('option');
-    opt.value = k;
-    opt.textContent = k;
-    sel.appendChild(opt);
-  });
+Object.keys(FORMATIONS).forEach(k=>{
+  [formSelA,formSelB].forEach(sel=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
 });
-formSelA.value = '4-3-3';
-formSelB.value = '4-4-2';
+formSelA.value='4-3-3'; formSelB.value='4-4-2';
+Object.keys(PRESETS).forEach(k=>{
+  [presetSelA,presetSelB].forEach(sel=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
+});
 
-// Populate preset selects
-Object.keys(PRESETS).forEach(k => {
-  [presetSelA, presetSelB].forEach(sel => {
-    const opt = document.createElement('option');
-    opt.value = k;
-    opt.textContent = k;
-    sel.appendChild(opt);
+// 戦術スライダーを生成
+['a','b'].forEach(team=>{
+  const host=$('tactics-'+team);
+  TACTICS.forEach(t=>{
+    const d=document.createElement('div'); d.className='tactic';
+    d.innerHTML=`<div class="poles"><span class="lo">${t.lo}</span><span class="hi">${t.hi}</span></div>
+      <input type="range" id="${t.key}-${team}" min="0" max="100" value="${DEFAULT_T[t.key]}">
+      <div class="hint"><b style="color:#5a6a7a">${t.label}</b> ｜ ${t.hint}</div>`;
+    host.appendChild(d);
   });
 });
 
-// ===== Helpers =====
-function setSlider(team, key, val) {
-  const el = document.getElementById(`${key}-${team}`);
-  el.value = val;
-  document.getElementById(`${key}-${team}-val`).textContent = val;
+// ============ プロフィール構築（描画・分析・シミュ共通）============
+function buildProfile(formName, t, name){
+  const pos=FORMATIONS[formName].p;
+  let nD=0,nM=0,nA=0,midCentral=0,wide=0,centerAtt=0;
+  pos.forEach((p,i)=>{ if(i===0)return; const [x,y]=p;
+    if(y<0.34)nA++; else if(y<0.64)nM++; else nD++;
+    if(y>=0.34&&y<0.64&&Math.abs(x-0.5)<0.20)midCentral++;
+    if(y<0.62&&Math.abs(x-0.5)>0.30)wide++;
+    if(y<0.46&&Math.abs(x-0.5)<0.22)centerAtt++;
+  });
+  return { form:formName, name, nD,nM,nA,midCentral,wide,centerAtt,
+    line:t.line/100, press:t.press/100, width:t.width/100, direct:t.direct/100, commit:t.commit/100,
+    q:0.7+(t.quality/100)*0.6 };
+}
+function readTactics(team){
+  const t={}; TACTICS.forEach(x=>t[x.key]=parseInt($(x.key+'-'+team).value));
+  t.quality=parseInt($('quality-'+team).value); return t;
+}
+function readProfile(team){
+  return buildProfile($('form-'+team).value, readTactics(team), $('name-'+team).value || ('チーム'+team.toUpperCase()));
 }
 
-function applyPreset(team) {
-  const presetSel = document.getElementById(`preset-${team}`);
-  const p = PRESETS[presetSel.value];
-  if (!p) { drawPitch(); return; }
-  document.getElementById(`form-${team}`).value = p.form;
-  setSlider(team, 'atk', p.atk);
-  setSlider(team, 'def', p.def);
-  setSlider(team, 'press', p.press);
-  updateInfo(team);
+// ============ シミュレーションエンジン（node検証済み）============
+const clamp=(lo,hi,v)=>Math.max(lo,Math.min(hi,v));
+const rnd=(a,b)=>Math.random()*(b-a)+a;
+const chance=p=>Math.random()<p;
+
+function controlPower(m){
+  return (m.nM+1.3*m.midCentral)*(1+0.20*(1-m.width))*(1-0.30*m.direct)*(0.55+0.55*m.line)*(0.85+0.30*m.press)*m.q;
+}
+function xgOpen(att,def){
+  const flankA=(att.wide+0.4)*(0.4+0.9*att.width);
+  const flankD=(def.nD*0.5+0.5)*(0.45+0.8*def.width);
+  const centerA=(att.centerAtt+0.4)*(0.5+0.9*(1-att.width));
+  const centerD=(def.nD*0.55+def.nM*0.45+0.5)*(0.5+0.6*(1-def.width))*(1+0.30*(1-def.line));
+  const rF=flankA/(flankA+flankD), rC=centerA/(centerA+centerD);
+  let xg=Math.max(rF,rC)*0.30+Math.min(rF,rC)*0.07;
+  xg+=att.direct*def.line*0.16;
+  xg*=att.q/def.q;
+  return { xg:clamp(0.03,0.45,xg), route:(rF>rC?'サイド':'中央') };
+}
+function atkRate(att,poss){ const vol=(att.nA*1.0+0.5*att.nM+0.5)*(0.65+0.7*att.commit); return 0.026*vol*poss; }
+function counterXg(def,att){ const exp=att.commit*0.6+att.line*0.4; const sh=(0.35+0.70*def.direct)*(0.5+0.30*def.nA); return clamp(0.04,0.48,0.14*exp*sh*def.q/att.q); }
+function counterRate(def,att){ const exp=att.commit*0.6+att.line*0.4; return 0.020*exp*(0.4+0.8*def.direct)*(0.5+0.4*def.nA); }
+function pressOutcome(P,H,min){
+  const stam=min<62?1:(1-0.45*P.press*((min-62)/30));
+  const intensity=P.press*(0.45+0.6*P.line)*(0.6+0.5*(P.nM/4))*Math.max(0.3,stam);
+  if(!chance(0.030*intensity))return null;
+  if(chance(H.direct*0.7)) return {who:'H', xg:clamp(0.06,0.45,0.16+0.22*P.line)*H.q/P.q, type:'bypass'};
+  return {who:'P', xg:clamp(0.08,0.48,0.20+0.13*P.press)*P.q/H.q, type:'win'};
+}
+
+function simulate(A,B){
+  const poss0=controlPower(A)/(controlPower(A)+controlPower(B));
+  let gA=0,gB=0; const log=[];
+  const s={shotA:0,shotB:0,sotA:0,sotB:0,bigA:0,bigB:0,xgA:0,xgB:0,possSum:0,possN:0,cntA:0,cntB:0,pwA:0,pwB:0};
+  const SHOT=['右足','左足','ヘディング','ミドル','こぼれ球'];
+  function shoot(team,xg,min,tag){
+    const A1=team==='A';
+    if(A1){s.shotA++;s.xgA+=xg;if(xg>0.30)s.bigA++;} else {s.shotB++;s.xgB+=xg;if(xg>0.30)s.bigB++;}
+    const onT=chance(0.34+xg*0.5); if(onT){A1?s.sotA++:s.sotB++;}
+    if(chance(xg)){
+      if(A1)gA++; else gB++;
+      const nm=A1?A.name:B.name;
+      log.push({type:'goal',text:`⚽ ${min}' ゴール！ ${nm}（${tag||SHOT[Math.floor(Math.random()*5)]}）[${gA}-${gB}]`});
+      return true;
+    } else if(onT&&chance(0.4)){
+      log.push({type:'event',text:`${min}' ${(A1?A.name:B.name)} の決定機をGKがセーブ`});
+    }
+    return false;
+  }
+  log.push({type:'half',text:'━━━ 前半キックオフ ━━━'});
+  for(let min=1;min<=90;min++){
+    if(min===46)log.push({type:'half',text:'━━━ 後半開始 ━━━'});
+    const poss=clamp(0.12,0.88,poss0+rnd(-0.06,0.06)); s.possSum+=poss; s.possN++;
+    if(chance(atkRate(A,poss))){ const o=xgOpen(A,B); if(!shoot('A',o.xg,min,o.route+'攻撃') && chance(counterRate(B,A))){s.cntB++; shoot('B',counterXg(B,A),min,'カウンター');} }
+    if(chance(atkRate(B,1-poss))){ const o=xgOpen(B,A); if(!shoot('B',o.xg,min,o.route+'攻撃') && chance(counterRate(A,B))){s.cntA++; shoot('A',counterXg(A,B),min,'カウンター');} }
+    let pr=pressOutcome(B,A,min); if(pr){ if(pr.who==='P'){s.pwB++; shoot('B',pr.xg,min,'ハイプレス奪取');} else shoot('A',pr.xg,min,'プレス回避→背後'); }
+    pr=pressOutcome(A,B,min); if(pr){ if(pr.who==='P'){s.pwA++; shoot('A',pr.xg,min,'ハイプレス奪取');} else shoot('B',pr.xg,min,'プレス回避→背後'); }
+    if(chance(0.05)){ const isA=chance(0.5); log.push({type:'event',text:`${min}' ${(isA?A.name:B.name)} ${chance(0.5)?'コーナーキック':'FK'}`}); }
+  }
+  log.push({type:'half',text:`━━━ 試合終了 ${gA}-${gB} ━━━`});
+  s.possApct=Math.round(s.possSum/s.possN*100);
+  return { gA,gB,s,log };
+}
+
+// ============ 戦術相性レポート（設定から構造的に導く・乱数なし）============
+function tacticalReport(A,B){
+  const ppA=controlPower(A), ppB=controlPower(B);
+  const possA=Math.round(ppA/(ppA+ppB)*100);
+  const cols={};
+  [['A',A,B],['B',B,A]].forEach(([k,m,opp])=>{
+    const ins=[];
+    if(k==='A'? possA>=56 : possA<=44) ins.push(['good','中盤を支配しボールを保持できる']);
+    if(k==='A'? possA<=44 : possA>=56) ins.push(['neu','ボールは相手に持たれやすい（保持より速攻向き）']);
+    if(m.press>0.7 && opp.direct<0.45) ins.push(['good','ハイプレスが相手の組み立てにハマりやすい']);
+    if(m.press>0.7 && opp.direct>0.6) ins.push(['risk','プレスを直線的な相手に外され、背後を取られやすい']);
+    if(m.line>0.7 && opp.direct>0.6) ins.push(['risk','ハイラインの背後を速い攻撃に狙われる']);
+    if(m.line>0.7 && opp.direct<0.4) ins.push(['good','ハイラインで相手を押し込み主導権を握れる']);
+    if(m.line<0.4) ins.push(['good','低いブロックで中央を堅く閉じられる']);
+    if(m.width>0.65 && opp.width<0.4) ins.push(['good','広い攻撃で相手の手薄なサイドを突ける']);
+    if(m.width<0.35 && opp.width>0.65) ins.push(['risk','狭い陣形のサイドを相手のワイド攻撃に空けられる']);
+    if(m.width<0.35) ins.push(['good','中央を密集させ相手の中央攻撃を封じる']);
+    if(m.commit>0.65) ins.push(['risk','攻撃に枚数をかけるぶん被カウンターのリスクが高い']);
+    if(m.commit<0.35) ins.push(['good','自重した攻撃でカウンターを受けにくい']);
+    if(m.direct>0.7) ins.push(['neu','直線的で速いが、ボール保持は捨てている']);
+    if(m.nA>=3 && m.commit>0.5) ins.push(['good','前線の枚数が多く厚みのある攻撃ができる']);
+    if(m.nD>=5) ins.push(['good','最終ラインが厚く守備は堅い']);
+    if(m.nD<=3 && m.line>0.7) ins.push(['risk','後ろが薄く高い位置取り、守備の余白が小さい']);
+    if(m.q-opp.q>0.12) ins.push(['good','選手個々の質で相手を上回る']);
+    if(opp.q-m.q>0.12) ins.push(['risk','選手の質で相手に劣る（戦術での工夫が必要）']);
+    if(ins.length===0) ins.push(['neu','クセの少ないバランス型']);
+    cols[k]={ins:ins.slice(0,6)};
+  });
+
+  // 主要な噛み合わせ（最も効きそうな1〜2点）
+  const clashes=[];
+  if(A.press>0.7 && B.direct>0.6) clashes.push(`<b>${A.name}</b>の高い守備ライン＆プレスを、<b>${B.name}</b>の直線的な速攻が背後で狙う構図。プレスが外れた瞬間が勝負。`);
+  if(B.press>0.7 && A.direct>0.6) clashes.push(`<b>${B.name}</b>のプレスを、<b>${A.name}</b>の直線的な攻撃が背後で狙う構図。`);
+  if(A.line>0.7 && B.line<0.4) clashes.push(`<b>${A.name}</b>が押し込み、<b>${B.name}</b>が撤退して受ける「攻略 vs 堅守」の典型。${B.name}はカウンターの一撃に懸ける。`);
+  if(B.line>0.7 && A.line<0.4) clashes.push(`<b>${B.name}</b>が押し込み、<b>${A.name}</b>が撤退して耐える展開。`);
+  if(Math.abs(possA-50)>=15) clashes.push(`ボール支配は<b>${possA>=50?A.name:B.name}</b>に大きく傾く見込み（推定保持率 ${Math.max(possA,100-possA)}%）。持たない側はいかに速く攻め切るかが鍵。`);
+  if(A.width>0.65 && B.width<0.4) clashes.push(`<b>${A.name}</b>のワイドな攻撃 vs <b>${B.name}</b>の中央密集。サイドの幅を使えるかが焦点。`);
+  if(clashes.length===0) clashes.push(`両者とも極端さが少なく、噛み合わせの優劣は小さい。選手の質と当日の出来が結果を分ける。`);
+
+  return { possA, cols, clashes:clashes.slice(0,2) };
+}
+
+// ============ ピッチ描画（戦術で配置がリアクティブに変化）============
+function adjPos(x,y,m){
+  // ハイライン: 全体を相手ゴール方向(yを小さく)へ押し上げ
+  let ny=y-(m.line-0.5)*0.16;
+  // 攻撃の枚数: 前の選手をさらに押し上げ/自重で引き下げ
+  if(y<0.55) ny-=(m.commit-0.5)*0.10;
+  // 横幅: 中央(0.5)を基準に広げる/狭める
+  let nx=0.5+(x-0.5)*(0.72+0.6*m.width);
+  return [clamp(0.04,0.96,nx), clamp(0.05,0.95,ny)];
+}
+function drawPitch(){
+  const W=pitchCanvas.width,H=pitchCanvas.height; ctx.clearRect(0,0,W,H);
+  const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#2ec27e');g.addColorStop(.5,'#27ae60');g.addColorStop(1,'#2ec27e');
+  ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(0,0,W,H,14); ctx.fill();
+  ctx.globalAlpha=.08; for(let y=0;y<H;y+=44){ctx.fillStyle='#fff';ctx.fillRect(0,y,W,22);} ctx.globalAlpha=1;
+  ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.lineWidth=2;
+  ctx.strokeRect(16,14,W-32,H-28);
+  ctx.beginPath();ctx.moveTo(16,H/2);ctx.lineTo(W-16,H/2);ctx.stroke();
+  ctx.beginPath();ctx.arc(W/2,H/2,48,0,7);ctx.stroke();
+  const paW=190,paH=74,gaW=96,gaH=28;
+  ctx.strokeRect((W-paW)/2,14,paW,paH);ctx.strokeRect((W-gaW)/2,14,gaW,gaH);
+  ctx.strokeRect((W-paW)/2,H-14-paH,paW,paH);ctx.strokeRect((W-gaW)/2,H-14-gaH,gaW,gaH);
+  const A=readProfile('a'), B=readProfile('b');
+  const colA=$('color-a').value, colB=$('color-b').value;
+  drawTeam(FORMATIONS[A.form].p,A,colA,false,W,H);
+  drawTeam(FORMATIONS[B.form].p,B,colB,true,W,H);
+  ctx.font='bold 12px Segoe UI'; ctx.fillStyle=colA; ctx.textAlign='left';
+  ctx.fillText('▲ '+A.name,20,H-6);
+  ctx.fillStyle=colB; ctx.textAlign='right'; ctx.fillText(B.name+' ▼',W-20,24);
+  $('pitch-vs').textContent=`${A.form}  ⚔  ${B.form}`;
+  updateInfo('a'); updateInfo('b');
+}
+function drawTeam(positions,m,color,flip,W,H){
+  const pad=16;
+  positions.forEach((p,i)=>{
+    let [px,py]=p;
+    if(i!==0){ [px,py]=adjPos(px,py,m); } // GK以外は戦術で移動
+    let x=px*(W-pad*2)+pad, y=py*(H-56)+28; if(flip)y=H-y;
+    ctx.beginPath();ctx.arc(x+2,y+2,12,0,7);ctx.fillStyle='rgba(0,0,0,.22)';ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,12,0,7);ctx.fillStyle=color;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 10px Segoe UI';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(i+1,x,y);
+  });
+  ctx.textBaseline='alphabetic';
+}
+function updateInfo(team){
+  const f=FORMATIONS[$('form-'+team).value];
+  const p=PRESETS[$('preset-'+team).value];
+  $('info-'+team).textContent = p ? '💡 '+p.note : (f?f.desc:'');
+}
+
+// ============ プリセット適用 ============
+function applyPreset(team){
+  const p=PRESETS[$('preset-'+team).value]; if(!p){drawPitch();return;}
+  $('form-'+team).value=p.form;
+  TACTICS.forEach(t=>{ $(t.key+'-'+team).value=p[t.key]; });
+  $('quality-'+team).value=p.quality; $('quality-'+team+'-val').textContent=p.quality;
   drawPitch();
 }
 
-function updateInfo(team) {
-  const sel = document.getElementById(`form-${team}`);
-  const info = document.getElementById(`info-${team}`);
-  const presetSel = document.getElementById(`preset-${team}`);
-  const f = FORMATIONS[sel.value];
-  let txt = f ? f.desc : '';
-  const p = PRESETS[presetSel.value];
-  if (p) txt = '💡 ' + p.note;
-  info.textContent = txt;
-}
-
-// ===== Events =====
-['a','b'].forEach(t => {
-  ['atk','def','press'].forEach(s => {
-    const el = document.getElementById(`${s}-${t}`);
-    const lbl = document.getElementById(`${s}-${t}-val`);
-    el.addEventListener('input', () => {
-      lbl.textContent = el.value;
-      // 手動で動かしたらプリセットを解除
-      document.getElementById(`preset-${t}`).value = '— 手動設定 —';
-      updateInfo(t);
-      drawPitch();
-    });
-  });
-  document.getElementById(`form-${t}`).addEventListener('change', () => {
-    document.getElementById(`preset-${t}`).value = '— 手動設定 —';
-    updateInfo(t);
-    drawPitch();
-  });
-  document.getElementById(`preset-${t}`).addEventListener('change', () => applyPreset(t));
-  document.getElementById(`color-${t}`).addEventListener('change', drawPitch);
-  document.getElementById(`name-${t}`).addEventListener('input', drawPitch);
-});
-updateInfo('a'); updateInfo('b');
-
-// ===== PITCH DRAWING =====
-function drawPitch() {
-  const W = pitchCanvas.width, H = pitchCanvas.height;
-  ctx.clearRect(0, 0, W, H);
-
-  // Grass
-  const grad = ctx.createLinearGradient(0, 0, 0, H);
-  grad.addColorStop(0, '#2ec27e');
-  grad.addColorStop(0.5, '#27ae60');
-  grad.addColorStop(1, '#2ec27e');
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.roundRect(0, 0, W, H, 14);
-  ctx.fill();
-
-  // Mowing stripes
-  ctx.globalAlpha = 0.08;
-  for (let y = 0; y < H; y += 44) {
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, y, W, 22);
-  }
-  ctx.globalAlpha = 1;
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-  ctx.lineWidth = 2;
-
-  // Border
-  ctx.strokeRect(16, 14, W-32, H-28);
-  // Center line
-  ctx.beginPath();
-  ctx.moveTo(16, H/2);
-  ctx.lineTo(W-16, H/2);
-  ctx.stroke();
-  // Center circle
-  ctx.beginPath();
-  ctx.arc(W/2, H/2, 48, 0, Math.PI*2);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(W/2, H/2, 3, 0, Math.PI*2);
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.fill();
-
-  // Penalty + goal areas
-  const paW = 190, paH = 74, gaW = 96, gaH = 28;
-  ctx.strokeRect((W-paW)/2, 14, paW, paH);
-  ctx.strokeRect((W-gaW)/2, 14, gaW, gaH);
-  ctx.strokeRect((W-paW)/2, H-14-paH, paW, paH);
-  ctx.strokeRect((W-gaW)/2, H-14-gaH, gaW, gaH);
-
-  // Penalty spots
-  [[W/2, 14+54],[W/2, H-14-54]].forEach(([px,py]) => {
-    ctx.beginPath();
-    ctx.arc(px, py, 2.5, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-    ctx.fill();
-  });
-
-  // Teams
-  const fA = FORMATIONS[formSelA.value];
-  const fB = FORMATIONS[formSelB.value];
-  const colA = document.getElementById('color-a').value;
-  const colB = document.getElementById('color-b').value;
-
-  if (fA) drawTeam(fA.positions, colA, false, W, H);
-  if (fB) drawTeam(fB.positions, colB, true, W, H);
-
-  // Labels
-  ctx.font = 'bold 12px Segoe UI';
-  ctx.fillStyle = colA;
-  ctx.textAlign = 'left';
-  ctx.fillText('▲ ' + (document.getElementById('name-a').value || 'チームA'), 20, H-6);
-  ctx.fillStyle = colB;
-  ctx.textAlign = 'right';
-  ctx.fillText((document.getElementById('name-b').value || 'チームB') + ' ▼', W-20, 24);
-
-  // VS info under pitch
-  document.getElementById('pitch-vs').textContent =
-    `${formSelA.value}  ⚔  ${formSelB.value}`;
-}
-
-function drawTeam(positions, color, flip, W, H) {
-  const pad = 16;
-  positions.forEach((pos, i) => {
-    let x = pos.x * (W - pad*2) + pad;
-    let y = pos.y * (H - 28*2) + 28;
-    if (flip) { y = H - y; }
-
-    ctx.beginPath();
-    ctx.arc(x+2, y+2, 12, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(0,0,0,0.22)';
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(x, y, 12, 0, Math.PI*2);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px Segoe UI';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(i + 1, x, y);
-  });
-  ctx.textBaseline = 'alphabetic';
-}
-
-// ===== SIMULATION ENGINE =====
-function getFormStats(team) {
-  const sel = document.getElementById(`form-${team}`);
-  const f = FORMATIONS[sel.value];
-  const atkSlider = parseInt(document.getElementById(`atk-${team}`).value);
-  const defSlider = parseInt(document.getElementById(`def-${team}`).value);
-  const pressSlider = parseInt(document.getElementById(`press-${team}`).value);
-  return {
-    name: sel.value,
-    atk: (f.atk * 0.45 + atkSlider * 0.55) / 100,
-    def: (f.def * 0.45 + defSlider * 0.55) / 100,
-    mid: f.mid / 100,
-    width: f.width / 100,
-    press: (f.press * 0.45 + pressSlider * 0.55) / 100,
-  };
-}
-
-function rnd(min, max) { return Math.random() * (max - min) + min; }
-function chance(p) { return Math.random() < p; }
-
-function simulate() {
-  const stA = getFormStats('a');
-  const stB = getFormStats('b');
-  const nameA = document.getElementById('name-a').value || 'チームA';
-  const nameB = document.getElementById('name-b').value || 'チームB';
-
-  const log = [];
-  let scoreA = 0, scoreB = 0;
-
-  const stats = {
-    shots_a: 0, shots_b: 0, shots_on_a: 0, shots_on_b: 0,
-    corners_a: 0, corners_b: 0, fouls_a: 0, fouls_b: 0,
-    offsides_a: 0, offsides_b: 0, possession_a: 0, possession_b: 0,
-  };
-
-  // 中盤の支配力でポゼッションを決定
-  const facA = stA.mid * 0.6 + stA.width * 0.2 + (1 - stB.press) * 0.2;
-  const facB = stB.mid * 0.6 + stB.width * 0.2 + (1 - stA.press) * 0.2;
-  const basePossA = facA / (facA + facB + 0.001);
-
-  log.push({type:'half', text: '━━━ 前半キックオフ ━━━'});
-
-  for (let min = 1; min <= 90; min++) {
-    if (min === 46) log.push({type:'half', text: '━━━ 後半キックオフ ━━━'});
-
-    const possA = Math.min(0.85, Math.max(0.15, basePossA + rnd(-0.08, 0.08)));
-    if (chance(possA)) stats.possession_a++; else stats.possession_b++;
-
-    const shotChanceA = stA.atk * 0.05 * (1 - stB.def * 0.5) * (possA > 0.5 ? 1.3 : 0.8);
-    const shotChanceB = stB.atk * 0.05 * (1 - stA.def * 0.5) * (possA < 0.5 ? 1.3 : 0.8);
-    // カウンター: 失った側がプレスで奪い返して速攻
-    const counterA = stA.atk * 0.018 * (1 - possA) * stA.press;
-    const counterB = stB.atk * 0.018 * possA * stB.press;
-
-    let scored = false;
-    if (chance(shotChanceA + counterA)) {
-      stats.shots_a++;
-      if (chance(0.42 + stA.atk * 0.22)) {
-        stats.shots_on_a++;
-        if (chance(0.26 + stA.atk * 0.15 - stB.def * 0.12)) {
-          scoreA++; scored = true;
-          const t = ['右足シュート','左足シュート','ヘディング','直接FK','PK','ミドルシュート'][Math.floor(Math.random()*6)];
-          log.push({type:'goal', text: `⚽ ${min}' GOAL！ ${nameA} (${t}) [${scoreA}-${scoreB}]`});
-        } else if (chance(0.5)) {
-          log.push({type:'event', text: `${min}' ${nameA} のシュートをGKがビッグセーブ`});
-        }
-      } else if (chance(0.3)) {
-        stats.corners_a++;
-        log.push({type:'event', text: `${min}' ${nameA} コーナーキック`});
-      }
-    }
-    if (!scored && chance(shotChanceB + counterB)) {
-      stats.shots_b++;
-      if (chance(0.42 + stB.atk * 0.22)) {
-        stats.shots_on_b++;
-        if (chance(0.26 + stB.atk * 0.15 - stA.def * 0.12)) {
-          scoreB++;
-          const t = ['右足シュート','左足シュート','ヘディング','直接FK','PK','ミドルシュート'][Math.floor(Math.random()*6)];
-          log.push({type:'goal', text: `⚽ ${min}' GOAL！ ${nameB} (${t}) [${scoreA}-${scoreB}]`});
-        } else if (chance(0.5)) {
-          log.push({type:'event', text: `${min}' ${nameB} のシュートをGKがビッグセーブ`});
-        }
-      } else if (chance(0.3)) {
-        stats.corners_b++;
-        log.push({type:'event', text: `${min}' ${nameB} コーナーキック`});
-      }
-    }
-
-    if (chance(0.08)) {
-      const isA = chance(0.5);
-      const ev = isA ? nameA : nameB;
-      const opp = isA ? nameB : nameA;
-      if (chance(0.4)) {
-        if (isA) stats.fouls_a++; else stats.fouls_b++;
-        log.push({type:'event', text: `${min}' ${ev} がファウル → ${opp} にFK`});
-      } else if (chance(0.3)) {
-        if (isA) stats.offsides_a++; else stats.offsides_b++;
-        log.push({type:'event', text: `${min}' ${ev} オフサイド`});
-      }
-    }
-
-    if ((min === 60 || min === 70 || min === 78) && chance(0.4)) {
-      const isA = chance(0.5);
-      log.push({type:'event', text: `${min}' ${isA ? nameA : nameB} 選手交代`});
-    }
-  }
-
-  log.push({type:'half', text: `━━━ 試合終了 ${scoreA}-${scoreB} ━━━`});
-
-  const totalMin = stats.possession_a + stats.possession_b;
-  const possPctA = Math.round(stats.possession_a / totalMin * 100);
-  return { scoreA, scoreB, log, stats, possPctA, possPctB: 100 - possPctA, nameA, nameB };
-}
-
-// ===== UI control =====
-document.getElementById('btn-sim').addEventListener('click', () => {
-  document.getElementById('sim-progress').style.display = 'block';
-  ['scoreboard','stats-box','log-box'].forEach(id => document.getElementById(id).style.display = 'none');
-  setTimeout(() => {
-    showResult(simulate());
-    document.getElementById('sim-progress').style.display = 'none';
-  }, 450);
+// ============ イベント ============
+['a','b'].forEach(t=>{
+  TACTICS.forEach(x=>$(x.key+'-'+t).addEventListener('input',()=>{ $('preset-'+t).value='— 手動設定 —'; drawPitch(); }));
+  $('quality-'+t).addEventListener('input',()=>{ $('quality-'+t+'-val').textContent=$('quality-'+t).value; $('preset-'+t).value='— 手動設定 —'; });
+  $('form-'+t).addEventListener('change',()=>{ $('preset-'+t).value='— 手動設定 —'; drawPitch(); });
+  $('preset-'+t).addEventListener('change',()=>applyPreset(t));
+  $('color-'+t).addEventListener('change',drawPitch);
+  $('name-'+t).addEventListener('input',drawPitch);
 });
 
-document.getElementById('btn-reset').addEventListener('click', () => {
-  ['scoreboard','stats-box','log-box','sim-progress'].forEach(id => document.getElementById(id).style.display = 'none');
-  ['a','b'].forEach(t => {
-    ['atk','def','press'].forEach(s => setSlider(t, s, 50));
-    document.getElementById(`preset-${t}`).value = '— 手動設定 —';
-    updateInfo(t);
+$('btn-sim').addEventListener('click',()=>{
+  $('sim-progress').style.display='block';
+  ['scoreboard','stats-box','report-box','log-box'].forEach(id=>$(id).style.display='none');
+  setTimeout(()=>{ showResult(); $('sim-progress').style.display='none'; },420);
+});
+$('btn-reset').addEventListener('click',()=>{
+  ['scoreboard','stats-box','report-box','log-box','sim-progress'].forEach(id=>$(id).style.display='none');
+  ['a','b'].forEach(t=>{
+    TACTICS.forEach(x=>$(x.key+'-'+t).value=DEFAULT_T[x.key]);
+    $('quality-'+t).value=70; $('quality-'+t+'-val').textContent='70';
+    $('preset-'+t).value='— 手動設定 —';
   });
   drawPitch();
 });
 
-function showResult(r) {
-  const colA = document.getElementById('color-a').value;
-  const colB = document.getElementById('color-b').value;
+// ============ 結果表示 ============
+function showResult(){
+  const A=readProfile('a'), B=readProfile('b');
+  const r=simulate(A,B);
+  const colA=$('color-a').value, colB=$('color-b').value;
 
-  document.getElementById('sb-name-a').textContent = r.nameA;
-  document.getElementById('sb-name-b').textContent = r.nameB;
-  document.getElementById('sb-score-a').textContent = r.scoreA;
-  document.getElementById('sb-score-b').textContent = r.scoreB;
-  document.getElementById('sb-minute').textContent = '90分 試合終了';
-  document.getElementById('sb-score-a').style.color = colA;
-  document.getElementById('sb-score-b').style.color = colB;
+  $('sb-name-a').textContent=A.name; $('sb-name-b').textContent=B.name;
+  $('sb-score-a').textContent=r.gA; $('sb-score-b').textContent=r.gB;
+  $('sb-score-a').style.color=colA; $('sb-score-b').style.color=colB;
+  const bn=$('winner-banner');
+  if(r.gA>r.gB){bn.textContent=`🏆 ${A.name} の勝利`;bn.style.background=colA+'22';bn.style.color=colA;}
+  else if(r.gB>r.gA){bn.textContent=`🏆 ${B.name} の勝利`;bn.style.background=colB+'22';bn.style.color=colB;}
+  else{bn.textContent='🤝 引き分け';bn.style.background='#f0f4f8';bn.style.color='#5a6a7a';}
+  $('scoreboard').style.display='block';
 
-  const banner = document.getElementById('winner-banner');
-  if (r.scoreA > r.scoreB) {
-    banner.textContent = `🏆 ${r.nameA} の勝利！`;
-    banner.style.background = colA + '22'; banner.style.color = colA;
-  } else if (r.scoreB > r.scoreA) {
-    banner.textContent = `🏆 ${r.nameB} の勝利！`;
-    banner.style.background = colB + '22'; banner.style.color = colB;
-  } else {
-    banner.textContent = '🤝 引き分け';
-    banner.style.background = '#f0f4f8'; banner.style.color = '#5a6a7a';
-  }
-  document.getElementById('scoreboard').style.display = 'block';
-
-  const statsData = [
-    { label: 'ポゼッション', a: r.possPctA, b: r.possPctB, suffix: '%' },
-    { label: 'シュート', a: r.stats.shots_a, b: r.stats.shots_b },
-    { label: '枠内シュート', a: r.stats.shots_on_a, b: r.stats.shots_on_b },
-    { label: 'コーナー', a: r.stats.corners_a, b: r.stats.corners_b },
-    { label: 'ファウル', a: r.stats.fouls_a, b: r.stats.fouls_b },
-    { label: 'オフサイド', a: r.stats.offsides_a, b: r.stats.offsides_b },
+  const sd=[
+    {l:'推定ポゼッション',a:r.s.possApct,b:100-r.s.possApct,suf:'%'},
+    {l:'シュート',a:r.s.shotA,b:r.s.shotB},
+    {l:'枠内',a:r.s.sotA,b:r.s.sotB},
+    {l:'xG（期待得点）',a:r.s.xgA.toFixed(2),b:r.s.xgB.toFixed(2)},
+    {l:'決定機（大）',a:r.s.bigA,b:r.s.bigB},
+    {l:'カウンター発生',a:r.s.cntA,b:r.s.cntB},
+    {l:'プレス奪取',a:r.s.pwA,b:r.s.pwB},
   ];
-  let html = '';
-  statsData.forEach(s => {
-    const total = s.a + s.b || 1;
-    const wA = (s.a / total * 100).toFixed(0);
-    const wB = 100 - wA;
-    html += `
-    <div class="cmp-stat">
-      <div class="cmp-top">
-        <span style="color:${colA}">${s.a}${s.suffix||''}</span>
-        <span class="cmp-label">${s.label}</span>
-        <span style="color:${colB}">${s.b}${s.suffix||''}</span>
-      </div>
-      <div class="cmp-bars">
-        <div class="cmp-a" style="width:${wA}%;background:${colA}"></div>
-        <div class="cmp-b" style="width:${wB}%;background:${colB}"></div>
-      </div>
-    </div>`;
-  });
+  let h='';
+  sd.forEach(s=>{ const a=parseFloat(s.a),b=parseFloat(s.b),tot=a+b||1,wa=(a/tot*100).toFixed(0);
+    h+=`<div class="cmp-stat"><div class="cmp-top"><span style="color:${colA}">${s.a}${s.suf||''}</span><span class="cmp-label">${s.l}</span><span style="color:${colB}">${s.b}${s.suf||''}</span></div>
+    <div class="cmp-bars"><div class="cmp-a" style="width:${wa}%;background:${colA}"></div><div class="cmp-b" style="width:${100-wa}%;background:${colB}"></div></div></div>`; });
+  $('stats-content').innerHTML=h; $('stats-box').style.display='block';
 
-  const stA = getFormStats('a');
-  const stB = getFormStats('b');
-  const adv = [];
-  if (stA.mid > stB.mid + 0.1) adv.push(`${r.nameA}が中盤を支配`);
-  if (stB.mid > stA.mid + 0.1) adv.push(`${r.nameB}が中盤を支配`);
-  if (stA.atk > stB.def + 0.15) adv.push(`${r.nameA}の攻撃が${r.nameB}守備を上回る`);
-  if (stB.atk > stA.def + 0.15) adv.push(`${r.nameB}の攻撃が${r.nameA}守備を上回る`);
-  if (stA.press > stB.press + 0.12) adv.push(`${r.nameA}の高プレスが効果的`);
-  if (stB.press > stA.press + 0.12) adv.push(`${r.nameB}の高プレスが効果的`);
+  // レポート
+  const rep=tacticalReport(A,B);
+  const colHtml=(k,m,color)=>`<div class="col"><h3 style="color:${color}">${m.name}（${m.form}）</h3>
+    ${rep.cols[k].ins.map(([cls,txt])=>`<div class="ins ${cls}">${txt}</div>`).join('')}</div>`;
+  $('report-content').innerHTML=`<div class="report">${colHtml('A',A,colA)}${colHtml('B',B,colB)}</div>
+    <div class="key-clash"><b>🎯 注目の噛み合わせ</b><br>${rep.clashes.map(c=>'・'+c).join('<br>')}</div>`;
+  $('report-box').style.display='block';
 
-  html += `<div class="analysis">
-    <div class="ttl">🔍 フォーメーション分析</div>
-    <div>${formSelA.value} vs ${formSelB.value}</div>
-    ${adv.map(a => `<div>・${a}</div>`).join('')}
-    ${adv.length === 0 ? '<div>・両フォーメーションは拮抗している</div>' : ''}
-  </div>`;
-
-  document.getElementById('stats-content').innerHTML = html;
-  document.getElementById('stats-box').style.display = 'block';
-
-  const logList = document.getElementById('log-list');
-  logList.innerHTML = r.log.map(e => {
-    const cls = e.type === 'goal' ? 'log-goal' : e.type === 'half' ? 'log-half' : 'log-event';
-    return `<div class="${cls}">${e.text}</div>`;
+  $('log-list').innerHTML=r.log.map(e=>{
+    const c=e.type==='goal'?'log-goal':e.type==='half'?'log-half':'log-event';
+    return `<div class="${c}">${e.text}</div>`;
   }).join('');
-  document.getElementById('log-box').style.display = 'block';
-
-  document.getElementById('scoreboard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('log-box').style.display='block';
+  $('scoreboard').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// Initial draw
+// 初期描画
+['a','b'].forEach(t=>$('quality-'+t+'-val').textContent=$('quality-'+t).value);
 drawPitch();
 </script>
 </body>
