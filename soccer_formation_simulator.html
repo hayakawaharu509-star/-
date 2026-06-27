@@ -20,44 +20,29 @@
   }
   .subtitle { text-align: center; color: #5a6a7a; font-size: 0.85rem; padding: 10px 16px 0; line-height:1.6; }
 
-  /* モード切替 */
   .mode-bar {
     display: flex; justify-content: center; gap: 0; margin: 16px auto; width: fit-content;
     border-radius: 12px; overflow: hidden; box-shadow: 0 4px 14px rgba(31,45,61,0.12);
   }
-  .mode-btn {
-    padding: 11px 26px; border: none; cursor: pointer; font-size: 0.95rem; font-weight: 700;
-    transition: all 0.2s;
-  }
+  .mode-btn { padding: 11px 26px; border: none; cursor: pointer; font-size: 0.95rem; font-weight: 700; transition: all 0.2s; }
   .mode-btn.real { background: #fff; color: #5a6a7a; }
   .mode-btn.efb  { background: #fff; color: #5a6a7a; }
   .mode-btn.active.real { background: linear-gradient(90deg,#00b894,#0984e3); color:#fff; }
   .mode-btn.active.efb  { background: linear-gradient(90deg,#6c5ce7,#e17055); color:#fff; }
 
-  details.help {
-    max-width: 780px; margin: 8px auto 0; background: #fff; border-radius: 14px;
-    padding: 6px 18px; box-shadow: 0 4px 14px rgba(31,45,61,0.07);
-  }
+  details.help { max-width: 800px; margin: 8px auto 0; background: #fff; border-radius: 14px; padding: 6px 18px; box-shadow: 0 4px 14px rgba(31,45,61,0.07); }
   details.help summary { cursor: pointer; font-weight: 700; color: #0984e3; padding: 10px 0; }
   details.help .body { font-size: 0.84rem; line-height: 1.8; color: #46586a; padding-bottom: 12px; }
   details.help .body b { color: #1f2d3d; }
   details.help .body .pair { background:#f5f9fc; border-radius:8px; padding:8px 12px; margin:6px 0; }
-  details.help .body .pair .pro { color:#1f8f5f; }
-  details.help .body .pair .con { color:#d0392f; }
+  details.help .body .pair .pro { color:#1f8f5f; } details.help .body .pair .con { color:#d0392f; }
 
   .main { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; justify-content: center; align-items: flex-start; }
-  .panel {
-    background: #fff; border-radius: 16px; padding: 16px; width: 310px;
-    box-shadow: 0 6px 20px rgba(31,45,61,0.08); border: 1px solid rgba(31,45,61,0.05);
-  }
+  .panel { background: #fff; border-radius: 16px; padding: 16px; width: 320px; box-shadow: 0 6px 20px rgba(31,45,61,0.08); border: 1px solid rgba(31,45,61,0.05); }
   .panel h2 { font-size: 1.05rem; margin-bottom: 12px; }
-  .panel-a h2 { color: #e74c3c; }
-  .panel-b h2 { color: #2980d9; }
+  .panel-a h2 { color: #e74c3c; } .panel-b h2 { color: #2980d9; }
 
-  select, input[type=text] {
-    width: 100%; padding: 9px 11px; border-radius: 10px; border: 1.5px solid #dfe6ec;
-    background: #f7fafc; color: #1f2d3d; font-size: 0.88rem; margin-bottom: 10px; outline: none;
-  }
+  select, input[type=text] { width: 100%; padding: 9px 11px; border-radius: 10px; border: 1.5px solid #dfe6ec; background: #f7fafc; color: #1f2d3d; font-size: 0.88rem; margin-bottom: 10px; outline: none; }
   select:focus, input:focus { border-color: #0984e3; box-shadow: 0 0 0 3px rgba(9,132,227,0.12); }
   option { background: #fff; color: #1f2d3d; }
 
@@ -66,8 +51,7 @@
   input[type=color] { width: 38px; height: 38px; border: none; border-radius: 9px; cursor: pointer; background: none; padding: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
 
   .preset-box { background: linear-gradient(135deg, #fff9e6, #fff); border: 1.5px solid #ffe08a; border-radius: 10px; padding: 9px; margin-bottom: 12px; }
-  .preset-box .fld-label { color: #b8860b; }
-  .preset-box select { margin-bottom: 0; background:#fff; border-color:#ffe08a; }
+  .preset-box .fld-label { color: #b8860b; } .preset-box select { margin-bottom: 0; background:#fff; border-color:#ffe08a; }
 
   .formation-info { font-size: 0.76rem; color: #7a8a9a; line-height: 1.5; background: #f7fafc; border-radius: 8px; padding: 7px 9px; margin-bottom: 12px; }
 
@@ -79,27 +63,23 @@
   .panel-b .tactic input[type=range] { accent-color: #2980d9; }
   .tactic .hint { font-size: 0.7rem; color: #9aa7b3; line-height: 1.4; margin-top: 1px; }
 
-  /* eFootball専用: チーム戦術スタイル */
-  .style-box {
-    background: linear-gradient(135deg, #f0ebff, #fff); border: 1.5px solid #c2b0ff;
-    border-radius: 10px; padding: 9px; margin-bottom: 12px;
-  }
-  .style-box .fld-label { color: #6c5ce7; }
-  .style-box select { margin-bottom: 0; background:#fff; border-color:#c2b0ff; }
+  .style-box { background: linear-gradient(135deg, #f0ebff, #fff); border: 1.5px solid #c2b0ff; border-radius: 10px; padding: 9px; margin-bottom: 12px; }
+  .style-box .fld-label { color: #6c5ce7; } .style-box select { margin-bottom: 0; background:#fff; border-color:#c2b0ff; }
 
-  /* eFootball専用: 個別指示スライダーエリア */
-  .efb-inst {
-    background: linear-gradient(135deg, #fff3f0, #fff); border: 1.5px solid #fab1a0;
-    border-radius: 10px; padding: 10px; margin-bottom: 12px;
-  }
-  .efb-inst .fld-label { color: #d35400; margin-bottom: 8px; }
-  .efb-inst .tactic { margin-bottom: 10px; }
-  .panel-a .efb-inst input[type=range] { accent-color: #e74c3c; }
-  .panel-b .efb-inst input[type=range] { accent-color: #2980d9; }
+  .efb-vector { font-size: 0.73rem; color: #6c5ce7; background:#f4f0ff; border:1px solid #ddd2ff; border-radius:8px; padding:7px 9px; margin-bottom:12px; line-height:1.6; }
+  .efb-vector b { color:#5a4bbf; } .efb-vector .note { color:#9a8fc0; font-size:0.66rem; }
+
+  .efb-inst { background: linear-gradient(135deg, #fff3f0, #fff); border: 1.5px solid #fab1a0; border-radius: 10px; padding: 10px; margin-bottom: 12px; }
+  .efb-inst .grp-label { font-size:0.76rem; font-weight:700; color:#d35400; margin:6px 0 5px; display:block; }
+  .efb-inst .grp-label.def { color:#2980d9; }
+  .efb-inst label.chk { display:flex; align-items:flex-start; gap:7px; font-size:0.78rem; color:#46586a; padding:5px 6px; border-radius:7px; cursor:pointer; line-height:1.35; }
+  .efb-inst label.chk:hover { background:#fff6f2; }
+  .efb-inst label.chk input { margin-top:2px; width:15px; height:15px; cursor:pointer; flex-shrink:0; }
+  .efb-inst label.chk.disabled { opacity:0.4; cursor:not-allowed; }
+  .efb-inst label.chk small { color:#9aa7b3; }
 
   .quality-box { background:#f0f7ff; border-radius:10px; padding:9px 11px; margin-top:4px; }
-  .quality-box .fld-label{ color:#0984e3; }
-  .quality-box .note{ font-size:0.68rem; color:#9aa7b3; margin-top:2px; }
+  .quality-box .fld-label{ color:#0984e3; } .quality-box .note{ font-size:0.68rem; color:#9aa7b3; margin-top:2px; }
 
   .pitch-wrap { position: relative; width: 360px; flex-shrink: 0; }
   canvas#pitch { border-radius: 14px; display: block; box-shadow: 0 8px 28px rgba(0,80,40,0.25); width: 100%; }
@@ -111,11 +91,13 @@
   .btn-efb     { background: linear-gradient(90deg, #6c5ce7, #e17055); box-shadow: 0 6px 18px rgba(108,92,231,0.3); }
   .btn-secondary { background: #fff; color: #5a6a7a; border: 1.5px solid #dfe6ec; margin-top: 10px; }
   .controls-wrap { text-align: center; padding: 0 16px 16px; }
-  .controls-inner { max-width: 420px; margin: auto; }
+  .controls-inner { max-width: 460px; margin: auto; }
+  .trials-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px; font-size:0.85rem; color:#5a6a7a; font-weight:600; }
+  .trials-row select { width:auto; margin:0; padding:8px 12px; font-weight:700; }
 
   #sim-progress { display: none; text-align: center; padding: 12px; color: #0984e3; font-weight: 600; }
 
-  .card { width: 100%; max-width: 780px; background: #fff; border-radius: 16px; padding: 18px; margin: 0 auto 14px; box-shadow: 0 6px 20px rgba(31,45,61,0.08); }
+  .card { width: 100%; max-width: 800px; background: #fff; border-radius: 16px; padding: 18px; margin: 0 auto 14px; box-shadow: 0 6px 20px rgba(31,45,61,0.08); }
   .card h2 { font-size: 1.05rem; color: #0984e3; margin-bottom: 14px; }
 
   #scoreboard { text-align: center; }
@@ -129,6 +111,12 @@
   .cmp-label { color: #7a8a9a; font-weight: 600; }
   .cmp-bars { display: flex; height: 11px; gap: 3px; }
   .cmp-a { border-radius: 6px 2px 2px 6px; } .cmp-b { border-radius: 2px 6px 6px 2px; }
+
+  #batch-box .wdl-record { text-align:center; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
+  #batch-box .wdl-sub { text-align:center; font-size:0.85rem; color:#7a8a9a; margin-bottom:14px; }
+  #batch-box .wdl-bar { display:flex; height:26px; border-radius:8px; overflow:hidden; font-size:0.78rem; font-weight:700; color:#fff; margin-bottom:16px; }
+  #batch-box .wdl-bar span { display:flex; align-items:center; justify-content:center; min-width:0; }
+  #batch-box .wdl-bar .draw { background:#b0bcc8; }
 
   .report { display:flex; flex-wrap:wrap; gap:14px; }
   .report .col { flex:1; min-width:240px; }
@@ -145,60 +133,45 @@
   #log-list::-webkit-scrollbar { width: 6px; } #log-list::-webkit-scrollbar-thumb { background: #cdd8e2; border-radius: 4px; }
   .log-goal { color: #e67e22; font-weight: 800; } .log-event { color: #8a98a6; } .log-half { color: #0984e3; font-weight: 700; padding: 3px 0; }
 
-  /* eFootball結果専用 */
   .efb-badge { display:inline-block; background:#6c5ce7; color:#fff; border-radius:6px; padding:2px 7px; font-size:0.7rem; font-weight:700; margin-left:6px; vertical-align:middle; }
   .behind-bar { background: linear-gradient(90deg,#e17055,#d63031); color:#fff; border-radius:6px; padding:3px 9px; font-size:0.78rem; font-weight:700; display:inline-block; }
 </style>
 </head>
 <body>
 <h1>⚽ サッカー戦術 仮想実験室</h1>
-<div class="subtitle">フォーメーション × 戦術スタイルを対戦させ、相性を研究するシミュレーター。<br>
-「攻撃力」のような万能パラメータはありません。すべての設定は<b>長所と短所が表裏一体</b>です。</div>
+<div class="subtitle">フォーメーション × 戦術を対戦させ、相性を研究するシミュレーター。<br>
+回数を決めて<b>一括実験</b>すれば、勝率や相性の傾向がわかります。</div>
 
-<!-- モード切替 -->
 <div class="mode-bar">
   <button class="mode-btn real active" id="btn-mode-real" onclick="setMode('real')">⚽ リアルサッカーモード</button>
   <button class="mode-btn efb" id="btn-mode-efb" onclick="setMode('efb')">🎮 eFootball 2026モード</button>
 </div>
 
-<!-- リアルサッカー解説 -->
 <details class="help" id="help-real">
-  <summary>📖 はじめに ― このシミュレーターの考え方と各設定の意味</summary>
+  <summary>📖 リアルサッカーモードの考え方</summary>
   <div class="body">
-    実際のサッカーでは、選手の人数は11人で一定。<b>強さは「盤面のどこに人を置き、何を捨てて何を取るか」という選択から生まれます。</b>
-    だからこのツールには「攻撃力を上げる」ような項目はありません。代わりに、現実の戦術分析で使われる5つの軸を調整します。各軸は必ず代償を伴います。<br><br>
-    <b>① 守備ライン</b>
-    <div class="pair"><span class="pro">高い＝</span>相手を押し込み高い位置で奪える。<span class="con">代償＝</span>DFの背後を速攻に突かれる。</div>
-    <b>② プレス強度</b>
-    <div class="pair"><span class="pro">高い＝</span>高い位置で奪ってカウンター。<span class="con">代償＝</span>外されると手薄に。終盤に消耗。</div>
-    <b>③ 横幅</b>
-    <div class="pair"><span class="pro">広い＝</span>サイドを起点に崩す。<span class="con">代償＝</span>中央が薄い。<span class="pro">狭い＝</span>中央支配。<span class="con">代償＝</span>サイドが空く。</div>
-    <b>④ 攻撃の型</b>
-    <div class="pair"><span class="pro">直線的＝</span>縦に速く背後を突く。<span class="con">代償＝</span>支配率↓。<span class="pro">遅攻＝</span>保持して主導権。<span class="con">代償＝</span>崩しに手間。</div>
-    <b>⑤ 攻撃の枚数</b>
-    <div class="pair"><span class="pro">多い＝</span>厚みある攻撃。<span class="con">代償＝</span>被カウンターリスク。<span class="pro">自重＝</span>カウンター耐性。<span class="con">代償＝</span>攻撃が単調。</div>
-    <b>「選手の質」</b>は戦術とは別物。純粋な戦術比較では両チーム同値にしてください。
+    強さは「盤面のどこに人を置き、何を捨てて何を取るか」から生まれます。5つの軸はすべて代償を伴います。<br>
+    <b>① 守備ライン</b><div class="pair"><span class="pro">高い＝</span>押し込み高位で奪う。<span class="con">代償＝</span>背後を速攻に突かれる。</div>
+    <b>② プレス強度</b><div class="pair"><span class="pro">高い＝</span>高位奪取。<span class="con">代償＝</span>外されると手薄/終盤消耗。</div>
+    <b>③ 横幅</b><div class="pair"><span class="pro">広い＝</span>サイドで崩す。<span class="con">代償＝</span>中央が薄い。</div>
+    <b>④ 攻撃の型</b><div class="pair"><span class="pro">直線的＝</span>縦に速い。<span class="con">代償＝</span>支配率↓。</div>
+    <b>⑤ 攻撃の枚数</b><div class="pair"><span class="pro">多い＝</span>厚み。<span class="con">代償＝</span>被カウンター。</div>
   </div>
 </details>
 
-<!-- eFootball解説 -->
 <details class="help" id="help-efb" style="display:none">
-  <summary>🎮 eFootball 2026モードとは ― ゲーム内メカニクスの解説</summary>
+  <summary>🎮 eFootball 2026モードとは ― 実機準拠の作り</summary>
   <div class="body">
-    <b>eFootballではリアルとは別のゲームバランスが存在します。</b>このモードはコミュニティの知見をもとに再現したシミュレーターです。<br><br>
-    <b>★ 裏抜けメタ（最重要）</b>
-    <div class="pair"><span class="pro">Deep Run指示＋ゴールハンタープレースタイル＝</span>相手のハイラインの背後に走り込む動き。<b>AIのライン管理の甘さ</b>で、リアル以上に異常な確率で決定機が生まれる。<span class="con">対策＝</span>撤退ライン（Deep Line指示）で背後のスペースを消す。</div>
-    <b>カウンター優位（QC/LBC）</b>
-    <div class="pair"><span class="pro">Quick Counter / Long Ball Counter＝</span>トランジション（攻守の切替）の効率がリアルより大幅に高い。Counter Target指示でさらに刺殺効率↑。</div>
-    <b>ポゼッション冷遇</b>
-    <div class="pair"><span class="con">保持(POSS)だけでは得点にならない。</span>崩しの工夫（裏抜け・Counter Target）が必要。ただし<span class="pro">制圧（POSS）で相手のカウンター機会を奪う</span>効果は絶大。</div>
-    <b>研究から導いた最強戦術</b>
-    <div class="pair">メタ10種の総当たり＋2世代の最適化実験の結果：<b>「制圧+刺殺 4-2-1-3」が76.3%の総合勝率</b>（全10メタに勝ち越し）。POSS制圧でボールを奪い、counterTgtで刺し返す構造。</div>
-    <b>チーム戦術スタイル（5種）</b>
-    <div class="pair">POSS=ポゼッション重視 / QC=クイックカウンター / LBC=ロングボールカウンター / WIDE=アウトワイド / LONG=ロングボール</div>
-    <b>2枠×2の個別指示</b><br>
-    攻撃指示: <b>裏抜け</b>(Deep Run/ゴールハンター) ・ <b>Counter Target</b>(カウンターで残る) ・ <b>Anchoring</b>(陣形維持→被カウンター減)<br>
-    守備指示: <b>Man Marking</b>(オープンプレー抑制) ・ <b>撤退ライン</b>(Deep Line→裏抜け無効化)
+    <b>実機のメニューで設定できるものだけ</b>を再現しています（ライン高さ等の数値は直接いじれません）。<br><br>
+    <b>① チームスタイル（5種）</b>
+    <div class="pair">ポゼッション / ショートカウンター / ロングカウンター / サイドアタック / ロングボール。<b>これを選ぶと、ライン・プレス・幅・直線性・枚数が自動で決まります</b>（手で数値設定はできない）。</div>
+    <b>② 選手への指示（攻撃から最大2・守備から最大2）</b>
+    <div class="pair"><b>攻撃：</b>ラインブレイカー（裏抜け）/ ポストプレイヤー / 前線に残る（カウンターの的）<br>
+    <b>守備：</b>マンマーク（相手エースを消す）/ ラインダウン（撤退＝裏のスペースを消す）/ アンカリング（被カウンター減）</div>
+    <b>★ 裏抜けメタ</b>
+    <div class="pair">ラインブレイカーは相手ラインの背後へ走る。相手のラインが高いほど決定機が増える。<span class="con">対策＝</span>ラインダウンで自陣ラインを下げる。</div>
+    <b>研究で見つけた最適</b>
+    <div class="pair">1960パターン全探索の結果：<b>3-5-2 ポゼッション ＋ ラインブレイカー/ポストプレイヤー ＋ マンマーク/ラインダウン</b>が、構築可能なメタ10種すべてに勝ち越し（総合83.8%）。</div>
   </div>
 </details>
 
@@ -213,47 +186,10 @@
     <span class="fld-label">フォーメーション</span>
     <select id="form-a"></select>
     <div class="formation-info" id="info-a"></div>
-    <!-- eFootball: チーム戦術スタイル -->
-    <div class="style-box" id="style-box-a" style="display:none">
-      <span class="fld-label">🎮 チーム戦術スタイル</span>
-      <select id="style-a">
-        <option value="POSS">POSS（ポゼッション）</option>
-        <option value="QC">QC（クイックカウンター）</option>
-        <option value="LBC">LBC（ロングボールカウンター）</option>
-        <option value="WIDE">WIDE（アウトワイド）</option>
-        <option value="LONG">LONG（ロングボール）</option>
-      </select>
-    </div>
+    <div class="style-box" id="style-box-a" style="display:none"><span class="fld-label">🎮 チームスタイル</span><select id="style-a"></select></div>
     <div id="tactics-a"></div>
-    <!-- eFootball: 個別指示 -->
-    <div class="efb-inst" id="efb-inst-a" style="display:none">
-      <span class="fld-label">🎯 個別指示（2×2枠）</span>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">裏抜け最大</span></div>
-        <input type="range" id="deepRun-a" min="0" max="100" value="60">
-        <div class="hint"><b style="color:#5a6a7a">Deep Run / ゴールハンター</b> ｜ ハイラインの背後を突く。相手ライン×直線性で倍増</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">Counter Target強</span></div>
-        <input type="range" id="counterTgt-a" min="0" max="100" value="50">
-        <div class="hint"><b style="color:#5a6a7a">Counter Target</b> ｜ 奪われた瞬間にカウンターで刺し返す効率↑</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">Anchoring強</span></div>
-        <input type="range" id="anchor-a" min="0" max="100" value="30">
-        <div class="hint"><b style="color:#5a6a7a">Anchoring</b> ｜ 陣形を維持→被カウンターを減らす。攻撃を自重する代わり</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">Man Marking強</span></div>
-        <input type="range" id="marking-a" min="0" max="100" value="30">
-        <div class="hint"><b style="color:#5a6a7a">Man / Tight Marking</b> ｜ 相手のオープンプレーxGを抑制</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">ターゲットマン強</span></div>
-        <input type="range" id="targetMan-a" min="0" max="100" value="30">
-        <div class="hint"><b style="color:#5a6a7a">Target Man</b> ｜ クロス・ロングボールの的。WIDEスタイルで効果大</div>
-      </div>
-    </div>
+    <div class="efb-vector" id="efb-vector-a" style="display:none"></div>
+    <div class="efb-inst" id="efb-inst-a" style="display:none"></div>
     <div class="quality-box">
       <span class="fld-label">選手の質（個の能力）<span id="quality-a-val">70</span></span>
       <input type="range" id="quality-a" min="30" max="100" value="70" style="width:100%;accent-color:#e74c3c">
@@ -261,7 +197,6 @@
     </div>
   </div>
 
-  <!-- Pitch -->
   <div class="pitch-wrap">
     <canvas id="pitch" width="360" height="520"></canvas>
     <div class="pitch-vs" id="pitch-vs"></div>
@@ -277,45 +212,10 @@
     <span class="fld-label">フォーメーション</span>
     <select id="form-b"></select>
     <div class="formation-info" id="info-b"></div>
-    <div class="style-box" id="style-box-b" style="display:none">
-      <span class="fld-label">🎮 チーム戦術スタイル</span>
-      <select id="style-b">
-        <option value="POSS">POSS（ポゼッション）</option>
-        <option value="QC">QC（クイックカウンター）</option>
-        <option value="LBC">LBC（ロングボールカウンター）</option>
-        <option value="WIDE">WIDE（アウトワイド）</option>
-        <option value="LONG">LONG（ロングボール）</option>
-      </select>
-    </div>
+    <div class="style-box" id="style-box-b" style="display:none"><span class="fld-label">🎮 チームスタイル</span><select id="style-b"></select></div>
     <div id="tactics-b"></div>
-    <div class="efb-inst" id="efb-inst-b" style="display:none">
-      <span class="fld-label">🎯 個別指示（2×2枠）</span>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">裏抜け最大</span></div>
-        <input type="range" id="deepRun-b" min="0" max="100" value="60">
-        <div class="hint"><b style="color:#5a6a7a">Deep Run / ゴールハンター</b> ｜ ハイラインの背後を突く</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">Counter Target強</span></div>
-        <input type="range" id="counterTgt-b" min="0" max="100" value="50">
-        <div class="hint"><b style="color:#5a6a7a">Counter Target</b> ｜ カウンター効率↑</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">Anchoring強</span></div>
-        <input type="range" id="anchor-b" min="0" max="100" value="30">
-        <div class="hint"><b style="color:#5a6a7a">Anchoring</b> ｜ 被カウンター減</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">Man Marking強</span></div>
-        <input type="range" id="marking-b" min="0" max="100" value="30">
-        <div class="hint"><b style="color:#5a6a7a">Man / Tight Marking</b> ｜ オープンプレー抑制</div>
-      </div>
-      <div class="tactic">
-        <div class="poles"><span class="lo">なし</span><span class="hi">ターゲットマン強</span></div>
-        <input type="range" id="targetMan-b" min="0" max="100" value="30">
-        <div class="hint"><b style="color:#5a6a7a">Target Man</b> ｜ クロス・ロングの的</div>
-      </div>
-    </div>
+    <div class="efb-vector" id="efb-vector-b" style="display:none"></div>
+    <div class="efb-inst" id="efb-inst-b" style="display:none"></div>
     <div class="quality-box">
       <span class="fld-label">選手の質（個の能力）<span id="quality-b-val">70</span></span>
       <input type="range" id="quality-b" min="30" max="100" value="70" style="width:100%;accent-color:#2980d9">
@@ -325,11 +225,27 @@
 </div>
 
 <div class="controls-wrap"><div class="controls-inner">
-  <button class="btn btn-primary" id="btn-sim">▶ 試合シミュレーション開始</button>
+  <div class="trials-row">
+    <span>試行回数</span>
+    <select id="trials">
+      <option value="1">1試合（詳細ログ）</option>
+      <option value="10">10回</option>
+      <option value="50">50回</option>
+      <option value="100" selected>100回</option>
+      <option value="300">300回</option>
+      <option value="500">500回</option>
+    </select>
+  </div>
+  <button class="btn btn-primary" id="btn-sim">▶ 実験開始</button>
   <button class="btn btn-secondary" id="btn-reset">リセット</button>
 </div></div>
 
-<div id="sim-progress">⚽ シミュレーション中...</div>
+<div id="sim-progress">⚽ 実験中...</div>
+
+<div id="batch-box" class="card" style="display:none">
+  <h2 id="batch-title">🧪 一括実験の結果</h2>
+  <div id="batch-content"></div>
+</div>
 
 <div id="scoreboard" class="card" style="display:none">
   <div class="score-teams">
@@ -339,571 +255,499 @@
   <div style="font-size:0.85rem;color:#7a8a9a;margin-top:4px">90分 試合終了</div>
   <div class="winner-banner" id="winner-banner"></div>
 </div>
-
-<div id="stats-box" class="card" style="display:none">
-  <h2>📊 試合スタッツ</h2>
-  <div id="stats-content"></div>
-</div>
-
-<div id="report-box" class="card" style="display:none">
-  <h2 id="report-title">🔬 戦術相性レポート</h2>
-  <div id="report-content"></div>
-</div>
-
-<div id="log-box" class="card" style="display:none">
-  <h2>📋 試合ログ</h2>
-  <div id="log-list"></div>
-</div>
+<div id="stats-box" class="card" style="display:none"><h2>📊 試合スタッツ</h2><div id="stats-content"></div></div>
+<div id="report-box" class="card" style="display:none"><h2 id="report-title">🔬 戦術相性レポート</h2><div id="report-content"></div></div>
+<div id="log-box" class="card" style="display:none"><h2>📋 試合ログ</h2><div id="log-list"></div></div>
 
 <script>
-// ============================================================
-//  モード管理
-// ============================================================
-let currentMode = 'real'; // 'real' | 'efb'
+const $ = id => document.getElementById(id);
 
-function setMode(mode) {
+// ============================================================
+//  モード
+// ============================================================
+let currentMode = 'real';
+function setMode(mode){
   currentMode = mode;
-  document.getElementById('btn-mode-real').className = 'mode-btn real' + (mode==='real'?' active':'');
-  document.getElementById('btn-mode-efb').className  = 'mode-btn efb'  + (mode==='efb' ?' active':'');
-  document.getElementById('help-real').style.display = mode==='real' ? '' : 'none';
-  document.getElementById('help-efb').style.display  = mode==='efb'  ? '' : 'none';
-  ['a','b'].forEach(t => {
-    document.getElementById('style-box-' + t).style.display = mode==='efb' ? '' : 'none';
-    document.getElementById('efb-inst-' + t).style.display  = mode==='efb' ? '' : 'none';
+  $('btn-mode-real').className = 'mode-btn real' + (mode==='real'?' active':'');
+  $('btn-mode-efb').className  = 'mode-btn efb'  + (mode==='efb' ?' active':'');
+  $('help-real').style.display = mode==='real'?'':'none';
+  $('help-efb').style.display  = mode==='efb' ?'':'none';
+  ['a','b'].forEach(t=>{
+    $('style-box-'+t).style.display = mode==='efb'?'':'none';
+    $('efb-inst-'+t).style.display  = mode==='efb'?'':'none';
+    $('efb-vector-'+t).style.display= mode==='efb'?'':'none';
+    $('tactics-'+t).style.display   = mode==='efb'?'none':'';
   });
-  document.getElementById('btn-sim').className = mode==='efb' ? 'btn btn-efb' : 'btn btn-primary';
-  document.getElementById('report-title').textContent = mode==='efb'
-    ? '🎮 eFootball 戦術レポート（ゲーム内メカニクス分析）'
-    : '🔬 戦術相性レポート（設定から導かれる構造的な分析）';
+  $('btn-sim').className = mode==='efb' ? 'btn btn-efb' : 'btn btn-primary';
+  $('report-title').textContent = mode==='efb' ? '🎮 eFootball 戦術レポート' : '🔬 戦術相性レポート';
   rebuildFormationSelect();
   rebuildPresetSelect();
-  ['scoreboard','stats-box','report-box','log-box'].forEach(id => document.getElementById(id).style.display='none');
+  ['batch-box','scoreboard','stats-box','report-box','log-box'].forEach(id=>$(id).style.display='none');
   drawPitch();
 }
 
 // ============================================================
-//  フォーメーション定義
+//  フォーメーション
 // ============================================================
 const FORMATIONS_REAL = {
-  "4-4-2":   { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.15,0.50],[0.38,0.50],[0.62,0.50],[0.85,0.50],[0.35,0.27],[0.65,0.27]], desc:"バランス型の基本。2ライン4-4で守り、2トップが起点。" },
-  "4-3-3":   { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.25,0.52],[0.5,0.48],[0.75,0.52],[0.2,0.25],[0.5,0.20],[0.8,0.25]], desc:"3トップで幅を取る。ポゼッション/プレス志向に合う。" },
-  "4-2-3-1": { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.35,0.60],[0.65,0.60],[0.15,0.42],[0.5,0.40],[0.85,0.42],[0.5,0.22]], desc:"ダブルボランチで中盤を安定させる現代主流。" },
-  "3-5-2":   { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.10,0.52],[0.30,0.50],[0.50,0.48],[0.70,0.50],[0.90,0.52],[0.35,0.25],[0.65,0.25]], desc:"中盤5枚で数的優位。WBが幅を作る。" },
-  "3-4-3":   { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.15,0.52],[0.38,0.52],[0.62,0.52],[0.85,0.52],[0.2,0.25],[0.5,0.20],[0.8,0.25]], desc:"超攻撃型。ハイプレスと相性◎、守備の枚数は最少。" },
-  "3-4-2-1": { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.12,0.54],[0.40,0.52],[0.60,0.52],[0.88,0.54],[0.35,0.32],[0.65,0.32],[0.5,0.18]], desc:"2シャドーが相手の急所を突く。WBで幅も確保。" },
-  "5-3-2":   { p:[[0.5,0.92],[0.10,0.70],[0.28,0.72],[0.50,0.70],[0.72,0.72],[0.90,0.70],[0.28,0.50],[0.50,0.48],[0.72,0.50],[0.35,0.27],[0.65,0.27]], desc:"5バックでブロックを固める守備的布陣。" },
-  "4-1-4-1": { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.5,0.62],[0.12,0.46],[0.35,0.44],[0.65,0.44],[0.88,0.46],[0.5,0.22]], desc:"アンカーで中央を封鎖。守備の安定度が高い。" },
-  "4-4-2ダイヤ":{ p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.5,0.62],[0.2,0.48],[0.8,0.48],[0.5,0.38],[0.35,0.24],[0.65,0.24]], desc:"中盤ダイヤで中央を厚く。サイドは手薄。" },
-  "5-4-1":   { p:[[0.5,0.92],[0.10,0.70],[0.28,0.72],[0.50,0.70],[0.72,0.72],[0.90,0.70],[0.2,0.50],[0.4,0.48],[0.6,0.48],[0.8,0.50],[0.5,0.25]], desc:"5-4の二重ブロック。極端な堅守・カウンター用。" },
-  "2-3-5(WM)":{ p:[[0.5,0.92],[0.3,0.78],[0.7,0.78],[0.2,0.60],[0.5,0.58],[0.8,0.60],[0.1,0.30],[0.3,0.22],[0.5,0.18],[0.7,0.22],[0.9,0.30]], desc:"歴史的超攻撃陣形(1920-30年代)。研究用。守備は脆い。" },
+  "4-4-2":   { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.15,0.50],[0.38,0.50],[0.62,0.50],[0.85,0.50],[0.35,0.27],[0.65,0.27]], desc:"バランス型の基本。2トップが起点。" },
+  "4-3-3":   { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.25,0.52],[0.5,0.48],[0.75,0.52],[0.2,0.25],[0.5,0.20],[0.8,0.25]], desc:"3トップで幅を取る。" },
+  "4-2-3-1": { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.35,0.60],[0.65,0.60],[0.15,0.42],[0.5,0.40],[0.85,0.42],[0.5,0.22]], desc:"ダブルボランチで中盤安定の現代主流。" },
+  "3-5-2":   { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.10,0.52],[0.30,0.50],[0.50,0.48],[0.70,0.50],[0.90,0.52],[0.35,0.25],[0.65,0.25]], desc:"中盤5枚で数的優位。" },
+  "3-4-2-1": { p:[[0.5,0.92],[0.25,0.75],[0.5,0.72],[0.75,0.75],[0.12,0.54],[0.40,0.52],[0.60,0.52],[0.88,0.54],[0.35,0.32],[0.65,0.32],[0.5,0.18]], desc:"2シャドーが急所を突く。" },
+  "5-3-2":   { p:[[0.5,0.92],[0.10,0.70],[0.28,0.72],[0.50,0.70],[0.72,0.72],[0.90,0.70],[0.28,0.50],[0.50,0.48],[0.72,0.50],[0.35,0.27],[0.65,0.27]], desc:"5バックで固める守備的布陣。" },
+  "4-1-4-1": { p:[[0.5,0.92],[0.15,0.72],[0.38,0.72],[0.62,0.72],[0.85,0.72],[0.5,0.62],[0.12,0.46],[0.35,0.44],[0.65,0.44],[0.88,0.46],[0.5,0.22]], desc:"アンカーで中央封鎖。" },
+  "5-4-1":   { p:[[0.5,0.92],[0.10,0.70],[0.28,0.72],[0.50,0.70],[0.72,0.72],[0.90,0.70],[0.2,0.50],[0.4,0.48],[0.6,0.48],[0.8,0.50],[0.5,0.25]], desc:"二重ブロックの堅守。" },
 };
 
 const FORMATIONS_EFB = {
-  "4-2-1-3": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.38,.55],[.62,.55],[.5,.38],[.18,.22],[.5,.18],[.82,.22]], desc:"eFootball主流。4バック＋ダブルボランチ＋AMF＋3トップ。AMFが中核。" },
-  "4-2-2-2": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.38,.56],[.62,.56],[.22,.38],[.78,.38],[.38,.20],[.62,.20]], desc:"2シャドー＋2トップのボックス型。アウトワイドにも合う。" },
-  "4-3-3":   { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.25,.52],[.5,.48],[.75,.52],[.2,.25],[.5,.20],[.8,.25]], desc:"クイックカウンターとの相性が良い。3トップで幅を確保。" },
-  "4-2-3-1": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.35,.60],[.65,.60],[.15,.42],[.5,.40],[.85,.42],[.5,.22]], desc:"ダブルボランチ＋トップ下＋1トップ。守備ブロックに有効。" },
-  "4-3-1-2": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.30,.55],[.5,.52],[.70,.55],[.5,.38],[.38,.22],[.62,.22]], desc:"中央密集2トップ。ナロー速攻に最適。中央から刺す。" },
-  "3-5-2":   { p:[[.5,.92],[.25,.75],[.5,.72],[.75,.75],[.10,.52],[.30,.50],[.50,.48],[.70,.50],[.90,.52],[.35,.25],[.65,.25]], desc:"WB＋中盤5枚。幅のある攻撃と中盤支配を両立。" },
-  "4-4-2":   { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.15,.50],[.38,.50],[.62,.50],[.85,.50],[.35,.27],[.65,.27]], desc:"フラット4-4-2。ロングボールスタイルと相性が良い。" },
-  "3-2-5":   { p:[[.5,.92],[.25,.74],[.5,.72],[.75,.74],[.38,.55],[.62,.55],[.10,.25],[.30,.20],[.5,.18],[.70,.20],[.90,.25]], desc:"eFootball特有の超攻撃陣形。5トップで殴る。3バックは守備が脆い。" },
+  "4-2-1-3": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.38,.55],[.62,.55],[.5,.38],[.18,.22],[.5,.18],[.82,.22]], desc:"eFootball主流。4バック＋Wボランチ＋OMF＋3トップ。" },
+  "4-2-2-2": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.38,.56],[.62,.56],[.22,.38],[.78,.38],[.38,.20],[.62,.20]], desc:"2シャドー＋2トップのボックス型。" },
+  "4-3-3":   { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.25,.52],[.5,.48],[.75,.52],[.2,.25],[.5,.20],[.8,.25]], desc:"カウンターと好相性。3トップで幅確保。" },
+  "4-2-3-1": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.35,.60],[.65,.60],[.15,.42],[.5,.40],[.85,.42],[.5,.22]], desc:"Wボランチ＋OMF＋1トップ。守備に有効。" },
+  "4-3-1-2": { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.30,.55],[.5,.52],[.70,.55],[.5,.38],[.38,.22],[.62,.22]], desc:"中央密集2トップ。ナロー速攻向き。" },
+  "3-5-2":   { p:[[.5,.92],[.25,.75],[.5,.72],[.75,.75],[.10,.52],[.30,.50],[.50,.48],[.70,.50],[.90,.52],[.35,.25],[.65,.25]], desc:"両サイドはLMF/RMF。中盤5枚で支配＋2トップ。" },
+  "4-4-2":   { p:[[.5,.92],[.15,.72],[.38,.72],[.62,.72],[.85,.72],[.15,.50],[.38,.50],[.62,.50],[.85,.50],[.35,.27],[.65,.27]], desc:"フラット4-4-2。ロングボールと好相性。" },
+  "3-2-5":   { p:[[.5,.92],[.25,.74],[.5,.72],[.75,.74],[.38,.55],[.62,.55],[.10,.25],[.30,.20],[.5,.18],[.70,.20],[.90,.25]], desc:"超攻撃。5トップで殴る。3バックは脆い。" },
 };
 
 // ============================================================
-//  戦術スライダー（5軸・共通）
+//  リアル：戦術スライダー（5軸）
 // ============================================================
 const TACTICS = [
-  { key:'line',   label:'① 守備ライン', lo:'低い(撤退)',      hi:'高い(ハイライン)', hint:'高い=高位で奪える/コンパクト ⇄ 背後スペースが広くなる' },
-  { key:'press',  label:'② プレス強度', lo:'撤退ブロック',    hi:'ハイプレス',       hint:'高い=高位奪取 ⇄ 外されると危険/終盤に消耗' },
-  { key:'width',  label:'③ 横幅',       lo:'狭い(中央密集)',  hi:'広い(サイド)',     hint:'広い=サイドを崩す ⇄ 中央が薄い / 狭い=中央支配 ⇄ サイドが空く' },
-  { key:'direct', label:'④ 攻撃の型',   lo:'遅攻ポゼッション',hi:'直線的(速攻)',     hint:'直線=縦に速く/裏抜けと相性◎ ⇄ 支配率↓ / 遅攻=保持 ⇄ プレスを受けやすい' },
-  { key:'commit', label:'⑤ 攻撃の枚数', lo:'自重(堅実)',      hi:'全員攻撃',         hint:'多い=攻撃に厚み ⇄ 被カウンターリスク増大' },
+  { key:'line',   label:'① 守備ライン', lo:'低い(撤退)',      hi:'高い(ハイライン)', hint:'高い=高位で奪える ⇄ 背後が広い' },
+  { key:'press',  label:'② プレス強度', lo:'撤退ブロック',    hi:'ハイプレス',       hint:'高い=高位奪取 ⇄ 外されると危険/消耗' },
+  { key:'width',  label:'③ 横幅',       lo:'狭い(中央密集)',  hi:'広い(サイド)',     hint:'広い=サイドで崩す ⇄ 中央が薄い' },
+  { key:'direct', label:'④ 攻撃の型',   lo:'遅攻ポゼッション',hi:'直線的(速攻)',     hint:'直線=縦に速い ⇄ 支配率↓' },
+  { key:'commit', label:'⑤ 攻撃の枚数', lo:'自重(堅実)',      hi:'全員攻撃',         hint:'多い=厚み ⇄ 被カウンター増' },
 ];
 const DEFAULT_REAL = { line:50, press:50, width:50, direct:35, commit:50, quality:70 };
-const DEFAULT_EFB  = { line:50, press:55, width:60, direct:45, commit:55, quality:70 };
 
 // ============================================================
-//  プリセット定義
+//  eFootball：チームスタイル → 固定の戦術ベクトル
+// ============================================================
+const EFB_STYLES = {
+  "ポゼッション":      {code:"POSS", line:66,press:66,width:62,direct:25,commit:58, desc:"短い距離で保持し支配。崩しの工夫が要る。" },
+  "ショートカウンター":{code:"QC",  line:56,press:62,width:55,direct:62,commit:58, desc:"高位で奪って素早く。カウンター効率が高い。" },
+  "ロングカウンター":  {code:"LBC", line:42,press:48,width:52,direct:80,commit:52, desc:"引いて奪い前線へ一発。裏抜けと好相性。" },
+  "サイドアタック":    {code:"WIDE",line:56,press:56,width:85,direct:48,commit:62, desc:"サイドからクロス。ポストに合わせる。" },
+  "ロングボール":      {code:"LONG",line:48,press:52,width:70,direct:85,commit:55, desc:"前線へ直接。ポストで起点＋セカンド回収。" },
+};
+const EFB_ATK_LIST = [
+  {key:"ラインブレイカー（裏抜け）", note:"相手ライン裏へ走る。相手が高ラインなほど決定機↑", eff:{deepRun:88}},
+  {key:"ポストプレイヤー（ポスト）", note:"くさび/クロスの的。収めて落とす", eff:{targetMan:78}},
+  {key:"前線に残る（カウンターの的）", note:"奪った瞬間の刺し返し効率↑（QC/ロングカウンターで強化）", eff:{counterTgt:85}},
+];
+const EFB_DEF_LIST = [
+  {key:"マンマーク", note:"相手エースに張り付きオープン攻撃を抑制", eff:{marking:60}},
+  {key:"ラインダウン（撤退）", note:"自陣ラインを下げ、裏と被カウンターを封じる", eff:{lineDown:20}},
+  {key:"アンカリング（自陣に留まる）", note:"攻め上がりを自重し被カウンターを減らす", eff:{anchor:55, commitDown:6}},
+];
+
+// ============================================================
+//  プリセット
 // ============================================================
 const PRESETS_REAL = {
   "— 手動設定 —": null,
-  "ポジショナルプレー / 偽SB (シティ系)": { form:"4-3-3",   line:72, press:68, width:72, direct:22, commit:60, quality:82, note:"高い位置で圧倒的に保持。動かしながら崩す。" },
-  "ゲーゲンプレッシング (リバプール系)":   { form:"4-3-3",   line:80, press:92, width:58, direct:52, commit:70, quality:80, note:"ハイライン＋猛プレスで即時奪回。縦に速く。" },
-  "ティキタカ / 遅攻保持 (バルサ系)":      { form:"4-3-3",   line:70, press:78, width:60, direct:16, commit:55, quality:80, note:"短いパスで支配。我慢して崩す遅攻。" },
-  "堅守速攻ブロック (アトレティコ系)":     { form:"4-4-2",   line:32, press:38, width:35, direct:70, commit:30, quality:74, note:"中央を締めた撤退ブロック。カウンターで仕留める。" },
-  "ウイングバック攻勢 (インテル系)":       { form:"3-5-2",   line:55, press:55, width:82, direct:45, commit:60, quality:76, note:"WBが幅を作る3-5-2。サイドと2トップの厚み。" },
-  "現代バランス型 (バイエルン系)":         { form:"4-2-3-1", line:62, press:66, width:62, direct:38, commit:55, quality:80, note:"保持もプレスも高水準。穴の少ないオールラウンド。" },
-  "ハイプレス3シャドー (コンテ/ナポリ系)": { form:"3-4-2-1", line:64, press:78, width:70, direct:48, commit:62, quality:76, note:"2シャドーとWBで前向きの圧力。" },
-  "トータルフットボール (アヤックス系)":   { form:"4-3-3",   line:82, press:80, width:68, direct:28, commit:68, quality:74, note:"極端なハイライン＋保持＋全員攻撃。背後は脆い。" },
-  "カテナチオ / 超守備 (伊クラシック)":    { form:"5-4-1",   line:25, press:30, width:32, direct:62, commit:22, quality:70, note:"二重ブロックで完全撤退。1点を守り切る。" },
-  "ロングボール / 直線的 (英クラシック)":  { form:"4-4-2",   line:48, press:52, width:72, direct:88, commit:55, quality:66, note:"縦に速いダイレクト。プレスを蹴り飛ばして背後。" },
+  "ポジショナルプレー (シティ系)": { form:"4-3-3",   line:72, press:68, width:72, direct:22, commit:60, quality:82, note:"高い位置で圧倒的に保持。" },
+  "ゲーゲンプレッシング (リバプール系)": { form:"4-3-3", line:80, press:92, width:58, direct:52, commit:70, quality:80, note:"ハイライン＋猛プレスで即時奪回。" },
+  "ティキタカ (バルサ系)":      { form:"4-3-3",   line:70, press:78, width:60, direct:16, commit:55, quality:80, note:"短いパスで支配する遅攻。" },
+  "堅守速攻 (アトレティコ系)":   { form:"4-4-2",   line:32, press:38, width:35, direct:70, commit:30, quality:74, note:"撤退ブロック＋カウンター。" },
+  "現代バランス型 (バイエルン系)": { form:"4-2-3-1", line:62, press:66, width:62, direct:38, commit:55, quality:80, note:"保持もプレスも高水準。" },
+  "3シャドー (コンテ系)":       { form:"3-4-2-1", line:64, press:78, width:70, direct:48, commit:62, quality:76, note:"2シャドーとWBで前向きの圧力。" },
+  "カテナチオ (伊クラシック)":   { form:"5-4-1",   line:25, press:30, width:32, direct:62, commit:22, quality:70, note:"完全撤退で守り切る。" },
+  "ロングボール (英クラシック)": { form:"4-4-2",   line:48, press:52, width:72, direct:88, commit:55, quality:66, note:"縦に速いダイレクト。" },
 };
 
 const PRESETS_EFB = {
   "— 手動設定 —": null,
-  "★最強: 制圧+刺殺 4-2-1-3 [76.3%]": {
-    form:"4-2-1-3", style:"POSS", line:56, press:66, width:68, direct:40, commit:62, quality:70,
-    deepRun:78, counterTgt:85, anchor:45, marking:45, targetMan:0,
-    note:"研究結果の最強戦術(全メタ10種に勝ち越し・総合76.3%)。POSS制圧でボールを奪いCounter Targetで刺し返す。DMF=Anchoring、CFにゴールハンター。"
+  "★最適: 3-5-2 ポゼッション（実機準拠 83.8%）": {
+    form:"3-5-2", style:"ポゼッション",
+    atk:["ラインブレイカー（裏抜け）","ポストプレイヤー（ポスト）"],
+    def:["マンマーク","ラインダウン（撤退）"],
+    note:"1960パターン全探索の最適。支配で攻めさせず、撤退＋マンマークで裏とカウンターを封じ、2トップ(裏抜け＋ポスト)で刺す。実機メニューだけで構築可。"
   },
-  "LBC裏抜け 4-2-1-3 [メタ1位]": {
-    form:"4-2-1-3", style:"LBC", line:46, press:50, width:55, direct:78, commit:55, quality:70,
-    deepRun:90, counterTgt:80, anchor:30, marking:0, targetMan:0,
-    note:"コミュニティ最有力メタ。3トップにゴールハンター/Deep Run＋Counter Target。ロングカウンターで裏へ一発。"
+  "超攻撃 3-2-5（攻撃型）": {
+    form:"3-2-5", style:"サイドアタック",
+    atk:["ラインブレイカー（裏抜け）","ポストプレイヤー（ポスト）"], def:[],
+    note:"5トップで殴る。手数は多いが守備が脆く、制圧型に食われやすい。"
   },
-  "クイックカウンター 4-3-3 [メタ2位]": {
-    form:"4-3-3", style:"QC", line:55, press:62, width:60, direct:62, commit:58, quality:70,
-    deepRun:80, counterTgt:70, anchor:0, marking:0, targetMan:0,
-    note:"奪って素早く。WGが裏抜け、ショートカウンター連発。QCスタイルでカウンター効率1.5倍。"
+  "ロングカウンター 4-2-1-3": {
+    form:"4-2-1-3", style:"ロングカウンター",
+    atk:["ラインブレイカー（裏抜け）","前線に残る（カウンターの的）"], def:[],
+    note:"引いて奪い、3トップの裏抜けで一撃。コミュニティ定番メタ。"
   },
-  "超攻撃 3-2-5 [攻撃型]": {
-    form:"3-2-5", style:"WIDE", line:62, press:58, width:80, direct:50, commit:80, quality:70,
-    deepRun:65, counterTgt:0, anchor:0, marking:0, targetMan:50,
-    note:"5トップで殴る。点は取れるが守備崩壊リスク。制圧型に食われやすい。"
-  },
-  "アウトワイド 4-2-2-2": {
-    form:"4-2-2-2", style:"WIDE", line:58, press:58, width:85, direct:45, commit:60, quality:70,
-    deepRun:50, counterTgt:0, anchor:0, marking:0, targetMan:70,
-    note:"サイド突破→クロス。ターゲットマンに合わせる。攻撃的SB。"
-  },
-  "ナロー速攻 4-3-1-2": {
-    form:"4-3-1-2", style:"QC", line:54, press:60, width:30, direct:60, commit:58, quality:70,
-    deepRun:70, counterTgt:60, anchor:0, marking:0, targetMan:0,
-    note:"中央密集2トップ。狭く奪って中央を一気に。"
-  },
-  "守備的ブロック 4-2-3-1": {
-    form:"4-2-3-1", style:"LBC", line:34, press:42, width:45, direct:55, commit:38, quality:70,
-    deepRun:45, counterTgt:70, anchor:60, marking:60, targetMan:0,
-    note:"Deep Line(撤退)+Man Marking。耐えてカウンター。裏抜けを食らわない。"
-  },
-  "ハイプレス前進 4-3-3": {
-    form:"4-3-3", style:"QC", line:78, press:85, width:62, direct:45, commit:66, quality:70,
-    deepRun:55, counterTgt:0, anchor:0, marking:0, targetMan:0,
-    note:"ゲーゲン風ハイライン。奪って速攻だが背後リスク大。裏抜けを食らいやすい。"
+  "ショートカウンター 4-3-3": {
+    form:"4-3-3", style:"ショートカウンター",
+    atk:["ラインブレイカー（裏抜け）","前線に残る（カウンターの的）"], def:[],
+    note:"高位で奪って素早く。カウンター効率が高い。"
   },
   "ポゼッション 4-2-1-3": {
-    form:"4-2-1-3", style:"POSS", line:68, press:66, width:65, direct:25, commit:60, quality:70,
-    deepRun:35, counterTgt:0, anchor:0, marking:20, targetMan:0,
-    note:"保持して崩す。AMFがタクト。ただし崩しの一手が必要。"
+    form:"4-2-1-3", style:"ポゼッション", atk:[], def:["マンマーク"],
+    note:"保持して崩す。OMFがタクト。崩しの一手が課題。"
   },
-  "ロングボール 4-4-2": {
-    form:"4-4-2", style:"LONG", line:50, press:52, width:70, direct:85, commit:55, quality:70,
-    deepRun:55, counterTgt:0, anchor:0, marking:0, targetMan:80,
-    note:"前線へ直接。ターゲットマンの起点＋セカンド回収。"
+  "守備的ブロック 4-2-3-1": {
+    form:"4-2-3-1", style:"ロングカウンター",
+    atk:["前線に残る（カウンターの的）"], def:["マンマーク","ラインダウン（撤退）"],
+    note:"撤退＋マンマークで耐えてカウンター。裏抜けを食らわない。"
+  },
+  "サイドアタック 4-2-2-2": {
+    form:"4-2-2-2", style:"サイドアタック",
+    atk:["ポストプレイヤー（ポスト）"], def:[],
+    note:"サイド突破→クロスをポストに合わせる。"
+  },
+  "ハイプレス前進 4-3-3": {
+    form:"4-3-3", style:"ショートカウンター",
+    atk:["ラインブレイカー（裏抜け）"], def:[],
+    note:"前から奪う。背後リスクがあり裏抜けを食らいやすい。"
   },
 };
 
 // ============================================================
 //  DOM構築
 // ============================================================
-const $ = id => document.getElementById(id);
 const pitchCanvas = $('pitch'), ctx = pitchCanvas.getContext('2d');
+const getForms   = () => currentMode==='efb' ? FORMATIONS_EFB : FORMATIONS_REAL;
+const getPresets = () => currentMode==='efb' ? PRESETS_EFB : PRESETS_REAL;
 
-function getCurrentFormations() {
-  return currentMode === 'efb' ? FORMATIONS_EFB : FORMATIONS_REAL;
-}
-function getCurrentPresets() {
-  return currentMode === 'efb' ? PRESETS_EFB : PRESETS_REAL;
-}
-
-// 戦術スライダーを初期化（一度だけ）
-['a','b'].forEach(team => {
-  const host = $('tactics-' + team);
-  TACTICS.forEach(t => {
-    const d = document.createElement('div'); d.className = 'tactic';
-    d.innerHTML = `<div class="poles"><span class="lo">${t.lo}</span><span class="hi">${t.hi}</span></div>
+['a','b'].forEach(team=>{
+  const host=$('tactics-'+team); host.innerHTML='';
+  TACTICS.forEach(t=>{
+    const d=document.createElement('div'); d.className='tactic';
+    d.innerHTML=`<div class="poles"><span class="lo">${t.lo}</span><span class="hi">${t.hi}</span></div>
       <input type="range" id="${t.key}-${team}" min="0" max="100" value="${DEFAULT_REAL[t.key]}">
       <div class="hint"><b style="color:#5a6a7a">${t.label}</b> ｜ ${t.hint}</div>`;
     host.appendChild(d);
   });
 });
 
-function rebuildFormationSelect() {
-  const forms = getCurrentFormations();
-  ['a','b'].forEach(team => {
-    const sel = $('form-' + team);
-    const old = sel.value;
-    sel.innerHTML = '';
-    Object.keys(forms).forEach(k => {
-      const o = document.createElement('option'); o.value = k; o.textContent = k; sel.appendChild(o);
+['a','b'].forEach(team=>{
+  const sSel=$('style-'+team); sSel.innerHTML='';
+  Object.keys(EFB_STYLES).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sSel.appendChild(o); });
+  const host=$('efb-inst-'+team); host.innerHTML='';
+  const mk=(list,kind)=>{
+    const lab=document.createElement('span'); lab.className='grp-label'+(kind==='def'?' def':'');
+    lab.textContent=(kind==='atk'?'🗡 攻撃の選手指示':'🛡 守備の選手指示')+'（最大2）';
+    host.appendChild(lab);
+    list.forEach((o,i)=>{
+      const l=document.createElement('label'); l.className='chk';
+      l.innerHTML=`<input type="checkbox" id="${kind}-${i}-${team}"><span>${o.key}<br><small>${o.note}</small></span>`;
+      host.appendChild(l);
     });
+  };
+  mk(EFB_ATK_LIST,'atk'); mk(EFB_DEF_LIST,'def');
+});
+
+function rebuildFormationSelect(){
+  const forms=getForms();
+  ['a','b'].forEach(team=>{
+    const sel=$('form-'+team); const old=sel.value; sel.innerHTML='';
+    Object.keys(forms).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
     sel.value = forms[old] ? old : Object.keys(forms)[0];
   });
 }
-
-function rebuildPresetSelect() {
-  const presets = getCurrentPresets();
-  ['a','b'].forEach(team => {
-    const sel = $('preset-' + team);
-    sel.innerHTML = '';
-    Object.keys(presets).forEach(k => {
-      const o = document.createElement('option'); o.value = k; o.textContent = k; sel.appendChild(o);
-    });
+function rebuildPresetSelect(){
+  const presets=getPresets();
+  ['a','b'].forEach(team=>{
+    const sel=$('preset-'+team); sel.innerHTML='';
+    Object.keys(presets).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
   });
 }
-
-// 初期セット
-rebuildFormationSelect();
-rebuildPresetSelect();
-$('form-a').value = '4-3-3'; $('form-b').value = '4-4-2';
+rebuildFormationSelect(); rebuildPresetSelect();
+$('form-a').value='4-3-3'; $('form-b').value='4-4-2';
 
 // ============================================================
 //  プロフィール構築
 // ============================================================
-function buildProfileReal(formName, t, name) {
-  const pos = FORMATIONS_REAL[formName].p;
+function buildProfileReal(formName,t,name){
+  const pos=FORMATIONS_REAL[formName].p;
   let nD=0,nM=0,nA=0,midCentral=0,wide=0,centerAtt=0;
-  pos.forEach((p,i) => { if(i===0) return; const [x,y]=p;
-    if(y<0.34) nA++; else if(y<0.64) nM++; else nD++;
-    if(y>=0.34&&y<0.64&&Math.abs(x-0.5)<0.20) midCentral++;
-    if(y<0.62&&Math.abs(x-0.5)>0.30) wide++;
-    if(y<0.46&&Math.abs(x-0.5)<0.22) centerAtt++;
+  pos.forEach((p,i)=>{ if(i===0)return; const[x,y]=p;
+    if(y<0.34)nA++; else if(y<0.64)nM++; else nD++;
+    if(y>=0.34&&y<0.64&&Math.abs(x-0.5)<0.20)midCentral++;
+    if(y<0.62&&Math.abs(x-0.5)>0.30)wide++;
+    if(y<0.46&&Math.abs(x-0.5)<0.22)centerAtt++;
   });
   return { form:formName, name, nD,nM,nA,midCentral,wide,centerAtt,
     line:t.line/100, press:t.press/100, width:t.width/100, direct:t.direct/100, commit:t.commit/100,
     q:0.7+(t.quality/100)*0.6 };
 }
-
-function buildProfileEfb(formName, t, name) {
-  const pos = FORMATIONS_EFB[formName].p;
+function buildProfileEfb(formName,t,name){
+  const pos=FORMATIONS_EFB[formName].p;
   let nD=0,nM=0,nA=0,midC=0,wide=0,cAtt=0;
-  pos.forEach((p,i) => { if(i===0) return; const [x,y]=p;
-    if(y<0.34) nA++; else if(y<0.64) nM++; else nD++;
-    if(y>=0.34&&y<0.64&&Math.abs(x-0.5)<0.20) midC++;
-    if(y<0.62&&Math.abs(x-0.5)>0.30) wide++;
-    if(y<0.46&&Math.abs(x-0.5)<0.22) cAtt++;
+  pos.forEach((p,i)=>{ if(i===0)return; const[x,y]=p;
+    if(y<0.34)nA++; else if(y<0.64)nM++; else nD++;
+    if(y>=0.34&&y<0.64&&Math.abs(x-0.5)<0.20)midC++;
+    if(y<0.62&&Math.abs(x-0.5)>0.30)wide++;
+    if(y<0.46&&Math.abs(x-0.5)<0.22)cAtt++;
   });
   return { form:formName, name, nD,nM,nA,midCentral:midC,wide,centerAtt:cAtt,
     line:t.line/100, press:t.press/100, width:t.width/100, direct:t.direct/100, commit:t.commit/100,
-    style:t.style||'QC',
-    deepRun:(t.deepRun||0)/100,
-    counterTgt:(t.counterTgt||0)/100,
-    targetMan:(t.targetMan||0)/100,
-    marking:(t.marking||0)/100,
-    anchor:(t.anchor||0)/100,
+    style:t.style,
+    deepRun:(t.deepRun||0)/100, counterTgt:(t.counterTgt||0)/100, targetMan:(t.targetMan||0)/100,
+    marking:(t.marking||0)/100, anchor:(t.anchor||0)/100,
     q:0.7+(t.quality/100)*0.6 };
 }
-
-function readTactics(team) {
-  const t = {}; TACTICS.forEach(x => t[x.key] = parseInt($(x.key+'-'+team).value));
-  t.quality = parseInt($('quality-'+team).value);
-  if(currentMode==='efb') {
-    t.style    = $('style-'+team).value;
-    t.deepRun  = parseInt($('deepRun-'+team).value);
-    t.counterTgt = parseInt($('counterTgt-'+team).value);
-    t.anchor   = parseInt($('anchor-'+team).value);
-    t.marking  = parseInt($('marking-'+team).value);
-    t.targetMan= parseInt($('targetMan-'+team).value);
-  }
+function deriveEfb(team){
+  const st=EFB_STYLES[$('style-'+team).value];
+  const t={ line:st.line, press:st.press, width:st.width, direct:st.direct, commit:st.commit, style:st.code,
+            deepRun:28, counterTgt:0, targetMan:0, marking:0, anchor:0, quality:parseInt($('quality-'+team).value) };
+  let na=0; EFB_ATK_LIST.forEach((o,i)=>{ if($('atk-'+i+'-'+team).checked && na<2){ na++; Object.assign(t,o.eff); } });
+  let nd=0; EFB_DEF_LIST.forEach((o,i)=>{ if($('def-'+i+'-'+team).checked && nd<2){ nd++;
+    const e=o.eff;
+    if(e.lineDown)   t.line=Math.max(20,t.line-e.lineDown);
+    if(e.commitDown) t.commit=Math.max(30,t.commit-e.commitDown);
+    if(e.marking)    t.marking=e.marking;
+    if(e.anchor)     t.anchor=e.anchor;
+  } });
   return t;
 }
-
-function readProfile(team) {
-  const t = readTactics(team);
-  const name = $('name-'+team).value || ('チーム'+team.toUpperCase());
-  if(currentMode==='efb') return buildProfileEfb($('form-'+team).value, t, name);
-  return buildProfileReal($('form-'+team).value, t, name);
+function readTacticsReal(team){
+  const t={}; TACTICS.forEach(x=>t[x.key]=parseInt($(x.key+'-'+team).value));
+  t.quality=parseInt($('quality-'+team).value); return t;
+}
+function readProfile(team){
+  const name=$('name-'+team).value || ('チーム'+team.toUpperCase());
+  if(currentMode==='efb') return buildProfileEfb($('form-'+team).value, deriveEfb(team), name);
+  return buildProfileReal($('form-'+team).value, readTacticsReal(team), name);
+}
+function updateEfbLimits(team){
+  [['atk',EFB_ATK_LIST],['def',EFB_DEF_LIST]].forEach(([kind,list])=>{
+    let n=0; list.forEach((o,i)=>{ if($(kind+'-'+i+'-'+team).checked)n++; });
+    list.forEach((o,i)=>{ const cb=$(kind+'-'+i+'-'+team); const lab=cb.closest('label');
+      const dis=(n>=2 && !cb.checked); cb.disabled=dis; lab.classList.toggle('disabled',dis); });
+  });
+}
+function updateEfbVector(team){
+  if(currentMode!=='efb') return;
+  const t=deriveEfb(team);
+  $('efb-vector-'+team).innerHTML=
+    `<b>このスタイルの戦術</b>：ライン${t.line} / プレス${t.press} / 幅${t.width} / 直線${t.direct} / 枚数${t.commit}`+
+    `<br><span class="note">${EFB_STYLES[$('style-'+team).value].desc}（数値はスタイルが自動決定。手で変更不可）</span>`;
 }
 
 // ============================================================
-//  シミュレーションエンジン（リアルサッカー）
+//  エンジン（リアル）
 // ============================================================
 const clamp=(lo,hi,v)=>Math.max(lo,Math.min(hi,v));
 const rnd=(a,b)=>Math.random()*(b-a)+a;
 const chance=p=>Math.random()<p;
-
-function controlPowerReal(m){
-  return (m.nM+1.3*m.midCentral)*(1+0.20*(1-m.width))*(1-0.30*m.direct)*(0.55+0.55*m.line)*(0.85+0.30*m.press)*m.q;
-}
+function controlPowerReal(m){ return (m.nM+1.3*m.midCentral)*(1+0.20*(1-m.width))*(1-0.30*m.direct)*(0.55+0.55*m.line)*(0.85+0.30*m.press)*m.q; }
 function xgOpenReal(att,def){
-  const flankA=(att.wide+0.4)*(0.4+0.9*att.width);
-  const flankD=(def.nD*0.5+0.5)*(0.45+0.8*def.width);
-  const centerA=(att.centerAtt+0.4)*(0.5+0.9*(1-att.width));
-  const centerD=(def.nD*0.55+def.nM*0.45+0.5)*(0.5+0.6*(1-def.width))*(1+0.30*(1-def.line));
+  const flankA=(att.wide+0.4)*(0.4+0.9*att.width), flankD=(def.nD*0.5+0.5)*(0.45+0.8*def.width);
+  const centerA=(att.centerAtt+0.4)*(0.5+0.9*(1-att.width)), centerD=(def.nD*0.55+def.nM*0.45+0.5)*(0.5+0.6*(1-def.width))*(1+0.30*(1-def.line));
   const rF=flankA/(flankA+flankD), rC=centerA/(centerA+centerD);
-  let xg=Math.max(rF,rC)*0.30+Math.min(rF,rC)*0.07;
-  xg+=att.direct*def.line*0.16;
-  xg*=att.q/def.q;
+  let xg=Math.max(rF,rC)*0.30+Math.min(rF,rC)*0.07; xg+=att.direct*def.line*0.16; xg*=att.q/def.q;
   return { xg:clamp(0.03,0.45,xg), route:(rF>rC?'サイド':'中央') };
 }
-function atkRateReal(att,poss){ const vol=(att.nA*1.0+0.5*att.nM+0.5)*(0.65+0.7*att.commit); return 0.026*vol*poss; }
+function atkRateReal(att,poss){ return 0.026*((att.nA*1.0+0.5*att.nM+0.5)*(0.65+0.7*att.commit))*poss; }
 function counterXgReal(def,att){ const exp=att.commit*0.6+att.line*0.4; const sh=(0.35+0.70*def.direct)*(0.5+0.30*def.nA); return clamp(0.04,0.48,0.14*exp*sh*def.q/att.q); }
 function counterRateReal(def,att){ const exp=att.commit*0.6+att.line*0.4; return 0.020*exp*(0.4+0.8*def.direct)*(0.5+0.4*def.nA); }
 function pressOutcomeReal(P,H,min){
   const stam=min<62?1:(1-0.45*P.press*((min-62)/30));
   const intensity=P.press*(0.45+0.6*P.line)*(0.6+0.5*(P.nM/4))*Math.max(0.3,stam);
-  if(!chance(0.030*intensity)) return null;
-  if(chance(H.direct*0.7)) return {who:'H', xg:clamp(0.06,0.45,0.16+0.22*P.line)*H.q/P.q, type:'bypass'};
-  return {who:'P', xg:clamp(0.08,0.48,0.20+0.13*P.press)*P.q/H.q, type:'win'};
+  if(!chance(0.030*intensity))return null;
+  if(chance(H.direct*0.7)) return {who:'H', xg:clamp(0.06,0.45,0.16+0.22*P.line)*H.q/P.q};
+  return {who:'P', xg:clamp(0.08,0.48,0.20+0.13*P.press)*P.q/H.q};
 }
-
-function simulateReal(A,B){
+function simulateReal(A,B,wantLog){
   const poss0=controlPowerReal(A)/(controlPowerReal(A)+controlPowerReal(B));
   let gA=0,gB=0; const log=[];
-  const s={shotA:0,shotB:0,sotA:0,sotB:0,bigA:0,bigB:0,xgA:0,xgB:0,possSum:0,possN:0,cntA:0,cntB:0,pwA:0,pwB:0};
+  const s={shotA:0,shotB:0,sotA:0,sotB:0,bigA:0,bigB:0,xgA:0,xgB:0,possSum:0,possN:0,cntA:0,cntB:0,pwA:0,pwB:0,behA:0,behB:0};
   const SHOT=['右足','左足','ヘディング','ミドル','こぼれ球'];
   function shoot(team,xg,min,tag){
     const isA=team==='A';
     if(isA){s.shotA++;s.xgA+=xg;if(xg>0.30)s.bigA++;} else {s.shotB++;s.xgB+=xg;if(xg>0.30)s.bigB++;}
     const onT=chance(0.34+xg*0.5); if(onT){isA?s.sotA++:s.sotB++;}
-    if(chance(xg)){
-      if(isA) gA++; else gB++;
-      log.push({type:'goal',text:`⚽ ${min}' ゴール！ ${isA?A.name:B.name}（${tag||SHOT[Math.floor(Math.random()*5)]}）[${gA}-${gB}]`});
-      return true;
-    } else if(onT&&chance(0.4)) log.push({type:'event',text:`${min}' ${isA?A.name:B.name} の決定機をGKがセーブ`});
+    if(chance(xg)){ if(isA)gA++; else gB++; if(wantLog)log.push({type:'goal',text:`⚽ ${min}' ゴール！ ${isA?A.name:B.name}（${tag||SHOT[(Math.random()*5)|0]}）[${gA}-${gB}]`}); return true; }
+    else if(wantLog&&onT&&chance(0.4)) log.push({type:'event',text:`${min}' ${isA?A.name:B.name} の決定機をGKがセーブ`});
     return false;
   }
-  log.push({type:'half',text:'━━━ 前半キックオフ ━━━'});
+  if(wantLog)log.push({type:'half',text:'━━━ 前半キックオフ ━━━'});
   for(let min=1;min<=90;min++){
-    if(min===46) log.push({type:'half',text:'━━━ 後半開始 ━━━'});
+    if(wantLog&&min===46)log.push({type:'half',text:'━━━ 後半開始 ━━━'});
     const poss=clamp(0.12,0.88,poss0+rnd(-0.06,0.06)); s.possSum+=poss; s.possN++;
     if(chance(atkRateReal(A,poss))){ const o=xgOpenReal(A,B); if(!shoot('A',o.xg,min,o.route+'攻撃')&&chance(counterRateReal(B,A))){s.cntB++;shoot('B',counterXgReal(B,A),min,'カウンター');} }
     if(chance(atkRateReal(B,1-poss))){ const o=xgOpenReal(B,A); if(!shoot('B',o.xg,min,o.route+'攻撃')&&chance(counterRateReal(A,B))){s.cntA++;shoot('A',counterXgReal(A,B),min,'カウンター');} }
-    let pr=pressOutcomeReal(B,A,min); if(pr){ if(pr.who==='P'){s.pwB++;shoot('B',pr.xg,min,'ハイプレス奪取');} else shoot('A',pr.xg,min,'プレス回避→背後'); }
-    pr=pressOutcomeReal(A,B,min); if(pr){ if(pr.who==='P'){s.pwA++;shoot('A',pr.xg,min,'ハイプレス奪取');} else shoot('B',pr.xg,min,'プレス回避→背後'); }
-    if(chance(0.05)){ const isA=chance(0.5); log.push({type:'event',text:`${min}' ${isA?A.name:B.name} ${chance(0.5)?'コーナーキック':'FK'}`}); }
+    let pr=pressOutcomeReal(B,A,min); if(pr){ if(pr.who==='P'){s.pwB++;shoot('B',pr.xg,min,'プレス奪取');} else shoot('A',pr.xg,min,'プレス回避'); }
+    pr=pressOutcomeReal(A,B,min); if(pr){ if(pr.who==='P'){s.pwA++;shoot('A',pr.xg,min,'プレス奪取');} else shoot('B',pr.xg,min,'プレス回避'); }
+    if(wantLog&&chance(0.05)){ const isA=chance(0.5); log.push({type:'event',text:`${min}' ${isA?A.name:B.name} ${chance(0.5)?'CK':'FK'}`}); }
   }
-  log.push({type:'half',text:`━━━ 試合終了 ${gA}-${gB} ━━━`});
+  if(wantLog)log.push({type:'half',text:`━━━ 試合終了 ${gA}-${gB} ━━━`});
   s.possApct=Math.round(s.possSum/s.possN*100);
   return { gA,gB,s,log };
 }
 
 // ============================================================
-//  シミュレーションエンジン（eFootball 2026）
+//  エンジン（eFootball）
 // ============================================================
 const styleMul=(s,map,def=1)=>map[s]!==undefined?map[s]:def;
-
-function controlEfb(m){
-  return (m.nM+1.2*m.midCentral)*(1+0.18*(1-m.width))*(1-0.25*m.direct)
-    *(0.6+0.5*m.line)*(0.85+0.3*m.press)*m.q
-    *styleMul(m.style,{POSS:1.25,LBC:0.8,QC:0.85,LONG:0.8,WIDE:1.0});
-}
+function controlEfb(m){ return (m.nM+1.2*m.midCentral)*(1+0.18*(1-m.width))*(1-0.25*m.direct)*(0.6+0.5*m.line)*(0.85+0.3*m.press)*m.q*styleMul(m.style,{POSS:1.25,LBC:0.8,QC:0.85,LONG:0.8,WIDE:1.0}); }
 function xgOpenEfb(att,def){
-  const flankA=(att.wide+0.4)*(0.4+0.9*att.width);
-  const flankD=(def.nD*0.5+0.5)*(0.45+0.8*def.width);
-  const centerA=(att.centerAtt+0.4)*(0.5+0.9*(1-att.width));
-  const centerD=(def.nD*0.55+def.nM*0.45+0.5)*(0.5+0.6*(1-def.width))*(1+0.3*(1-def.line));
+  const flankA=(att.wide+0.4)*(0.4+0.9*att.width), flankD=(def.nD*0.5+0.5)*(0.45+0.8*def.width);
+  const centerA=(att.centerAtt+0.4)*(0.5+0.9*(1-att.width)), centerD=(def.nD*0.55+def.nM*0.45+0.5)*(0.5+0.6*(1-def.width))*(1+0.3*(1-def.line));
   const rF=flankA/(flankA+flankD), rC=centerA/(centerA+centerD);
-  let base=Math.max(rF,rC)*0.22+Math.min(rF,rC)*0.05;
-  base*=(1-0.28*def.marking);
+  let base=Math.max(rF,rC)*0.22+Math.min(rF,rC)*0.05; base*=(1-0.28*def.marking);
   const cross=att.width*att.targetMan*0.13;
-  // ★裏抜けメタ: Deep Run × 直線性 × 相手ライン高さ
   const behind=att.deepRun*(0.35+0.65*att.direct)*Math.max(0,def.line)*0.62;
-  let xg=(base+cross+behind)*att.q/def.q;
-  xg*=styleMul(att.style,{POSS:1.15,WIDE:1.05,LBC:0.9,QC:0.95,LONG:0.95});
-  return { xg:clamp(0.02,0.88,xg), route:(rF>rC?'サイド':'中央'), behind:behind };
+  let xg=(base+cross+behind)*att.q/def.q; xg*=styleMul(att.style,{POSS:1.15,WIDE:1.05,LBC:0.9,QC:0.95,LONG:0.95});
+  return { xg:clamp(0.02,0.88,xg), route:(rF>rC?'サイド':'中央') };
 }
-function atkRateEfb(att,poss){
-  const vol=(att.nA*1.0+0.5*att.nM+0.5)*(0.6+0.7*att.commit);
-  return 0.030*vol*poss*styleMul(att.style,{POSS:1.2,WIDE:1.1,LBC:0.8,QC:0.85,LONG:0.9});
-}
+function atkRateEfb(att,poss){ return 0.030*((att.nA*1.0+0.5*att.nM+0.5)*(0.6+0.7*att.commit))*poss*styleMul(att.style,{POSS:1.2,WIDE:1.1,LBC:0.8,QC:0.85,LONG:0.9}); }
 function counterXgEfb(def,att){
-  let exposure=att.commit*0.55+att.line*0.45+styleMul(att.style,{POSS:0.12,WIDE:0.08},0);
-  exposure*=(1-0.4*att.anchor);
+  let exposure=(att.commit*0.55+att.line*0.45+styleMul(att.style,{POSS:0.12,WIDE:0.08},0))*(1-0.4*att.anchor);
   const sharp=(0.4+0.7*def.direct)*(0.5+0.3*def.nA)*(1+0.5*def.counterTgt);
-  const behindCnt=def.deepRun*att.line*0.55;
-  const sm=styleMul(def.style,{QC:1.55,LBC:1.6,LONG:1.2},1);
+  const behindCnt=def.deepRun*att.line*0.55, sm=styleMul(def.style,{QC:1.55,LBC:1.6,LONG:1.2},1);
   return clamp(0.04,0.9,(0.15*exposure*sharp+behindCnt)*sm*def.q/att.q);
 }
-function counterRateEfb(def,att){
-  let exposure=(att.commit*0.55+att.line*0.45)*(1-0.4*att.anchor);
-  const sm=styleMul(def.style,{QC:1.5,LBC:1.5,LONG:1.2},1);
-  return 0.022*exposure*(0.4+0.8*def.direct)*(0.5+0.4*def.nA)*(1+0.45*def.counterTgt)*sm;
-}
+function counterRateEfb(def,att){ const exposure=(att.commit*0.55+att.line*0.45)*(1-0.4*att.anchor); const sm=styleMul(def.style,{QC:1.5,LBC:1.5,LONG:1.2},1); return 0.022*exposure*(0.4+0.8*def.direct)*(0.5+0.4*def.nA)*(1+0.45*def.counterTgt)*sm; }
 function pressEfb(P,H,min){
   const stam=min<62?1:(1-0.4*P.press*((min-62)/30));
   const intensity=P.press*(0.45+0.6*P.line)*(0.6+0.5*(P.nM/4))*Math.max(0.35,stam);
-  if(!chance(0.030*intensity)) return null;
-  const bypass=H.direct*0.62+H.targetMan*0.2;
-  if(chance(bypass)) return {who:'H', xg:clamp(0.06,0.55,0.16+0.28*P.line+0.3*H.deepRun)*H.q/P.q};
-  return {who:'P', xg:clamp(0.08,0.5,0.20+0.14*P.press)*P.q/H.q};
+  if(!chance(0.030*intensity))return null;
+  if(chance(H.direct*0.62+H.targetMan*0.2)) return {who:'H',xg:clamp(0.06,0.55,0.16+0.28*P.line+0.3*H.deepRun)*H.q/P.q};
+  return {who:'P',xg:clamp(0.08,0.5,0.20+0.14*P.press)*P.q/H.q};
 }
-
-function simulateEfb(A,B){
+function simulateEfb(A,B,wantLog){
   const p0=controlEfb(A)/(controlEfb(A)+controlEfb(B));
   let gA=0,gB=0; const log=[];
-  const s={shotA:0,shotB:0,xgA:0,xgB:0,possSum:0,possN:0,cntA:0,cntB:0,behA:0,behB:0};
-  function shoot(side,xg,min,tag,isBehind){
+  const s={shotA:0,shotB:0,xgA:0,xgB:0,possSum:0,possN:0,cntA:0,cntB:0,behA:0,behB:0,bigA:0,bigB:0,sotA:0,sotB:0,pwA:0,pwB:0};
+  function shoot(side,xg,min,tag,isBeh){
     const isA=side==='A';
-    if(isA){s.shotA++;s.xgA+=xg;if(isBehind)s.behA++;} else {s.shotB++;s.xgB+=xg;if(isBehind)s.behB++;}
-    if(chance(xg)){
-      if(isA) gA++; else gB++;
-      const nm=isA?A.name:B.name;
-      const label=isBehind?'★裏抜け':tag;
-      log.push({type:'goal',text:`⚽ ${min}' ゴール！ ${nm}（${label}）[${gA}-${gB}]`, efb:isBehind});
-      return true;
-    }
+    if(isA){s.shotA++;s.xgA+=xg;if(isBeh)s.behA++;} else {s.shotB++;s.xgB+=xg;if(isBeh)s.behB++;}
+    if(chance(xg)){ if(isA)gA++; else gB++; if(wantLog)log.push({type:'goal',efb:isBeh,text:`⚽ ${min}' ゴール！ ${isA?A.name:B.name}（${isBeh?'★裏抜け':tag}）[${gA}-${gB}]`}); return true; }
     return false;
   }
-  log.push({type:'half',text:'━━━ 前半キックオフ ━━━'});
+  if(wantLog)log.push({type:'half',text:'━━━ 前半キックオフ ━━━'});
   for(let min=1;min<=90;min++){
-    if(min===46) log.push({type:'half',text:'━━━ 後半開始 ━━━'});
+    if(wantLog&&min===46)log.push({type:'half',text:'━━━ 後半開始 ━━━'});
     const poss=clamp(0.12,0.88,p0+rnd(-0.06,0.06)); s.possSum+=poss; s.possN++;
-    if(chance(atkRateEfb(A,poss))){
-      const o=xgOpenEfb(A,B); const isBeh=(A.deepRun>0.4&&B.line>0.5);
-      if(!shoot('A',o.xg,min,o.route+'攻撃',isBeh)&&chance(counterRateEfb(B,A))){s.cntB++;shoot('B',counterXgEfb(B,A),min,'カウンター',false);}
-    }
-    if(chance(atkRateEfb(B,1-poss))){
-      const o=xgOpenEfb(B,A); const isBeh=(B.deepRun>0.4&&A.line>0.5);
-      if(!shoot('B',o.xg,min,o.route+'攻撃',isBeh)&&chance(counterRateEfb(A,B))){s.cntA++;shoot('A',counterXgEfb(A,B),min,'カウンター',false);}
-    }
-    let pr=pressEfb(B,A,min); if(pr) shoot(pr.who==='P'?'B':'A',pr.xg,min,'プレス',false);
-    pr=pressEfb(A,B,min); if(pr) shoot(pr.who==='P'?'A':'B',pr.xg,min,'プレス',false);
+    if(chance(atkRateEfb(A,poss))){ const o=xgOpenEfb(A,B); const beh=(A.deepRun>0.4&&B.line>0.5); if(!shoot('A',o.xg,min,o.route+'攻撃',beh)&&chance(counterRateEfb(B,A))){s.cntB++;shoot('B',counterXgEfb(B,A),min,'カウンター',false);} }
+    if(chance(atkRateEfb(B,1-poss))){ const o=xgOpenEfb(B,A); const beh=(B.deepRun>0.4&&A.line>0.5); if(!shoot('B',o.xg,min,o.route+'攻撃',beh)&&chance(counterRateEfb(A,B))){s.cntA++;shoot('A',counterXgEfb(A,B),min,'カウンター',false);} }
+    let pr=pressEfb(B,A,min); if(pr)shoot(pr.who==='P'?'B':'A',pr.xg,min,'プレス',false);
+    pr=pressEfb(A,B,min); if(pr)shoot(pr.who==='P'?'A':'B',pr.xg,min,'プレス',false);
   }
-  log.push({type:'half',text:`━━━ 試合終了 ${gA}-${gB} ━━━`});
+  if(wantLog)log.push({type:'half',text:`━━━ 試合終了 ${gA}-${gB} ━━━`});
   s.possApct=Math.round(s.possSum/s.possN*100);
   return { gA,gB,s,log };
 }
 
+const runOne=(A,B,wantLog)=> currentMode==='efb' ? simulateEfb(A,B,wantLog) : simulateReal(A,B,wantLog);
+
 // ============================================================
-//  戦術相性レポート
+//  レポート
 // ============================================================
 function tacticalReport(A,B){
-  const ppA=controlPowerReal(A), ppB=controlPowerReal(B);
-  const possA=Math.round(ppA/(ppA+ppB)*100);
+  const possA=Math.round(controlPowerReal(A)/(controlPowerReal(A)+controlPowerReal(B))*100);
   const cols={};
   [['A',A,B],['B',B,A]].forEach(([k,m,opp])=>{
     const ins=[];
     if(k==='A'?possA>=56:possA<=44) ins.push(['good','中盤を支配しボールを保持できる']);
-    if(k==='A'?possA<=44:possA>=56) ins.push(['neu','ボールは相手に持たれやすい']);
-    if(m.press>0.7&&opp.direct<0.45) ins.push(['good','ハイプレスが相手の組み立てにハマりやすい']);
-    if(m.press>0.7&&opp.direct>0.6) ins.push(['risk','プレスを直線的な相手に外され背後を取られやすい']);
-    if(m.line>0.7&&opp.direct>0.6) ins.push(['risk','ハイラインの背後を速い攻撃に狙われる']);
-    if(m.line>0.7&&opp.direct<0.4) ins.push(['good','ハイラインで相手を押し込み主導権を握れる']);
+    if(m.press>0.7&&opp.direct<0.45) ins.push(['good','ハイプレスが相手の組み立てにハマる']);
+    if(m.press>0.7&&opp.direct>0.6) ins.push(['risk','プレスを直線的な相手に外され背後を取られる']);
+    if(m.line>0.7&&opp.direct>0.6) ins.push(['risk','ハイラインの背後を速攻に狙われる']);
     if(m.line<0.4) ins.push(['good','低いブロックで中央を堅く閉じられる']);
     if(m.width>0.65&&opp.width<0.4) ins.push(['good','広い攻撃で相手の手薄なサイドを突ける']);
-    if(m.width<0.35&&opp.width>0.65) ins.push(['risk','狭い陣形のサイドを相手のワイド攻撃に空けられる']);
-    if(m.commit>0.65) ins.push(['risk','攻撃に枚数をかけるぶん被カウンターのリスクが高い']);
+    if(m.commit>0.65) ins.push(['risk','枚数をかけ被カウンターのリスクが高い']);
     if(m.commit<0.35) ins.push(['good','自重した攻撃でカウンターを受けにくい']);
-    if(m.nA>=3&&m.commit>0.5) ins.push(['good','前線の枚数が多く厚みのある攻撃ができる']);
-    if(m.nD>=5) ins.push(['good','最終ラインが厚く守備は堅い']);
-    if(m.nD<=3&&m.line>0.7) ins.push(['risk','後ろが薄く高い位置取り、守備の余白が小さい']);
-    if(m.q-opp.q>0.12) ins.push(['good','選手個々の質で相手を上回る']);
-    if(opp.q-m.q>0.12) ins.push(['risk','選手の質で相手に劣る（戦術での工夫が必要）']);
+    if(m.nD>=5) ins.push(['good','最終ラインが厚く守備が堅い']);
+    if(m.q-opp.q>0.12) ins.push(['good','選手の質で相手を上回る']);
+    if(opp.q-m.q>0.12) ins.push(['risk','選手の質で相手に劣る']);
     if(ins.length===0) ins.push(['neu','クセの少ないバランス型']);
     cols[k]={ins:ins.slice(0,6)};
   });
   const clashes=[];
-  if(A.press>0.7&&B.direct>0.6) clashes.push(`<b>${A.name}</b>のプレスを、<b>${B.name}</b>の直線的な速攻が背後で狙う構図。`);
-  if(B.press>0.7&&A.direct>0.6) clashes.push(`<b>${B.name}</b>のプレスを、<b>${A.name}</b>の直線的な攻撃が背後で狙う構図。`);
-  if(A.line>0.7&&B.line<0.4) clashes.push(`<b>${A.name}</b>が押し込み、<b>${B.name}</b>が撤退する「攻略 vs 堅守」の典型。`);
-  if(B.line>0.7&&A.line<0.4) clashes.push(`<b>${B.name}</b>が押し込み、<b>${A.name}</b>が撤退して耐える展開。`);
-  if(Math.abs(possA-50)>=15) clashes.push(`ボール支配は<b>${possA>=50?A.name:B.name}</b>に大きく傾く見込み（推定${Math.max(possA,100-possA)}%）。`);
-  if(A.width>0.65&&B.width<0.4) clashes.push(`<b>${A.name}</b>のワイド攻撃 vs <b>${B.name}</b>の中央密集。サイドの幅が焦点。`);
-  if(clashes.length===0) clashes.push('両者とも極端さが少なく噛み合わせの優劣は小さい。');
+  if(A.line>0.7&&B.direct>0.6) clashes.push(`<b>${A.name}</b>のハイラインの背後を<b>${B.name}</b>の速攻が狙う。`);
+  if(B.line>0.7&&A.direct>0.6) clashes.push(`<b>${B.name}</b>のハイラインの背後を<b>${A.name}</b>の速攻が狙う。`);
+  if(Math.abs(possA-50)>=15) clashes.push(`支配は<b>${possA>=50?A.name:B.name}</b>に傾く（推定${Math.max(possA,100-possA)}%）。`);
+  if(clashes.length===0) clashes.push('極端さが少なく噛み合わせの優劣は小さい。');
   return { possA, cols, clashes:clashes.slice(0,2) };
 }
-
 function efbReport(A,B){
-  const ppA=controlEfb(A), ppB=controlEfb(B);
-  const possA=Math.round(ppA/(ppA+ppB)*100);
+  const possA=Math.round(controlEfb(A)/(controlEfb(A)+controlEfb(B))*100);
   const cols={};
   [['A',A,B],['B',B,A]].forEach(([k,m,opp])=>{
     const ins=[];
-    // 裏抜けメタ判定
-    if(m.deepRun>0.6&&opp.line>0.55) ins.push(['good','★裏抜けが炸裂しやすい（Deep Run高×相手ハイライン）']);
-    if(opp.deepRun>0.6&&m.line>0.55) ins.push(['risk','★相手の裏抜けに食われやすい（自チームのハイライン）']);
-    if(m.marking>0.5) ins.push(['good','Man Markingで相手のオープンプレーを抑制']);
-    if(m.anchor>0.4) ins.push(['good','Anchoringで被カウンターを低減']);
-    if(m.counterTgt>0.6&&(m.style==='QC'||m.style==='LBC')) ins.push(['good','Counter Target×QC/LBCでカウンター刺殺効率が最大化']);
-    if(m.style==='POSS') ins.push(['good','POSS制圧で相手のカウンター機会を奪う']);
-    if(m.style==='POSS'&&m.deepRun<0.5&&m.counterTgt<0.5) ins.push(['risk','保持だけでは点にならない。裏抜けかCounter Targetが必要']);
-    if(m.style==='QC'||m.style==='LBC') ins.push(['good','カウンタースタイルで効率1.5〜1.6倍']);
-    if(m.commit>0.7&&m.anchor<0.3) ins.push(['risk','攻撃的で被カウンターが多くなる。Anchoringで軽減を']);
-    if(m.line>0.7&&opp.deepRun>0.6) ins.push(['risk','ハイライン×相手のDeep Runは裏抜けの温床']);
-    if(m.line<0.4&&m.deepRun<0.4) ins.push(['good','撤退ライン（Deep Line）で裏抜けを無効化']);
+    if(m.deepRun>0.6&&opp.line>0.55) ins.push(['good','★裏抜けが刺さりやすい（裏抜け×相手の高ライン）']);
+    if(opp.deepRun>0.6&&m.line>0.55) ins.push(['risk','★相手の裏抜けに食われやすい（自陣の高ライン）']);
+    if(m.marking>0.5) ins.push(['good','マンマークで相手のオープン攻撃を抑制']);
+    if(m.line<0.5) ins.push(['good','ラインダウンで裏のスペースを消している']);
+    if(m.anchor>0.4) ins.push(['good','アンカリングで被カウンターを低減']);
+    if(m.counterTgt>0.6&&(m.style==='QC'||m.style==='LBC')) ins.push(['good','前線に残す×カウンター系で刺殺効率が最大化']);
+    if(m.style==='POSS') ins.push(['good','支配で相手のカウンター機会を奪う']);
+    if(m.style==='POSS'&&m.deepRun<0.5&&m.targetMan<0.5) ins.push(['risk','保持だけでは点にならない。崩しの指示が要る']);
+    if(m.commit>0.7&&m.anchor<0.3) ins.push(['risk','攻撃的で被カウンターが多い。アンカリング推奨']);
     if(m.q-opp.q>0.12) ins.push(['good','選手の質で相手を上回る']);
     if(opp.q-m.q>0.12) ins.push(['risk','選手の質で相手に劣る']);
     if(ins.length===0) ins.push(['neu','バランス型の設定']);
     cols[k]={ins:ins.slice(0,6)};
   });
   const clashes=[];
-  if(A.deepRun>0.6&&B.line>0.6) clashes.push(`<b>${A.name}</b>のDeep Runが<b>${B.name}</b>のハイラインの背後を突く。<b>★裏抜けメタが炸裂</b>する構図。`);
-  if(B.deepRun>0.6&&A.line>0.6) clashes.push(`<b>${B.name}</b>のDeep Runが<b>${A.name}</b>のハイラインの背後を突く。<b>★裏抜けメタが炸裂</b>する構図。`);
-  if(A.style==='POSS'&&(B.style==='QC'||B.style==='LBC')) clashes.push(`<b>${A.name}</b>(POSS制圧)が<b>${B.name}</b>(カウンター)のカウンター機会を奪う展開。保持率が鍵。`);
-  if(B.style==='POSS'&&(A.style==='QC'||A.style==='LBC')) clashes.push(`<b>${B.name}</b>(POSS制圧)が<b>${A.name}</b>(カウンター)のカウンター機会を奪う展開。`);
-  if(Math.abs(possA-50)>=15) clashes.push(`ボール支配は<b>${possA>=50?A.name:B.name}</b>に傾く見込み（推定${Math.max(possA,100-possA)}%）。持たない側はカウンターの一撃に懸ける。`);
-  if(clashes.length===0) clashes.push('両者の噛み合わせに極端な優劣はない。');
+  if(A.deepRun>0.6&&B.line>0.6) clashes.push(`<b>${A.name}</b>の裏抜けが<b>${B.name}</b>の高ライン背後を突く。<b>★裏抜けメタ</b>。`);
+  if(B.deepRun>0.6&&A.line>0.6) clashes.push(`<b>${B.name}</b>の裏抜けが<b>${A.name}</b>の高ライン背後を突く。<b>★裏抜けメタ</b>。`);
+  if(A.style==='POSS'&&(B.style==='QC'||B.style==='LBC')) clashes.push(`<b>${A.name}</b>(支配)が<b>${B.name}</b>(カウンター)の機会を奪う展開。`);
+  if(Math.abs(possA-50)>=15) clashes.push(`支配は<b>${possA>=50?A.name:B.name}</b>に傾く（推定${Math.max(possA,100-possA)}%）。`);
+  if(clashes.length===0) clashes.push('極端な優劣はない。');
   return { possA, cols, clashes:clashes.slice(0,2) };
 }
 
 // ============================================================
 //  ピッチ描画
 // ============================================================
-function adjPos(x,y,m){
-  let ny=y-(m.line-0.5)*0.16;
-  if(y<0.55) ny-=(m.commit-0.5)*0.10;
-  let nx=0.5+(x-0.5)*(0.72+0.6*m.width);
-  return [clamp(0.04,0.96,nx), clamp(0.05,0.95,ny)];
-}
+function adjPos(x,y,m){ let ny=y-(m.line-0.5)*0.16; if(y<0.55)ny-=(m.commit-0.5)*0.10; let nx=0.5+(x-0.5)*(0.72+0.6*m.width); return [clamp(0.04,0.96,nx),clamp(0.05,0.95,ny)]; }
 function drawPitch(){
-  const W=pitchCanvas.width, H=pitchCanvas.height;
-  ctx.clearRect(0,0,W,H);
-  const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,'#2ec27e'); g.addColorStop(.5,'#27ae60'); g.addColorStop(1,'#2ec27e');
+  const W=pitchCanvas.width,H=pitchCanvas.height; ctx.clearRect(0,0,W,H);
+  const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#2ec27e');g.addColorStop(.5,'#27ae60');g.addColorStop(1,'#2ec27e');
   ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(0,0,W,H,14); ctx.fill();
-  ctx.globalAlpha=.08;
-  for(let y=0;y<H;y+=44){ctx.fillStyle='#fff';ctx.fillRect(0,y,W,22);}
-  ctx.globalAlpha=1;
-  ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.lineWidth=2;
-  ctx.strokeRect(16,14,W-32,H-28);
+  ctx.globalAlpha=.08; for(let y=0;y<H;y+=44){ctx.fillStyle='#fff';ctx.fillRect(0,y,W,22);} ctx.globalAlpha=1;
+  ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=2;ctx.strokeRect(16,14,W-32,H-28);
   ctx.beginPath();ctx.moveTo(16,H/2);ctx.lineTo(W-16,H/2);ctx.stroke();
   ctx.beginPath();ctx.arc(W/2,H/2,48,0,7);ctx.stroke();
   const paW=190,paH=74,gaW=96,gaH=28;
   ctx.strokeRect((W-paW)/2,14,paW,paH);ctx.strokeRect((W-gaW)/2,14,gaW,gaH);
   ctx.strokeRect((W-paW)/2,H-14-paH,paW,paH);ctx.strokeRect((W-gaW)/2,H-14-gaH,gaW,gaH);
   const A=readProfile('a'), B=readProfile('b');
-  const colA=$('color-a').value, colB=$('color-b').value;
-  const formsA=currentMode==='efb'?FORMATIONS_EFB:FORMATIONS_REAL;
-  const formsB=currentMode==='efb'?FORMATIONS_EFB:FORMATIONS_REAL;
-  drawTeam(formsA[A.form].p, A, colA, false, W, H);
-  drawTeam(formsB[B.form].p, B, colB, true, W, H);
-  ctx.font='bold 12px Segoe UI'; ctx.fillStyle=colA; ctx.textAlign='left';
-  ctx.fillText('▲ '+A.name, 20, H-6);
-  ctx.fillStyle=colB; ctx.textAlign='right'; ctx.fillText(B.name+' ▼', W-20, 24);
-  $('pitch-vs').textContent = `${A.form}  ⚔  ${B.form}`;
-  updateInfo('a'); updateInfo('b');
+  const forms=getForms();
+  drawTeam(forms[A.form].p,A,$('color-a').value,false,W,H);
+  drawTeam(forms[B.form].p,B,$('color-b').value,true,W,H);
+  ctx.font='bold 12px Segoe UI';ctx.fillStyle=$('color-a').value;ctx.textAlign='left';ctx.fillText('▲ '+A.name,20,H-6);
+  ctx.fillStyle=$('color-b').value;ctx.textAlign='right';ctx.fillText(B.name+' ▼',W-20,24);
+  $('pitch-vs').textContent=`${A.form}  ⚔  ${B.form}`;
+  updateInfo('a');updateInfo('b');
+  if(currentMode==='efb'){ updateEfbVector('a'); updateEfbVector('b'); }
 }
 function drawTeam(positions,m,color,flip,W,H){
   const pad=16;
   positions.forEach((p,i)=>{
-    let [px,py]=p;
-    if(i!==0) [px,py]=adjPos(px,py,m);
-    let x=px*(W-pad*2)+pad, y=py*(H-56)+28; if(flip) y=H-y;
+    let [px,py]=p; if(i!==0)[px,py]=adjPos(px,py,m);
+    let x=px*(W-pad*2)+pad, y=py*(H-56)+28; if(flip)y=H-y;
     ctx.beginPath();ctx.arc(x+2,y+2,12,0,7);ctx.fillStyle='rgba(0,0,0,.22)';ctx.fill();
     ctx.beginPath();ctx.arc(x,y,12,0,7);ctx.fillStyle=color;ctx.fill();
     ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-    ctx.fillStyle='#fff';ctx.font='bold 10px Segoe UI';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(i+1,x,y);
+    ctx.fillStyle='#fff';ctx.font='bold 10px Segoe UI';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(i+1,x,y);
   });
   ctx.textBaseline='alphabetic';
 }
 function updateInfo(team){
-  const forms=currentMode==='efb'?FORMATIONS_EFB:FORMATIONS_REAL;
-  const presets=getCurrentPresets();
-  const f=forms[$('form-'+team).value];
-  const p=presets[$('preset-'+team).value];
-  $(('info-'+team)).textContent = p ? '💡 '+p.note : (f?f.desc:'');
+  const f=getForms()[$('form-'+team).value]; const p=getPresets()[$('preset-'+team).value];
+  $('info-'+team).textContent = p ? '💡 '+p.note : (f?f.desc:'');
 }
 
 // ============================================================
 //  プリセット適用
 // ============================================================
 function applyPreset(team){
-  const p=getCurrentPresets()[$('preset-'+team).value];
-  if(!p){ drawPitch(); return; }
-  const forms=currentMode==='efb'?FORMATIONS_EFB:FORMATIONS_REAL;
-  if(forms[p.form]) $('form-'+team).value=p.form;
-  TACTICS.forEach(t=>{ $(t.key+'-'+team).value=p[t.key]||0; });
-  $('quality-'+team).value=p.quality||70;
-  $('quality-'+team+'-val').textContent=p.quality||70;
+  const p=getPresets()[$('preset-'+team).value]; if(!p){drawPitch();return;}
+  if(getForms()[p.form]) $('form-'+team).value=p.form;
   if(currentMode==='efb'){
-    $('style-'+team).value=p.style||'QC';
-    $('deepRun-'+team).value=p.deepRun||0;
-    $('counterTgt-'+team).value=p.counterTgt||0;
-    $('anchor-'+team).value=p.anchor||0;
-    $('marking-'+team).value=p.marking||0;
-    $('targetMan-'+team).value=p.targetMan||0;
+    $('style-'+team).value=p.style;
+    EFB_ATK_LIST.forEach((o,i)=>{ $('atk-'+i+'-'+team).checked=(p.atk||[]).includes(o.key); });
+    EFB_DEF_LIST.forEach((o,i)=>{ $('def-'+i+'-'+team).checked=(p.def||[]).includes(o.key); });
+    updateEfbLimits(team);
+    if(p.quality){ $('quality-'+team).value=p.quality; $('quality-'+team+'-val').textContent=p.quality; }
+  } else {
+    TACTICS.forEach(t=>{ $(t.key+'-'+team).value=p[t.key]; });
+    $('quality-'+team).value=p.quality; $('quality-'+team+'-val').textContent=p.quality;
   }
   drawPitch();
 }
@@ -912,17 +756,11 @@ function applyPreset(team){
 //  イベント
 // ============================================================
 ['a','b'].forEach(t=>{
-  TACTICS.forEach(x=>{
-    $(x.key+'-'+t).addEventListener('input',()=>{ $('preset-'+t).value='— 手動設定 —'; drawPitch(); });
-  });
-  ['deepRun','counterTgt','anchor','marking','targetMan'].forEach(k=>{
-    $(k+'-'+t).addEventListener('input',()=>{ $('preset-'+t).value='— 手動設定 —'; drawPitch(); });
-  });
+  TACTICS.forEach(x=>$(x.key+'-'+t).addEventListener('input',()=>{ $('preset-'+t).value='— 手動設定 —'; drawPitch(); }));
   $('style-'+t).addEventListener('change',()=>{ $('preset-'+t).value='— 手動設定 —'; drawPitch(); });
-  $('quality-'+t).addEventListener('input',()=>{
-    $('quality-'+t+'-val').textContent=$('quality-'+t).value;
-    $('preset-'+t).value='— 手動設定 —';
-  });
+  EFB_ATK_LIST.forEach((o,i)=>$('atk-'+i+'-'+t).addEventListener('change',()=>{ $('preset-'+t).value='— 手動設定 —'; updateEfbLimits(t); drawPitch(); }));
+  EFB_DEF_LIST.forEach((o,i)=>$('def-'+i+'-'+t).addEventListener('change',()=>{ $('preset-'+t).value='— 手動設定 —'; updateEfbLimits(t); drawPitch(); }));
+  $('quality-'+t).addEventListener('input',()=>{ $('quality-'+t+'-val').textContent=$('quality-'+t).value; $('preset-'+t).value='— 手動設定 —'; });
   $('form-'+t).addEventListener('change',()=>{ $('preset-'+t).value='— 手動設定 —'; drawPitch(); });
   $('preset-'+t).addEventListener('change',()=>applyPreset(t));
   $('color-'+t).addEventListener('change',drawPitch);
@@ -931,32 +769,31 @@ function applyPreset(team){
 
 $('btn-sim').addEventListener('click',()=>{
   $('sim-progress').style.display='block';
-  ['scoreboard','stats-box','report-box','log-box'].forEach(id=>$(id).style.display='none');
-  setTimeout(()=>{ showResult(); $('sim-progress').style.display='none'; }, 420);
+  ['batch-box','scoreboard','stats-box','report-box','log-box'].forEach(id=>$(id).style.display='none');
+  setTimeout(()=>{ const N=parseInt($('trials').value); if(N===1)showSingle(); else showBatch(N); $('sim-progress').style.display='none'; },380);
 });
 $('btn-reset').addEventListener('click',()=>{
-  ['scoreboard','stats-box','report-box','log-box','sim-progress'].forEach(id=>$(id).style.display='none');
-  const def=currentMode==='efb'?DEFAULT_EFB:DEFAULT_REAL;
+  ['batch-box','scoreboard','stats-box','report-box','log-box','sim-progress'].forEach(id=>$(id).style.display='none');
   ['a','b'].forEach(t=>{
-    TACTICS.forEach(x=>$(x.key+'-'+t).value=def[x.key]||50);
+    TACTICS.forEach(x=>$(x.key+'-'+t).value=DEFAULT_REAL[x.key]);
     $('quality-'+t).value=70; $('quality-'+t+'-val').textContent='70';
     $('preset-'+t).value='— 手動設定 —';
-    if(currentMode==='efb'){
-      ['deepRun','counterTgt','anchor','marking','targetMan'].forEach(k=>$(k+'-'+t).value=30);
-      $('style-'+t).value='QC';
+    if(currentMode==='efb'){ $('style-'+t).value='ポゼッション';
+      EFB_ATK_LIST.forEach((o,i)=>$('atk-'+i+'-'+t).checked=false);
+      EFB_DEF_LIST.forEach((o,i)=>$('def-'+i+'-'+t).checked=false);
+      updateEfbLimits(t);
     }
   });
   drawPitch();
 });
 
 // ============================================================
-//  結果表示
+//  1試合の詳細表示
 // ============================================================
-function showResult(){
+function showSingle(){
   const A=readProfile('a'), B=readProfile('b');
-  const r=currentMode==='efb' ? simulateEfb(A,B) : simulateReal(A,B);
+  const r=runOne(A,B,true);
   const colA=$('color-a').value, colB=$('color-b').value;
-
   $('sb-name-a').textContent=A.name; $('sb-name-b').textContent=B.name;
   $('sb-score-a').textContent=r.gA; $('sb-score-b').textContent=r.gB;
   $('sb-score-a').style.color=colA; $('sb-score-b').style.color=colB;
@@ -966,55 +803,72 @@ function showResult(){
   else{bn.textContent='🤝 引き分け';bn.style.background='#f0f4f8';bn.style.color='#5a6a7a';}
   $('scoreboard').style.display='block';
 
-  // スタッツ
-  let sd;
-  if(currentMode==='efb'){
-    sd=[
-      {l:'推定ポゼッション',a:r.s.possApct,b:100-r.s.possApct,suf:'%'},
-      {l:'シュート',a:r.s.shotA,b:r.s.shotB},
-      {l:'xG（期待得点）',a:r.s.xgA.toFixed(2),b:r.s.xgB.toFixed(2)},
-      {l:'カウンター発生',a:r.s.cntA,b:r.s.cntB},
-      {l:'★裏抜けシュート',a:r.s.behA,b:r.s.behB},
-    ];
-  } else {
-    sd=[
-      {l:'推定ポゼッション',a:r.s.possApct,b:100-r.s.possApct,suf:'%'},
-      {l:'シュート',a:r.s.shotA,b:r.s.shotB},
-      {l:'枠内',a:r.s.sotA,b:r.s.sotB},
-      {l:'xG（期待得点）',a:r.s.xgA.toFixed(2),b:r.s.xgB.toFixed(2)},
-      {l:'決定機（大）',a:r.s.bigA,b:r.s.bigB},
-      {l:'カウンター発生',a:r.s.cntA,b:r.s.cntB},
-      {l:'プレス奪取',a:r.s.pwA,b:r.s.pwB},
-    ];
-  }
-  let h='';
-  sd.forEach(s=>{
-    const a=parseFloat(s.a),b=parseFloat(s.b),tot=a+b||1,wa=(a/tot*100).toFixed(0);
-    h+=`<div class="cmp-stat"><div class="cmp-top"><span style="color:${colA}">${s.a}${s.suf||''}</span><span class="cmp-label">${s.l}</span><span style="color:${colB}">${s.b}${s.suf||''}</span></div>
-    <div class="cmp-bars"><div class="cmp-a" style="width:${wa}%;background:${colA}"></div><div class="cmp-b" style="width:${100-wa}%;background:${colB}"></div></div></div>`;
-  });
+  const sd=[{l:'推定ポゼッション',a:r.s.possApct,b:100-r.s.possApct,suf:'%'},{l:'シュート',a:r.s.shotA,b:r.s.shotB},
+    {l:'xG（期待得点）',a:r.s.xgA.toFixed(2),b:r.s.xgB.toFixed(2)},{l:'カウンター',a:r.s.cntA,b:r.s.cntB}];
+  if(currentMode==='efb') sd.push({l:'★裏抜けシュート',a:r.s.behA,b:r.s.behB});
+  else { sd.splice(2,0,{l:'枠内',a:r.s.sotA,b:r.s.sotB}); sd.push({l:'プレス奪取',a:r.s.pwA,b:r.s.pwB}); }
+  let h=''; sd.forEach(x=>{ const a=parseFloat(x.a),b=parseFloat(x.b),tot=a+b||1,wa=(a/tot*100).toFixed(0);
+    h+=`<div class="cmp-stat"><div class="cmp-top"><span style="color:${colA}">${x.a}${x.suf||''}</span><span class="cmp-label">${x.l}</span><span style="color:${colB}">${x.b}${x.suf||''}</span></div>
+    <div class="cmp-bars"><div class="cmp-a" style="width:${wa}%;background:${colA}"></div><div class="cmp-b" style="width:${100-wa}%;background:${colB}"></div></div></div>`; });
   $('stats-content').innerHTML=h; $('stats-box').style.display='block';
-
-  // レポート
-  const rep=currentMode==='efb' ? efbReport(A,B) : tacticalReport(A,B);
-  const colHtml=(k,m,color)=>`<div class="col"><h3 style="color:${color}">${m.name}（${m.form}）${currentMode==='efb'?'<span class="efb-badge">'+m.style+'</span>':''}</h3>
-    ${rep.cols[k].ins.map(([cls,txt])=>`<div class="ins ${cls}">${txt}</div>`).join('')}</div>`;
-  $('report-content').innerHTML=`<div class="report">${colHtml('A',A,colA)}${colHtml('B',B,colB)}</div>
-    <div class="key-clash"><b>🎯 注目の噛み合わせ</b><br>${rep.clashes.map(c=>'・'+c).join('<br>')}</div>`;
-  $('report-box').style.display='block';
-
-  // ログ
-  $('log-list').innerHTML=r.log.map(e=>{
-    const c=e.type==='goal'?'log-goal':e.type==='half'?'log-half':'log-event';
-    const badge=e.efb?'<span class="behind-bar">裏抜け</span> ':'';
-    return `<div class="${c}">${badge}${e.text}</div>`;
-  }).join('');
+  renderReport(A,B,colA,colB);
+  $('log-list').innerHTML=r.log.map(e=>{ const c=e.type==='goal'?'log-goal':e.type==='half'?'log-half':'log-event'; return `<div class="${c}">${e.efb?'<span class="behind-bar">裏抜け</span> ':''}${e.text}</div>`; }).join('');
   $('log-box').style.display='block';
   $('scoreboard').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// 初期描画
-['a','b'].forEach(t=>$('quality-'+t+'-val').textContent=$('quality-'+t).value);
+// ============================================================
+//  一括実験
+// ============================================================
+function showBatch(N){
+  const A=readProfile('a'), B=readProfile('b');
+  const colA=$('color-a').value, colB=$('color-b').value;
+  let wA=0,wB=0,d=0, gA=0,gB=0, xgA=0,xgB=0, poss=0, cntA=0,cntB=0, behA=0,behB=0;
+  const scores={};
+  for(let n=0;n<N;n++){
+    const r=runOne(A,B,false);
+    if(r.gA>r.gB)wA++; else if(r.gB>r.gA)wB++; else d++;
+    gA+=r.gA; gB+=r.gB; xgA+=r.s.xgA; xgB+=r.s.xgB; poss+=r.s.possApct; cntA+=r.s.cntA; cntB+=r.s.cntB; behA+=r.s.behA; behB+=r.s.behB;
+    const key=r.gA+'-'+r.gB; scores[key]=(scores[key]||0)+1;
+  }
+  const pct=x=>(x/N*100).toFixed(1);
+  const topScores=Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${k}（${(v/N*100).toFixed(0)}%）`).join(' / ');
+  $('batch-title').textContent=`🧪 一括実験の結果（${N}試合 ・ ${currentMode==='efb'?'eFootballモード':'リアルモード'}）`;
+  let h=`<div class="wdl-record"><span style="color:${colA}">${A.name} ${wA}勝</span> ${d}分 <span style="color:${colB}">${wB}勝 ${B.name}</span></div>
+    <div class="wdl-sub">勝率 ${A.name} ${pct(wA)}％ ／ 引分 ${pct(d)}％ ／ ${B.name} ${pct(wB)}％</div>
+    <div class="wdl-bar">
+      <span style="width:${pct(wA)}%;background:${colA}">${pct(wA)}%</span>
+      <span class="draw" style="width:${pct(d)}%">${pct(d)}%</span>
+      <span style="width:${pct(wB)}%;background:${colB}">${pct(wB)}%</span>
+    </div>`;
+  const rows=[
+    ['平均得点', (gA/N).toFixed(2), (gB/N).toFixed(2)],
+    ['平均xG（期待得点）', (xgA/N).toFixed(2), (xgB/N).toFixed(2)],
+    ['平均ポゼッション', Math.round(poss/N)+'%', (100-Math.round(poss/N))+'%'],
+    ['平均カウンター', (cntA/N).toFixed(1), (cntB/N).toFixed(1)],
+  ];
+  if(currentMode==='efb') rows.push(['平均★裏抜けシュート',(behA/N).toFixed(1),(behB/N).toFixed(1)]);
+  rows.forEach(([l,a,b])=>{ const av=parseFloat(a),bv=parseFloat(b),tot=av+bv||1,wa=(av/tot*100).toFixed(0);
+    h+=`<div class="cmp-stat"><div class="cmp-top"><span style="color:${colA}">${a}</span><span class="cmp-label">${l}</span><span style="color:${colB}">${b}</span></div>
+    <div class="cmp-bars"><div class="cmp-a" style="width:${wa}%;background:${colA}"></div><div class="cmp-b" style="width:${100-wa}%;background:${colB}"></div></div></div>`; });
+  h+=`<div style="font-size:0.8rem;color:#7a8a9a;margin-top:6px">よく出たスコア：${topScores}</div>`;
+  $('batch-content').innerHTML=h; $('batch-box').style.display='block';
+  renderReport(A,B,colA,colB);
+  $('batch-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderReport(A,B,colA,colB){
+  const rep=currentMode==='efb'?efbReport(A,B):tacticalReport(A,B);
+  const styleName=m=>Object.keys(EFB_STYLES).find(s=>EFB_STYLES[s].code===m.style)||'';
+  const colHtml=(k,m,color)=>`<div class="col"><h3 style="color:${color}">${m.name}（${m.form}）${currentMode==='efb'?'<span class="efb-badge">'+styleName(m)+'</span>':''}</h3>
+    ${rep.cols[k].ins.map(([cls,txt])=>`<div class="ins ${cls}">${txt}</div>`).join('')}</div>`;
+  $('report-content').innerHTML=`<div class="report">${colHtml('A',A,colA)}${colHtml('B',B,colB)}</div>
+    <div class="key-clash"><b>🎯 注目の噛み合わせ</b><br>${rep.clashes.map(c=>'・'+c).join('<br>')}</div>`;
+  $('report-box').style.display='block';
+}
+
+// 初期化
+['a','b'].forEach(t=>{ $('quality-'+t+'-val').textContent=$('quality-'+t).value; updateEfbLimits(t); });
 drawPitch();
 </script>
 </body>
