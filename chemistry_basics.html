@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>化学基礎 総合学習サイト | 原子・分子モデルと解説</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg1:#eef5ff; --bg2:#f3f0ff; --bg3:#eafff8;
+    --ink:#1f2d3d; --muted:#5a6a7a;
+    --card:#ffffff; --line:rgba(31,45,61,0.08);
+    --primary:#3b5bdb; --primary-d:#2a45b8; --accent:#7048e8; --accent2:#12b886;
+    --warn:#e8590c;
+    --c-alkali:#ff8a80; --c-alk-earth:#ffd54f; --c-transition:#90caf9;
+    --c-metal:#a5d6a7; --c-metalloid:#ce93d8; --c-nonmetal:#80cbc4;
+    --c-halogen:#fff176; --c-noble:#b0bec5;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    color: var(--ink);
+    font-family: 'Hiragino Sans', 'Yu Gothic', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+  header.top {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(90deg,#3b5bdb,#7048e8 55%,#12b886);
+    box-shadow: 0 4px 18px rgba(31,45,61,0.25);
+    padding: 14px 18px 0;
+  }
+  header.top h1 {
+    color: #fff; text-align: center; font-size: 1.5rem; letter-spacing: 1px;
+    padding-bottom: 4px;
+  }
+  header.top .sub {
+    color: rgba(255,255,255,0.85); text-align: center; font-size: 0.8rem; padding-bottom: 10px;
+  }
+  nav.tabs {
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    padding-bottom: 10px;
+  }
+  nav.tabs button {
+    appearance: none; border: none; cursor: pointer;
+    background: rgba(255,255,255,0.16); color: #fff;
+    padding: 9px 16px; border-radius: 999px 999px 0 0;
+    font-size: 0.88rem; font-weight: 600; letter-spacing: 0.5px;
+    transition: background 0.15s, transform 0.15s;
+  }
+  nav.tabs button:hover { background: rgba(255,255,255,0.28); }
+  nav.tabs button.active { background: #fff; color: var(--primary-d); }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 22px 16px 0; }
+  .tabpanel { display: none; animation: fadeIn 0.25s ease; }
+  .tabpanel.active { display: block; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .card {
+    background: var(--card); border-radius: 16px; padding: 20px;
+    box-shadow: 0 6px 20px rgba(31,45,61,0.08); border: 1px solid var(--line);
+  }
+  h2.title { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-d); display:flex; align-items:center; gap:8px; }
+  h3 { font-size: 1.05rem; margin: 14px 0 8px; color: var(--accent); }
+  p.lead { color: var(--muted); font-size: 0.92rem; margin-bottom: 14px; line-height:1.7; }
+
+  /* ---------- Home ---------- */
+  .hero { text-align:center; padding: 18px 10px 26px; }
+  .hero h2 { font-size:1.5rem; color:var(--primary-d); margin-bottom:8px; }
+  .hero p { color:var(--muted); max-width:640px; margin:0 auto; line-height:1.8; font-size:0.92rem;}
+  .grid-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:18px; }
+  .feat {
+    background:var(--card); border-radius:16px; padding:18px; cursor:pointer;
+    box-shadow:0 6px 18px rgba(31,45,61,0.08); border:1px solid var(--line);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .feat:hover { transform:translateY(-4px); box-shadow:0 10px 26px rgba(31,45,61,0.14); }
+  .feat .emoji { font-size:2rem; }
+  .feat h3 { margin:8px 0 4px; color:var(--ink); }
+  .feat p { color:var(--muted); font-size:0.85rem; line-height:1.6; }
+  .roadmap { margin-top:26px; }
+  .roadmap ul { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; margin-top:10px;}
+  .roadmap li { background:#f7f9fc; border-left:4px solid var(--primary); border-radius:8px; padding:10px 12px; font-size:0.85rem; color:var(--muted);}
+  .roadmap li b { color:var(--ink); display:block; margin-bottom:2px; }
+
+  /* ---------- Atom ---------- */
+  .atom-layout { display:flex; flex-wrap:wrap; gap:20px; }
+  .atom-stage-wrap { flex:1 1 380px; text-align:center; }
+  .atom-controls { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
+  select, input[type=text], input[type=number] {
+    padding:9px 12px; border-radius:10px; border:1.5px solid #dfe6ec;
+    background:#f7fafc; color:var(--ink); font-size:0.88rem; outline:none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  select:focus, input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(59,91,219,0.14); }
+  button.btn {
+    padding:9px 16px; border-radius:10px; border:none; cursor:pointer;
+    background:var(--primary); color:#fff; font-size:0.85rem; font-weight:600;
+    transition: background .15s, transform .1s;
+  }
+  button.btn:hover { background:var(--primary-d); }
+  button.btn:active { transform:scale(0.97); }
+  button.btn.ghost { background:#eef1f8; color:var(--primary-d); }
+  #atomSvgHolder { width:100%; max-width:400px; margin:0 auto; }
+  .atom-info { flex:1 1 300px; }
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
+  .info-grid .cell { background:#f7f9fc; border-radius:10px; padding:8px 10px; font-size:0.82rem; }
+  .info-grid .cell b { display:block; font-size:1.05rem; color:var(--primary-d); }
+  .legend-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+
+  /* ---------- Molecule / crystal 3D ---------- */
+  .mol-layout { display:flex; flex-wrap:wrap; gap:20px; }
+  .stage3d-wrap { flex:1 1 360px; }
+  .stage3d {
+    width:100%; height:320px; perspective:900px; touch-action:none;
+    background:radial-gradient(circle at 50% 40%, #f5f8ff 0%, #e4ecfb 100%);
+    border-radius:16px; border:1px solid var(--line); position:relative; overflow:hidden;
+    cursor:grab;
+  }
+  .stage3d:active { cursor:grabbing; }
+  .model3d { width:0; height:0; position:absolute; left:50%; top:50%; transform-style:preserve-3d; }
+  .atom3d {
+    position:absolute; border-radius:50%; transform-style:preserve-3d;
+    box-shadow: inset -4px -4px 8px rgba(0,0,0,0.25), inset 3px 3px 6px rgba(255,255,255,0.5);
+  }
+  .bond3d { position:absolute; border-radius:3px; transform-style:preserve-3d; }
+  .hint3d { text-align:center; font-size:0.75rem; color:var(--muted); margin-top:6px; }
+  .mol-side { flex:1 1 280px; }
+  .badge-row { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+  .badge { background:#eef1f8; color:var(--primary-d); border-radius:999px; padding:5px 12px; font-size:0.78rem; font-weight:600; }
+  .badge.warn { background:#fff1e6; color:var(--warn); }
+  .structural-box { background:#f7f9fc; border-radius:10px; padding:12px; font-size:1.1rem; text-align:center; letter-spacing:1px; margin:10px 0; }
+  .note-box { background:#f0f6ff; border-left:4px solid var(--primary); border-radius:8px; padding:10px 12px; font-size:0.85rem; color:var(--muted); line-height:1.6; }
+
+  /* ---------- periodic table ---------- */
+  .ptable-scroll { overflow-x:auto; padding-bottom:10px; }
+  .ptable {
+    display:grid; grid-template-columns:repeat(18, minmax(46px,1fr)); gap:3px;
+    min-width:900px; margin-top:10px;
+  }
+  .pcell {
+    background:#fff; border:1px solid var(--line); border-radius:6px; padding:4px 3px;
+    cursor:pointer; text-align:center; transition:transform .1s, box-shadow .1s;
+    font-size:0.68rem; line-height:1.15;
+  }
+  .pcell:hover { transform:translateY(-3px) scale(1.06); box-shadow:0 6px 14px rgba(31,45,61,0.22); z-index:2; position:relative; }
+  .pcell .z { font-size:0.6rem; color:var(--muted); }
+  .pcell .sym { font-size:1.1rem; font-weight:700; }
+  .pcell .nm { font-size:0.6rem; color:var(--muted); }
+  .legend-wrap { display:flex; flex-wrap:wrap; gap:10px; margin:14px 0; font-size:0.78rem; }
+  .legend-wrap span { display:flex; align-items:center; gap:5px; }
+  .extra-elems { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+  .extra-chip {
+    background:#f7f9fc; border:1px solid var(--line); border-radius:12px; padding:8px 14px;
+    cursor:pointer; text-align:center; transition:transform .1s;
+  }
+  .extra-chip:hover { transform:translateY(-3px); }
+  .extra-chip .sym { font-weight:700; font-size:1.1rem; color:var(--primary-d); }
+  .extra-chip .nm { font-size:0.7rem; color:var(--muted); }
+  #elemPopup {
+    position:fixed; inset:0; background:rgba(20,25,40,0.45); display:none;
+    align-items:center; justify-content:center; z-index:200; padding:16px;
+  }
+  #elemPopup .box {
+    background:#fff; border-radius:16px; padding:22px; max-width:380px; width:100%;
+    box-shadow:0 20px 50px rgba(0,0,0,0.3);
+  }
+  #elemPopup .box h3 { margin-top:0; }
+  #elemPopup .close { float:right; cursor:pointer; font-size:1.2rem; color:var(--muted); }
+
+  /* ---------- Guide ---------- */
+  .guide-layout { display:flex; gap:20px; align-items:flex-start; }
+  .guide-toc { flex:0 0 250px; position:sticky; top:130px; max-height:75vh; overflow-y:auto; }
+  .guide-toc input { width:100%; margin-bottom:10px; }
+  .guide-toc .part-title { font-weight:700; color:var(--primary-d); margin:10px 0 4px; font-size:0.85rem; }
+  .guide-toc a { display:block; font-size:0.8rem; color:var(--muted); padding:4px 8px; border-radius:6px; text-decoration:none; }
+  .guide-toc a:hover { background:#eef1f8; color:var(--primary-d); }
+  .guide-content { flex:1 1 auto; min-width:0; }
+  section.part { margin-bottom:22px; }
+  section.part > h2 { color:#fff; background:linear-gradient(90deg,var(--primary),var(--accent)); padding:10px 16px; border-radius:10px; font-size:1.05rem; }
+  details.chapter {
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    margin-top:10px; padding:2px 16px; box-shadow:0 3px 10px rgba(31,45,61,0.05);
+  }
+  details.chapter[open] { padding-bottom:14px; }
+  details.chapter summary {
+    cursor:pointer; font-weight:700; padding:12px 0; color:var(--ink); font-size:0.95rem;
+    list-style:none;
+  }
+  details.chapter summary::-webkit-details-marker { display:none; }
+  details.chapter summary::before { content:'▸ '; color:var(--accent); }
+  details.chapter[open] summary::before { content:'▾ '; }
+  details.chapter p { font-size:0.86rem; line-height:1.85; color:var(--ink); margin:6px 0; }
+  details.chapter ul, details.chapter ol { margin:6px 0 6px 20px; font-size:0.86rem; line-height:1.8; }
+  table.datatable { width:100%; border-collapse:collapse; margin:10px 0; font-size:0.8rem; }
+  table.datatable th, table.datatable td { border:1px solid var(--line); padding:6px 8px; text-align:left; }
+  table.datatable th { background:#f0f3fa; color:var(--primary-d); }
+  .formula-box {
+    background:#f0f6ff; border:1.5px dashed var(--primary); border-radius:10px;
+    padding:10px 14px; font-size:0.9rem; margin:10px 0; font-weight:600; color:var(--primary-d);
+  }
+  .example-box {
+    background:#fff8ec; border-left:4px solid #f0a500; border-radius:8px;
+    padding:10px 14px; font-size:0.84rem; margin:10px 0; line-height:1.7;
+  }
+  .example-box b { color:#b5720a; }
+  .calc-box { background:#eefaf3; border:1px solid #b8e6cc; border-radius:12px; padding:14px; margin:12px 0; }
+  .calc-box h4 { color:#12864f; margin-bottom:8px; font-size:0.9rem; }
+  .calc-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+  .calc-row label { font-size:0.8rem; color:var(--muted); min-width:120px; }
+  .calc-result { font-size:0.86rem; font-weight:700; color:#12864f; margin-top:6px; }
+
+  footer { text-align:center; color:var(--muted); font-size:0.75rem; padding:30px 10px 10px; }
+
+  @media (max-width: 800px) {
+    .guide-layout { flex-direction:column; }
+    .guide-toc { position:static; max-height:none; width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>⚗️ 化学基礎 総合学習サイト</h1>
+  <div class="sub">原子モデル・分子モデル・周期表・詳細解説をひとつに</div>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="home">🏠 ホーム</button>
+    <button class="tab-btn" data-tab="atom">⚛️ 原子モデル</button>
+    <button class="tab-btn" data-tab="molecule">🧬 分子・結晶モデル</button>
+    <button class="tab-btn" data-tab="periodic">📊 周期表</button>
+    <button class="tab-btn" data-tab="guide">📖 解説</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section id="tab-home" class="tabpanel active">
+    <div class="card hero">
+      <h2>化学基礎を、見て・動かして・読んで理解する</h2>
+      <p>このサイトは高校「化学基礎」の内容を、インタラクティブな原子モデル・分子モデル・周期表と、単元ごとに整理した詳しい解説文でまとめた学習ツールです。気になるところから自由に見てみましょう。</p>
+    </div>
+    <div class="grid-cards">
+      <div class="feat" onclick="switchTab('atom')">
+        <div class="emoji">⚛️</div>
+        <h3>原子モデル</h3>
+        <p>元素を選ぶと、原子核と電子殻がアニメーションで表示されます。電子配置・価電子・同位体も確認できます。</p>
+      </div>
+      <div class="feat" onclick="switchTab('molecule')">
+        <div class="emoji">🧬</div>
+        <h3>分子・結晶モデル</h3>
+        <p>代表的な分子をドラッグで回転させながら3Dで観察。結合の種類・分子の形・極性、金属/イオン結晶の充填率も学べます。</p>
+      </div>
+      <div class="feat" onclick="switchTab('periodic')">
+        <div class="emoji">📊</div>
+        <h3>周期表</h3>
+        <p>H〜Krを中心にした対話型周期表。族・周期・元素の分類が色分けされ、クリックで原子モデルにジャンプできます。</p>
+      </div>
+      <div class="feat" onclick="switchTab('guide')">
+        <div class="emoji">📖</div>
+        <h3>解説（全27章）</h3>
+        <p>物質の構成／物質量と化学反応式／酸と塩基／酸化還元反応の4編・27章。計算ツール付きで検索もできます。</p>
+      </div>
+    </div>
+    <div class="card roadmap">
+      <h2 class="title">🗺️ 化学基礎 全体マップ</h2>
+      <ul>
+        <li><b>第1編 物質の構成</b>純物質と混合物、原子の構造、電子配置と周期表、イオン結合・共有結合・金属結合、各種結晶と充填率</li>
+        <li><b>第2編 物質量と化学反応式</b>原子量・分子量、mol とアボガドロ数、気体のモル体積、溶液の濃度、反応式の量的関係</li>
+        <li><b>第3編 酸と塩基</b>酸・塩基の定義、電離度、pH、中和反応、中和滴定と指示薬</li>
+        <li><b>第4編 酸化還元反応</b>酸化数、酸化剤・還元剤、金属のイオン化傾向、電池、電気分解</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ ATOM ============ -->
+  <section id="tab-atom" class="tabpanel">
+    <div class="card">
+      <h2 class="title">⚛️ 原子モデルビューア</h2>
+      <p class="lead">元素を選択すると、原子核と電子殻(K, L, M, N…殻)のボーアモデルをアニメーション表示します。周期表のセルをクリックしてここへジャンプすることもできます。</p>
+      <div class="atom-controls">
+        <select id="atomSelect" onchange="renderAtom(this.value)"></select>
+        <button class="btn ghost" onclick="stepElement(-1)">◀ 前の元素</button>
+        <button class="btn ghost" onclick="stepElement(1)">次の元素 ▶</button>
+      </div>
+      <div class="atom-layout">
+        <div class="atom-stage-wrap">
+          <div id="atomSvgHolder"></div>
+          <div style="font-size:0.78rem;color:var(--muted);">
+            <span class="legend-dot" style="background:#e03131;"></span>陽子(p⁺)
+            <span class="legend-dot" style="background:#868e96;margin-left:10px;"></span>中性子(n)
+            <span class="legend-dot" style="background:#1971c2;margin-left:10px;"></span>電子(e⁻)
+          </div>
+        </div>
+        <div class="atom-info">
+          <h3 id="atomName">-</h3>
+          <div class="info-grid">
+            <div class="cell">原子番号 (Z)<b id="infoZ">-</b></div>
+            <div class="cell">質量数 (代表同位体)<b id="infoMass">-</b></div>
+            <div class="cell">原子量<b id="infoWeight">-</b></div>
+            <div class="cell">陽子数 / 中性子数<b id="infoPN">-</b></div>
+            <div class="cell">電子配置<b id="infoConfig">-</b></div>
+            <div class="cell">価電子数<b id="infoValence">-</b></div>
+            <div class="cell">周期 / 族<b id="infoPeriodGroup">-</b></div>
+            <div class="cell">元素の分類<b id="infoCategory">-</b></div>
+          </div>
+          <div class="note-box" id="atomNote"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOLECULE ============ -->
+  <section id="tab-molecule" class="tabpanel">
+    <div class="card">
+      <h2 class="title">🧬 分子モデルビューア</h2>
+      <p class="lead">分子をドラッグして3D回転できます。結合の種類・分子の形・極性、構造式を確認しましょう。</p>
+      <div class="atom-controls">
+        <select id="molSelect" onchange="renderMolecule(this.value)"></select>
+      </div>
+      <div class="mol-layout">
+        <div class="stage3d-wrap">
+          <div class="stage3d" id="molStage"><div class="model3d" id="molModel"></div></div>
+          <div class="hint3d">ドラッグして回転 / 自動回転中</div>
+        </div>
+        <div class="mol-side">
+          <h3 id="molName">-</h3>
+          <div class="badge-row" id="molBadges"></div>
+          <div class="structural-box" id="molStructural">-</div>
+          <div class="note-box" id="molNote"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <h2 class="title">💠 結晶構造ビューア（充填率）</h2>
+      <p class="lead">金属結晶・イオン結晶の代表的な単位格子を3Dで観察し、充填率（原子が空間を占める割合）を確認できます。</p>
+      <div class="atom-controls">
+        <select id="crystalSelect" onchange="renderCrystal(this.value)">
+          <option value="simple">単純立方格子</option>
+          <option value="bcc">体心立方格子</option>
+          <option value="fcc">面心立方格子</option>
+          <option value="nacl">NaCl型イオン結晶</option>
+        </select>
+      </div>
+      <div class="mol-layout">
+        <div class="stage3d-wrap">
+          <div class="stage3d" id="crystalStage"><div class="model3d" id="crystalModel"></div></div>
+          <div class="hint3d">ドラッグして回転 / 自動回転中</div>
+        </div>
+        <div class="mol-side">
+          <h3 id="crystalName">-</h3>
+          <div class="info-grid" id="crystalInfo"></div>
+          <div class="note-box" id="crystalNote"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PERIODIC ============ -->
+  <section id="tab-periodic" class="tabpanel">
+    <div class="card">
+      <h2 class="title">📊 対話型周期表（H〜Kr, Z=1〜36）</h2>
+      <p class="lead">セルをクリックすると詳細がポップアップし、「原子モデルで見る」から⚛️タブへジャンプできます。</p>
+      <div class="legend-wrap">
+        <span><span class="legend-dot" style="background:var(--c-alkali);"></span>アルカリ金属</span>
+        <span><span class="legend-dot" style="background:var(--c-alk-earth);"></span>アルカリ土類金属</span>
+        <span><span class="legend-dot" style="background:var(--c-transition);"></span>遷移元素</span>
+        <span><span class="legend-dot" style="background:var(--c-metal);"></span>その他の金属</span>
+        <span><span class="legend-dot" style="background:var(--c-metalloid);"></span>半金属</span>
+        <span><span class="legend-dot" style="background:var(--c-nonmetal);"></span>非金属</span>
+        <span><span class="legend-dot" style="background:var(--c-halogen);"></span>ハロゲン</span>
+        <span><span class="legend-dot" style="background:var(--c-noble);"></span>希ガス</span>
+      </div>
+      <div class="ptable-scroll"><div class="ptable" id="ptableGrid"></div></div>
+      <h3>教科書でよく登場するその他の元素</h3>
+      <div class="extra-elems" id="extraElems"></div>
+    </div>
+  </section>
+
+  <!-- ============ GUIDE ============ -->
+  <section id="tab-guide" class="tabpanel">
+    <div class="guide-layout">
+      <div class="card guide-toc">
+        <input type="text" id="tocSearch" placeholder="🔍 キーワードで検索…" oninput="filterGuide(this.value)">
+        <div id="tocList"></div>
+      </div>
+      <div class="guide-content" id="guideContent">
+
+        <section class="part" id="part-1">
+          <h2>第1編 物質の構成</h2>
+
+          <details class="chapter" id="ch1-1"><summary>1-1 純物質と混合物・単体と化合物・同素体</summary>
+            <p><b>純物質</b>は1種類の物質だけからなるもの（例：水、酸素、塩化ナトリウム）。<b>混合物</b>は2種類以上の純物質が混ざったもの（例：食塩水、空気、海水、石油）で、成分の割合を変えても性質が保たれます。</p>
+            <p>混合物を成分ごとに分ける操作を「分離・精製」といいます。代表的な方法は以下の通りです。</p>
+            <table class="datatable"><tr><th>操作</th><th>原理・用途</th></tr>
+              <tr><td>ろ過</td><td>固体と液体を、ろ紙などで分ける</td></tr>
+              <tr><td>蒸留</td><td>沸点の差を利用して液体混合物を分離（例：海水から真水）</td></tr>
+              <tr><td>分留</td><td>沸点の異なる複数成分を段階的に蒸留（例：石油の分留）</td></tr>
+              <tr><td>再結晶</td><td>温度による溶解度の差を利用し、固体の純度を上げる</td></tr>
+              <tr><td>抽出</td><td>溶媒への溶けやすさの差を利用して特定成分を取り出す</td></tr>
+              <tr><td>クロマトグラフィー</td><td>物質が紙・担体を移動する速さの差を利用して分離</td></tr>
+              <tr><td>昇華法</td><td>昇華しやすい物質（ヨウ素、ドライアイスなど）を分離</td></tr>
+            </table>
+            <p>純物質はさらに、1種類の元素からなる<b>単体</b>（例：O₂, Fe, C）と、2種類以上の元素からなる<b>化合物</b>（例：H₂O, NaCl）に分けられます。</p>
+            <p>同じ元素からなる単体で、性質の異なるものを<b>同素体</b>といいます。「SCOP（スコップ）」で覚えるとよいでしょう。</p>
+            <table class="datatable"><tr><th>元素</th><th>同素体の例</th></tr>
+              <tr><td>S（硫黄）</td><td>斜方硫黄・単斜硫黄・ゴム状硫黄</td></tr>
+              <tr><td>C（炭素）</td><td>ダイヤモンド・黒鉛（グラファイト）・フラーレン</td></tr>
+              <tr><td>O（酸素）</td><td>酸素 O₂・オゾン O₃</td></tr>
+              <tr><td>P（リン）</td><td>黄リン（猛毒）・赤リン</td></tr>
+            </table>
+          </details>
+
+          <details class="chapter" id="ch1-2"><summary>1-2 物質の三態と状態変化</summary>
+            <p>物質は温度・圧力によって固体・液体・気体の3つの状態（三態）をとります。粒子の熱運動と粒子間にはたらく引力のバランスで状態が決まります。</p>
+            <table class="datatable"><tr><th>変化</th><th>向き</th></tr>
+              <tr><td>融解</td><td>固体→液体</td></tr><tr><td>凝固</td><td>液体→固体</td></tr>
+              <tr><td>蒸発（気化）</td><td>液体→気体</td></tr><tr><td>凝縮</td><td>気体→液体</td></tr>
+              <tr><td>昇華</td><td>固体→気体</td></tr><tr><td>凝華</td><td>気体→固体</td></tr>
+            </table>
+            <p>固体では粒子は規則正しく配列し振動のみ、液体では粒子は移動できるが集合を保つ、気体では粒子は自由に飛び回り体積・形が定まりません。状態変化の間、温度は一定に保たれます（融点・沸点）。</p>
+          </details>
+
+          <details class="chapter" id="ch1-3"><summary>1-3 原子の構造・同位体</summary>
+            <p>原子は中心の<b>原子核</b>（陽子+中性子）と、その周りを回る<b>電子</b>からできています。</p>
+            <div class="formula-box">原子番号 Z ＝ 陽子の数 ＝（中性原子の）電子の数<br>質量数 A ＝ 陽子の数 ＋ 中性子の数</div>
+            <p>陽子は+の電荷、電子は-の電荷を持ち、中性子は電荷を持ちません。中性の原子では陽子数と電子数が等しいため、原子全体の電荷は0になります。</p>
+            <p>原子番号が同じ（＝元素が同じ）でも中性子の数が異なるものを<b>同位体（アイソトープ）</b>といいます。化学的性質はほぼ同じですが、質量が異なります。</p>
+            <table class="datatable"><tr><th>元素</th><th>同位体の例</th><th>備考</th></tr>
+              <tr><td>水素</td><td>¹H（軽水素）, ²H（重水素 D）, ³H（三重水素 T）</td><td>Tは放射性同位体</td></tr>
+              <tr><td>炭素</td><td>¹²C（存在比 約99%）, ¹³C, ¹⁴C</td><td>¹⁴Cは放射性、年代測定に利用</td></tr>
+              <tr><td>塩素</td><td>³⁵Cl（約76%）, ³⁷Cl（約24%）</td><td>原子量35.5はこの平均値</td></tr>
+            </table>
+            <p>原子量は、各同位体の相対質量にその存在比（割合）を掛けて合計した平均値です。放射性同位体は原子核が不安定で、放射線を出しながら別の原子核に変化（壊変）します。</p>
+          </details>
+
+          <details class="chapter" id="ch1-4"><summary>1-4 電子配置と価電子</summary>
+            <p>電子は原子核の周りにある<b>電子殻</b>に配置されます。内側からK殻・L殻・M殻・N殻…と呼び、各殻に入れる電子の最大数は決まっています。</p>
+            <div class="formula-box">電子殻の最大収容電子数 ＝ 2n²（n：内側から数えた殻の番号）<br>K殻(n=1):2個　L殻(n=2):8個　M殻(n=3):18個　N殻(n=4):32個</div>
+            <p>電子は原則として内側の殻から順に配置されますが、K・Ca以降ではM殻が18個埋まる前にN殻に電子が入り始めるという例外があります（本サイトの原子モデルは実際の配置に基づいています）。</p>
+            <p>もっとも外側の電子殻に入っている電子を<b>最外殻電子</b>、そのうち反応にかかわるものを<b>価電子</b>といいます（貴ガスの価電子数は0として扱います）。価電子の数がその原子の化学的性質（結合のしかたやイオンへのなりやすさ）を大きく左右します。</p>
+          </details>
+
+          <details class="chapter" id="ch1-5"><summary>1-5 周期表と周期律</summary>
+            <p>元素を原子番号の順に並べると、性質が周期的に繰り返されます（周期律）。これを表にまとめたものが<b>周期表</b>で、横の行を<b>周期</b>（1〜7）、縦の列を<b>族</b>（1〜18）と呼びます。</p>
+            <p>同じ族の元素は最外殻電子の数（価電子数）が似ているため、化学的性質もよく似ています。1・2族と13〜18族を<b>典型元素</b>、3〜12族を<b>遷移元素</b>と呼びます。遷移元素はすべて金属です。</p>
+            <p>周期表は左下ほど金属性が強く、右上ほど非金属性が強い傾向があります（水素を除く）。金属元素は陽イオンになりやすく、非金属元素は陰イオンになりやすい性質を持ちます。</p>
+          </details>
+
+          <details class="chapter" id="ch1-6"><summary>1-6 イオンとイオン化エネルギー・電子親和力</summary>
+            <p>原子が電子を失うと<b>陽イオン</b>（例 Na⁺）、電子を受け取ると<b>陰イオン</b>（例 Cl⁻）になります。多くの原子は、貴ガスと同じ安定な電子配置になろうとしてイオンになります。</p>
+            <div class="formula-box">イオン化エネルギー：原子から電子を1個取り去るのに必要なエネルギー（小さいほど陽イオンになりやすい＝アルカリ金属で小さい）<br>電子親和力：原子が電子を1個受け取るときに放出するエネルギー（大きいほど陰イオンになりやすい＝ハロゲンで大きい）</div>
+            <p>例：Na → Na⁺ + e⁻（ネオンと同じ電子配置に）、 Cl + e⁻ → Cl⁻（アルゴンと同じ電子配置に）</p>
+          </details>
+
+          <details class="chapter" id="ch1-7"><summary>1-7 イオン結合とイオン結晶</summary>
+            <p>陽イオンと陰イオンが静電気的な引力（クーロン力）で結びつくことを<b>イオン結合</b>といいます。金属元素（陽イオンになりやすい）と非金属元素（陰イオンになりやすい）の組み合わせで生じます。</p>
+            <p>イオン結合でできた化合物は、原子の個数比を最も簡単な整数比で表した<b>組成式</b>（例 NaCl, CaCl₂, Al₂O₃）で表します。全体として陽イオンと陰イオンの電荷の総和が0になるように決めます。</p>
+            <p>イオン結晶の性質：融点が高く硬いが、特定方向に力を加えると割れやすい（へき開）。固体は電気を通さないが、融解液や水溶液にすると自由に動けるイオンができるため電気を通す。</p>
+            <p>NaCl型結晶では、Na⁺とCl⁻が交互に規則正しく配列した立方体構造をつくります（結晶モデルは「分子・結晶モデル」タブで確認できます）。</p>
+          </details>
+
+          <details class="chapter" id="ch1-8"><summary>1-8 共有結合と分子・分子の形・極性</summary>
+            <p>非金属原子どうしが、互いに価電子を出し合い共有することでできる結合を<b>共有結合</b>といいます。共有された電子対を<b>共有電子対</b>、共有されていない電子対を<b>非共有電子対（孤立電子対）</b>といいます。</p>
+            <p>元素記号と価電子（点）で表した式を<b>電子式</b>、共有結合を線（－）で表した式を<b>構造式</b>といいます。線1本＝単結合、2本＝二重結合、3本＝三重結合です。</p>
+            <p>一方の原子だけが電子対を提供してできる共有結合を<b>配位結合</b>といいます（例：NH₄⁺, H₃O⁺, OH⁻からのH₂O）。できた結合は他の共有結合と区別できません。</p>
+            <p>分子は立体的な形を持ちます（電子対どうしの反発が最小になる配置をとる、というのが基本的な考え方です）。</p>
+            <table class="datatable"><tr><th>分子</th><th>形</th><th>結合角の目安</th></tr>
+              <tr><td>CO₂, C₂H₂</td><td>直線形</td><td>180°</td></tr>
+              <tr><td>H₂O, SO₂</td><td>折れ線形</td><td>約104.5°</td></tr>
+              <tr><td>NH₃</td><td>三角錐形</td><td>約107°</td></tr>
+              <tr><td>CH₄</td><td>正四面体形</td><td>約109.5°</td></tr>
+            </table>
+            <p>結合に電荷のかたよりがあるものを極性結合といい、分子全体として電荷のかたよりが残るものを<b>極性分子</b>、打ち消し合って残らないものを<b>無極性分子</b>といいます。CO₂やCH₄は結合に極性があっても、対称な形のため分子全体では無極性になります。</p>
+          </details>
+
+          <details class="chapter" id="ch1-9"><summary>1-9 分子間力と分子結晶</summary>
+            <p>すべての分子の間には、弱い引力である<b>ファンデルワールス力</b>がはたらきます。分子量が大きいほど強くなり、沸点・融点が高くなる傾向があります。</p>
+            <p>F・O・N原子に直接結合したH原子は、他の分子のF・O・N原子と強く引き合う<b>水素結合</b>を形成します。水素結合は分子間力の中でも特に強く、H₂O・NH₃・HFは同族の水素化合物（H₂S、PH₃、HClなど）に比べて沸点が異常に高くなります。</p>
+            <p>分子が分子間力によって規則正しく配列した結晶を<b>分子結晶</b>といいます（例：氷、ドライアイスCO₂、ヨウ素I₂）。分子結晶は一般に融点が低く、やわらかく、昇華するものもあります。</p>
+          </details>
+
+          <details class="chapter" id="ch1-10"><summary>1-10 金属結合と金属結晶・充填率</summary>
+            <p>金属原子の価電子は特定の原子に固定されず、結晶全体を自由に動き回ります。これを<b>自由電子</b>といい、自由電子による金属原子どうしの結合を<b>金属結合</b>といいます。</p>
+            <p>金属の性質（電気伝導性・熱伝導性が高い、金属光沢、たたくと薄く広がる<b>展性</b>、引っ張ると細く伸びる<b>延性</b>）はすべて自由電子の存在で説明できます。</p>
+            <p>金属原子は下表のような規則正しい結晶格子（単位格子）を作ります。<b>充填率</b>は、単位格子の体積のうち原子が実際に占める体積の割合です。</p>
+            <table class="datatable"><tr><th>結晶格子</th><th>単位格子中の原子数</th><th>配位数</th><th>充填率</th><th>金属の例</th></tr>
+              <tr><td>体心立方格子 (BCC)</td><td>2個</td><td>8</td><td>約68%</td><td>Na, K, Fe(常温)</td></tr>
+              <tr><td>面心立方格子 (FCC)</td><td>4個</td><td>12</td><td>約74%</td><td>Cu, Ag, Al, Au</td></tr>
+              <tr><td>六方最密構造 (HCP)</td><td>2個</td><td>12</td><td>約74%</td><td>Mg, Zn</td></tr>
+            </table>
+            <p>面心立方格子と六方最密構造はどちらも球を最も密に詰めた「最密充填」構造で、充填率は同じ約74%です。違いは積み重ね方で、面心立方はABCABC…、六方最密はABAB…という順で層を重ねます。（体心立方は最密構造ではないため充填率がやや低くなります。）3Dモデルは「分子・結晶モデル」タブの結晶構造ビューアで確認できます。</p>
+            <div class="example-box"><b>例題：</b>単純立方格子（原子が立方体の頂点だけにある構造、単位格子中の原子数1個、配位数6）の充填率は約52%です。原子を球とみなし、単位格子の一辺を a、原子半径を r とすると a=2r の関係があり、充填率＝(4/3πr³×1)/a³ で計算できます。</div>
+          </details>
+
+          <details class="chapter" id="ch1-11"><summary>1-11 共有結合の結晶</summary>
+            <p>非常に多数の原子が共有結合だけで規則正しく結びついた結晶を<b>共有結合の結晶</b>といいます。</p>
+            <table class="datatable"><tr><th>物質</th><th>構造</th><th>性質</th></tr>
+              <tr><td>ダイヤモンド（C）</td><td>各炭素原子が正四面体状に4個のCと結合</td><td>非常に硬い、電気を通さない（絶縁体）、無色透明</td></tr>
+              <tr><td>黒鉛（C）</td><td>正六角形の層が重なった構造、層内は共有結合、層間は弱い力</td><td>薄くはがれやすい、電気をよく通す（層内の電子が動ける）</td></tr>
+              <tr><td>ケイ素（Si）</td><td>ダイヤモンドと同じ構造</td><td>半導体、電子部品の材料</td></tr>
+              <tr><td>二酸化ケイ素（SiO₂・石英）</td><td>Siを中心にOが正四面体状に結合した網目構造</td><td>非常に硬く融点が高い、ガラスの原料</td></tr>
+            </table>
+            <p>共有結合の結晶は結合が非常に強いため、一般に融点が極めて高く、硬いという特徴があります。</p>
+          </details>
+        </section>
+
+        <section class="part" id="part-2">
+          <h2>第2編 物質量と化学反応式</h2>
+
+          <details class="chapter" id="ch2-1"><summary>2-1 原子量・分子量・式量</summary>
+            <p><b>原子量</b>は、質量数12の炭素原子（¹²C）を基準（12）とした相対質量に、天然に存在する同位体の存在比を考慮して平均した値です。</p>
+            <p><b>分子量</b>は分子を構成するすべての原子の原子量の総和、<b>式量</b>はイオン結晶や金属など分子として存在しない物質の組成式に含まれる原子量の総和です。</p>
+            <div class="example-box"><b>例：</b>水 H₂O の分子量 ＝ 1.0×2 + 16.0 ＝ 18.0　／　塩化ナトリウム NaCl の式量 ＝ 23.0 + 35.5 ＝ 58.5</div>
+          </details>
+
+          <details class="chapter" id="ch2-2"><summary>2-2 物質量（mol）とアボガドロ数</summary>
+            <p>原子や分子は非常に小さいため、6.02×10²³個の粒子の集団を1つの単位として扱います。これを<b>1 mol（モル）</b>といい、6.02×10²³ /mol を<b>アボガドロ定数 N_A</b>と呼びます。</p>
+            <div class="formula-box">物質量 n [mol] ＝ 質量 w [g] ÷ モル質量 M [g/mol] ＝ 粒子数 N ÷ アボガドロ定数 N_A</div>
+            <p>モル質量は、原子量・分子量・式量にそのまま単位 g/mol をつけた値です（例：炭素のモル質量は12.0 g/mol）。</p>
+            <div class="calc-box"><h4>🧮 mol・質量・粒子数 変換ツール</h4>
+              <div class="calc-row"><label>モル質量 M [g/mol]</label><input type="number" id="calcM" placeholder="例 18.0"></div>
+              <div class="calc-row"><label>物質量 n [mol]</label><input type="number" id="calcN" placeholder="どちらかを入力"></div>
+              <div class="calc-row"><label>質量 w [g]</label><input type="number" id="calcW" placeholder="どちらかを入力"></div>
+              <button class="btn" onclick="calcMol()">計算する</button>
+              <div class="calc-result" id="calcMolResult"></div>
+            </div>
+          </details>
+
+          <details class="chapter" id="ch2-3"><summary>2-3 気体のモル体積・アボガドロの法則</summary>
+            <p><b>アボガドロの法則</b>：同温・同圧のもとでは、気体の種類によらず同体積中に同数の分子が含まれます。</p>
+            <div class="formula-box">標準状態（0℃, 1.013×10⁵ Pa）で、気体1 molの体積は種類によらず 22.4 L</div>
+            <p>この関係から、標準状態の気体では 体積[L] ÷ 22.4 [L/mol] ＝ 物質量[mol] という変換ができます。</p>
+          </details>
+
+          <details class="chapter" id="ch2-4"><summary>2-4 溶液の濃度</summary>
+            <div class="formula-box">質量パーセント濃度 [%] ＝ 溶質の質量[g] ÷ 溶液の質量[g] × 100<br>モル濃度 [mol/L] ＝ 溶質の物質量[mol] ÷ 溶液の体積[L]</div>
+            <p>溶液の質量＝溶媒の質量＋溶質の質量である点に注意しましょう。モル濃度は溶液1Lあたりに溶けている溶質の物質量を表します。</p>
+            <div class="calc-box"><h4>🧮 モル濃度 計算ツール</h4>
+              <div class="calc-row"><label>溶質の物質量 [mol]</label><input type="number" id="concN" placeholder="例 0.50"></div>
+              <div class="calc-row"><label>溶液の体積 [mL]</label><input type="number" id="concV" placeholder="例 250"></div>
+              <button class="btn" onclick="calcConc()">モル濃度を計算</button>
+              <div class="calc-result" id="calcConcResult"></div>
+            </div>
+          </details>
+
+          <details class="chapter" id="ch2-5"><summary>2-5 化学反応式と量的関係</summary>
+            <p>化学反応式の係数比は、反応する物質・生成する物質の<b>物質量（mol）の比</b>をそのまま表しています。</p>
+            <div class="example-box"><b>例：</b> CH₄ + 2O₂ → CO₂ + 2H₂O<br>メタン1molが完全燃焼すると、酸素2mol を消費し、二酸化炭素1molと水2molが生成する、という意味になります。質量保存の法則により、反応の前後で全体の質量の総和は変化しません。</div>
+            <p>反応式を作る手順：①反応物・生成物の化学式を書く　②左右で各原子の数が等しくなるよう係数をつける（係数は最も簡単な整数比にする）　③係数1は省略する。</p>
+          </details>
+        </section>
+
+        <section class="part" id="part-3">
+          <h2>第3編 酸と塩基</h2>
+
+          <details class="chapter" id="ch3-1"><summary>3-1 酸・塩基の定義と価数</summary>
+            <p><b>アレニウスの定義</b>：水に溶けて水素イオン H⁺ を生じる物質を酸、水酸化物イオン OH⁻ を生じる物質を塩基という。</p>
+            <p><b>ブレンステッド・ローリーの定義</b>（より広い定義）：他の物質に H⁺ を与える物質を酸、H⁺ を受け取る物質を塩基という。これによりNH₃のようにOH⁻を持たない塩基も説明できます。</p>
+            <p>酸・塩基が電離したときに生じる H⁺（またはOH⁻）の数を<b>価数</b>といいます（例：HClは1価の酸、H₂SO₄は2価の酸、NaOHは1価の塩基、Ca(OH)₂は2価の塩基）。</p>
+          </details>
+
+          <details class="chapter" id="ch3-2"><summary>3-2 電離度と酸・塩基の強弱</summary>
+            <div class="formula-box">電離度 α ＝ 電離した酸（塩基）の物質量 ÷ 溶かした酸（塩基）の物質量　（0 ＜ α ≦ 1）</div>
+            <p>電離度がほぼ1（ほぼ完全に電離する）酸・塩基を<b>強酸・強塩基</b>、1より著しく小さい酸・塩基を<b>弱酸・弱塩基</b>といいます。</p>
+            <table class="datatable"><tr><th>分類</th><th>代表例</th></tr>
+              <tr><td>強酸</td><td>塩酸 HCl、硫酸 H₂SO₄、硝酸 HNO₃</td></tr>
+              <tr><td>弱酸</td><td>酢酸 CH₃COOH、炭酸 H₂CO₃</td></tr>
+              <tr><td>強塩基</td><td>水酸化ナトリウム NaOH、水酸化カリウム KOH、水酸化バリウム Ba(OH)₂</td></tr>
+              <tr><td>弱塩基</td><td>アンモニア NH₃</td></tr>
+            </table>
+          </details>
+
+          <details class="chapter" id="ch3-3"><summary>3-3 水素イオン濃度とpH</summary>
+            <div class="formula-box">水のイオン積 Kw ＝ [H⁺][OH⁻] ＝ 1.0×10⁻¹⁴ (mol/L)²（25℃）<br>pH ＝ −log₁₀[H⁺]</div>
+            <p>pH＝7が中性、pH＜7が酸性（値が小さいほど酸性が強い）、pH＞7が塩基性（値が大きいほど塩基性が強い）です。pHが1小さくなるごとに [H⁺] は10倍になります。</p>
+            <div class="calc-box"><h4>🧮 pH 簡易計算ツール（強酸・強塩基）</h4>
+              <div class="calc-row"><label>種類</label>
+                <select id="phType"><option value="acid">強酸</option><option value="base">強塩基</option></select>
+              </div>
+              <div class="calc-row"><label>濃度 [mol/L]</label><input type="number" id="phC" placeholder="例 0.010"></div>
+              <div class="calc-row"><label>価数</label><input type="number" id="phV" value="1"></div>
+              <button class="btn" onclick="calcPH()">pHを計算</button>
+              <div class="calc-result" id="calcPHResult"></div>
+            </div>
+          </details>
+
+          <details class="chapter" id="ch3-4"><summary>3-4 中和反応と塩</summary>
+            <p>酸と塩基が反応して、互いの性質を打ち消し合い、塩と水を生じる反応を<b>中和反応</b>といいます（酸のH⁺と塩基のOH⁻が結びついてH₂Oになる）。</p>
+            <p>塩は組成によって次のように分類されます。</p>
+            <table class="datatable"><tr><th>分類</th><th>特徴</th><th>例</th></tr>
+              <tr><td>正塩</td><td>酸のHも塩基のOHも残っていない塩</td><td>NaCl, CaCl₂</td></tr>
+              <tr><td>酸性塩</td><td>酸のHが一部残っている塩</td><td>NaHCO₃, NaHSO₄</td></tr>
+              <tr><td>塩基性塩</td><td>塩基のOHが一部残っている塩</td><td>MgCl(OH)</td></tr>
+            </table>
+            <p>塩の名称の分類と水溶液の性質（液性）は必ずしも一致しません。強酸＋強塩基からできた正塩の水溶液は中性、弱酸＋強塩基からできた正塩は塩基性、強酸＋弱塩基からできた正塩は酸性を示すのが基本です（例：CH₃COONa水溶液は塩基性）。</p>
+          </details>
+
+          <details class="chapter" id="ch3-5"><summary>3-5 中和滴定と指示薬</summary>
+            <div class="formula-box">中和の量的関係：酸の物質量 × 価数 ＝ 塩基の物質量 × 価数<br>（酸の濃度 c₁[mol/L] × 体積 v₁[L] × 価数 a ＝ 塩基の濃度 c₂[mol/L] × 体積 v₂[L] × 価数 b）</div>
+            <p>濃度既知の酸（塩基）を用いて、濃度未知の塩基（酸）の濃度を求める操作を<b>中和滴定</b>といいます。中和点（過不足なく反応した点）を知るために指示薬を用います。</p>
+            <table class="datatable"><tr><th>指示薬</th><th>変色域(pH)</th><th>酸性側の色</th><th>塩基性側の色</th></tr>
+              <tr><td>メチルオレンジ</td><td>3.1〜4.4</td><td>赤</td><td>黄</td></tr>
+              <tr><td>BTB（ブロモチモールブルー）</td><td>6.0〜7.6</td><td>黄</td><td>青（中性は緑）</td></tr>
+              <tr><td>フェノールフタレイン</td><td>8.0〜9.8</td><td>無色</td><td>赤（桃）</td></tr>
+            </table>
+            <p>強酸と強塩基の滴定曲線は中和点付近でpHが急激に変化し、その範囲内であればどの指示薬でも判定できます。弱酸と強塩基の中和点はpH＞7側にずれるため、フェノールフタレインが適します。</p>
+          </details>
+        </section>
+
+        <section class="part" id="part-4">
+          <h2>第4編 酸化還元反応</h2>
+
+          <details class="chapter" id="ch4-1"><summary>4-1 酸化・還元の定義</summary>
+            <table class="datatable"><tr><th>基準</th><th>酸化</th><th>還元</th></tr>
+              <tr><td>酸素</td><td>酸素と結びつく</td><td>酸素を失う</td></tr>
+              <tr><td>水素</td><td>水素を失う</td><td>水素と結びつく</td></tr>
+              <tr><td>電子</td><td>電子を失う</td><td>電子を受け取る</td></tr>
+            </table>
+            <p>実際の反応では酸化と還元は必ず同時に起こります（一方が電子を失えば、他方がその電子を受け取るため）。これを酸化還元反応といいます。</p>
+          </details>
+
+          <details class="chapter" id="ch4-2"><summary>4-2 酸化数</summary>
+            <p><b>酸化数</b>は、原子がどれだけ酸化された（電子を失った）状態にあるかを表す数値です。酸化数が増加＝酸化された、減少＝還元された、と判断できます。</p>
+            <table class="datatable"><tr><th>ルール</th><th>内容</th></tr>
+              <tr><td>単体</td><td>酸化数は0（例：H₂, O₂, Feの酸化数は0）</td></tr>
+              <tr><td>単原子イオン</td><td>イオンの電荷に等しい（例：Na⁺は+1, Cl⁻は−1）</td></tr>
+              <tr><td>化合物中のH</td><td>+1（金属水素化物などの例外は−1）</td></tr>
+              <tr><td>化合物中のO</td><td>−2（過酸化物H₂O₂中は−1）</td></tr>
+              <tr><td>化合物全体</td><td>酸化数の総和は0、多原子イオンでは総和が電荷に等しい</td></tr>
+            </table>
+          </details>
+
+          <details class="chapter" id="ch4-3"><summary>4-3 酸化剤と還元剤</summary>
+            <p>相手の物質を酸化する（＝自身は還元される、電子を受け取る）物質を<b>酸化剤</b>、相手の物質を還元する（＝自身は酸化される、電子を失う）物質を<b>還元剤</b>といいます。</p>
+            <table class="datatable"><tr><th>代表的な酸化剤</th><th>代表的な還元剤</th></tr>
+              <tr><td>過マンガン酸カリウム KMnO₄、二クロム酸カリウム K₂Cr₂O₇、過酸化水素 H₂O₂、塩素 Cl₂</td><td>硫化水素 H₂S、二酸化硫黄 SO₂、金属の単体（Na, Znなど）、シュウ酸</td></tr>
+            </table>
+            <p>過酸化水素 H₂O₂ のように、反応相手によって酸化剤にも還元剤にもなる物質もあります。</p>
+          </details>
+
+          <details class="chapter" id="ch4-4"><summary>4-4 金属のイオン化傾向</summary>
+            <p>金属が水溶液中で陽イオンになろうとする性質の強さの順に並べたものを<b>イオン化列</b>といいます。</p>
+            <div class="formula-box">K ＞ Ca ＞ Na ＞ Mg ＞ Al ＞ Zn ＞ Fe ＞ Ni ＞ Sn ＞ Pb ＞ (H₂) ＞ Cu ＞ Hg ＞ Ag ＞ Pt ＞ Au</div>
+            <p>覚え方の例：「貸そう か な、ま あ あ てに す な ひ ど す ぎる 借金」（K Ca Na Mg Al Zn Fe Ni Sn Pb H Cu Hg Ag Pt Au）</p>
+            <p>イオン化傾向が大きい金属ほど反応性が高く、水や酸と反応しやすく、さびやすい性質があります。イオン化傾向がHより大きい金属は塩酸や希硫酸と反応して水素を発生します。</p>
+          </details>
+
+          <details class="chapter" id="ch4-5"><summary>4-5 電池の基礎</summary>
+            <p>酸化還元反応にともなう電子の移動を、導線を通して電流として取り出す装置を<b>電池</b>といいます。電子が流れ出る側（酸化反応が起こる側）を<b>負極</b>、電子が流れ込む側（還元反応が起こる側）を<b>正極</b>といいます。</p>
+            <table class="datatable"><tr><th>電池</th><th>構成</th><th>特徴</th></tr>
+              <tr><td>ダニエル電池</td><td>(-)Zn | ZnSO₄水溶液 || CuSO₄水溶液 | Cu(+)</td><td>亜鉛が溶け出し、銅が析出する。起電力 約1.1V</td></tr>
+              <tr><td>鉛蓄電池</td><td>(-)Pb | 希硫酸 | PbO₂(+)</td><td>自動車のバッテリーに利用。充電できる二次電池</td></tr>
+              <tr><td>燃料電池</td><td>水素と酸素の反応を利用</td><td>生成物が水のみでクリーン、次世代エネルギーとして注目</td></tr>
+            </table>
+            <p>使い切りの電池を<b>一次電池</b>（例：マンガン乾電池）、充電して繰り返し使える電池を<b>二次電池</b>（例：鉛蓄電池、リチウムイオン電池）といいます。</p>
+          </details>
+
+          <details class="chapter" id="ch4-6"><summary>4-6 電気分解の基礎</summary>
+            <p>電池とは逆に、外部から電気エネルギーを加えることで、自然には進みにくい酸化還元反応を強制的に起こすことを<b>電気分解</b>といいます。</p>
+            <p>電源の負極につないだ電極を<b>陰極</b>（還元反応が起こる）、正極につないだ電極を<b>陽極</b>（酸化反応が起こる）といいます。</p>
+            <div class="example-box"><b>例：塩化銅(II)水溶液の電気分解</b><br>陰極：Cu²⁺ + 2e⁻ → Cu（銅が析出）<br>陽極：2Cl⁻ → Cl₂ + 2e⁻（塩素が発生）</div>
+            <p>電気分解は、金属の精錬（アルミニウムの製造など）やめっき、水の電気分解による水素・酸素の製造などに利用されています。</p>
+          </details>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="elemPopup"><div class="box">
+  <span class="close" onclick="closePopup()">✕</span>
+  <h3 id="popSym">-</h3>
+  <div id="popBody" style="font-size:0.85rem;color:var(--muted);line-height:1.8;"></div>
+  <button class="btn" style="margin-top:10px;width:100%;" id="popJump">原子モデルで見る ⚛️</button>
+</div></div>
+
+<footer>化学基礎 総合学習サイト — 学習用の簡易モデルです。数値は代表的な同位体・標準的な値に基づく概算です。</footer>
+
+<script>
+/* ============ Data ============ */
+const CAT_COLOR = {
+  alkali:'var(--c-alkali)', alkearth:'var(--c-alk-earth)', transition:'var(--c-transition)',
+  metal:'var(--c-metal)', metalloid:'var(--c-metalloid)', nonmetal:'var(--c-nonmetal)',
+  halogen:'var(--c-halogen)', noble:'var(--c-noble)'
+};
+const CAT_LABEL = {
+  alkali:'アルカリ金属', alkearth:'アルカリ土類金属', transition:'遷移元素', metal:'その他の金属',
+  metalloid:'半金属', nonmetal:'非金属', halogen:'ハロゲン', noble:'希ガス'
+};
+const ELEMENTS = [
+  {z:1,sym:'H',name:'水素',mass:1.0,weight:'1.01',cat:'nonmetal',shells:[1],p:1,g:1,note:'宇宙で最も存在量の多い元素。単体は無色の気体H₂。'},
+  {z:2,sym:'He',name:'ヘリウム',mass:4.0,weight:'4.00',cat:'noble',shells:[2],p:1,g:18,note:'反応性がほぼなく、気球や冷却材に利用される。'},
+  {z:3,sym:'Li',name:'リチウム',mass:7.0,weight:'6.94',cat:'alkali',shells:[2,1],p:2,g:1,note:'最も軽い金属。リチウムイオン電池に利用。'},
+  {z:4,sym:'Be',name:'ベリリウム',mass:9.0,weight:'9.01',cat:'alkearth',shells:[2,2],p:2,g:2,note:'軽くて硬い金属。'},
+  {z:5,sym:'B',name:'ホウ素',mass:11.0,weight:'10.81',cat:'metalloid',shells:[2,3],p:2,g:13,note:'半金属。ガラスや半導体に利用。'},
+  {z:6,sym:'C',name:'炭素',mass:12.0,weight:'12.01',cat:'nonmetal',shells:[2,4],p:2,g:14,note:'同素体が多い（ダイヤモンド・黒鉛など）。有機化合物の中心元素。'},
+  {z:7,sym:'N',name:'窒素',mass:14.0,weight:'14.01',cat:'nonmetal',shells:[2,5],p:2,g:15,note:'空気の約78%を占める。単体はN₂（三重結合）。'},
+  {z:8,sym:'O',name:'酸素',mass:16.0,weight:'16.00',cat:'nonmetal',shells:[2,6],p:2,g:16,note:'空気の約21%を占める。呼吸・燃焼に不可欠。'},
+  {z:9,sym:'F',name:'フッ素',mass:19.0,weight:'19.00',cat:'halogen',shells:[2,7],p:2,g:17,note:'電気陰性度が全元素中最大。反応性が非常に高い。'},
+  {z:10,sym:'Ne',name:'ネオン',mass:20.0,weight:'20.18',cat:'noble',shells:[2,8],p:2,g:18,note:'ネオンサインに利用される希ガス。'},
+  {z:11,sym:'Na',name:'ナトリウム',mass:23.0,weight:'22.99',cat:'alkali',shells:[2,8,1],p:3,g:1,note:'水と激しく反応する。食塩(NaCl)の構成元素。'},
+  {z:12,sym:'Mg',name:'マグネシウム',mass:24.0,weight:'24.31',cat:'alkearth',shells:[2,8,2],p:3,g:2,note:'軽金属。燃えると強い光を出す。'},
+  {z:13,sym:'Al',name:'アルミニウム',mass:27.0,weight:'26.98',cat:'metal',shells:[2,8,3],p:3,g:13,note:'軽くて加工しやすい金属。アルミ缶などに利用。'},
+  {z:14,sym:'Si',name:'ケイ素',mass:28.0,weight:'28.09',cat:'metalloid',shells:[2,8,4],p:3,g:14,note:'半導体の代表元素。地殻に酸素の次に多い。'},
+  {z:15,sym:'P',name:'リン',mass:31.0,weight:'30.97',cat:'nonmetal',shells:[2,8,5],p:3,g:15,note:'DNAや骨の成分。黄リン・赤リンの同素体を持つ。'},
+  {z:16,sym:'S',name:'硫黄',mass:32.0,weight:'32.07',cat:'nonmetal',shells:[2,8,6],p:3,g:16,note:'火山地帯で産出。同素体が多い。'},
+  {z:17,sym:'Cl',name:'塩素',mass:35.0,weight:'35.45',cat:'halogen',shells:[2,8,7],p:3,g:17,note:'黄緑色の有毒気体。殺菌・漂白に利用。'},
+  {z:18,sym:'Ar',name:'アルゴン',mass:40.0,weight:'39.95',cat:'noble',shells:[2,8,8],p:3,g:18,note:'空気中に約0.9%含まれる希ガス。'},
+  {z:19,sym:'K',name:'カリウム',mass:39.0,weight:'39.10',cat:'alkali',shells:[2,8,8,1],p:4,g:1,note:'水と激しく反応。M殻を18個埋める前にN殻に電子が入る例。'},
+  {z:20,sym:'Ca',name:'カルシウム',mass:40.0,weight:'40.08',cat:'alkearth',shells:[2,8,8,2],p:4,g:2,note:'骨や歯の主成分。'},
+  {z:21,sym:'Sc',name:'スカンジウム',mass:45.0,weight:'44.96',cat:'transition',shells:[2,8,9,2],p:4,g:3,note:'遷移元素の最初の元素。'},
+  {z:22,sym:'Ti',name:'チタン',mass:48.0,weight:'47.87',cat:'transition',shells:[2,8,10,2],p:4,g:4,note:'軽くて丈夫。航空機や眼鏡フレームに利用。'},
+  {z:23,sym:'V',name:'バナジウム',mass:51.0,weight:'50.94',cat:'transition',shells:[2,8,11,2],p:4,g:5,note:'合金の強化に利用。'},
+  {z:24,sym:'Cr',name:'クロム',mass:52.0,weight:'52.00',cat:'transition',shells:[2,8,13,1],p:4,g:6,note:'電子配置の例外（M殻13、N殻1）。ステンレス鋼に利用。'},
+  {z:25,sym:'Mn',name:'マンガン',mass:55.0,weight:'54.94',cat:'transition',shells:[2,8,13,2],p:4,g:7,note:'乾電池の材料などに利用。'},
+  {z:26,sym:'Fe',name:'鉄',mass:56.0,weight:'55.85',cat:'transition',shells:[2,8,14,2],p:4,g:8,note:'地球中心核の主成分。人類が最も多く利用する金属。'},
+  {z:27,sym:'Co',name:'コバルト',mass:59.0,weight:'58.93',cat:'transition',shells:[2,8,15,2],p:4,g:9,note:'リチウムイオン電池の正極材に利用。'},
+  {z:28,sym:'Ni',name:'ニッケル',mass:59.0,weight:'58.69',cat:'transition',shells:[2,8,16,2],p:4,g:10,note:'ステンレス鋼、硬貨に利用。'},
+  {z:29,sym:'Cu',name:'銅',mass:64.0,weight:'63.55',cat:'transition',shells:[2,8,18,1],p:4,g:11,note:'電子配置の例外（M殻18、N殻1）。電気伝導性が高く電線に利用。'},
+  {z:30,sym:'Zn',name:'亜鉛',mass:65.0,weight:'65.38',cat:'transition',shells:[2,8,18,2],p:4,g:12,note:'めっき（トタン）に利用。乾電池の負極。'},
+  {z:31,sym:'Ga',name:'ガリウム',mass:70.0,weight:'69.72',cat:'metal',shells:[2,8,18,3],p:4,g:13,note:'融点が低く手のひらの体温で融ける。半導体材料。'},
+  {z:32,sym:'Ge',name:'ゲルマニウム',mass:73.0,weight:'72.63',cat:'metalloid',shells:[2,8,18,4],p:4,g:14,note:'半導体の代表的元素の一つ。'},
+  {z:33,sym:'As',name:'ヒ素',mass:75.0,weight:'74.92',cat:'metalloid',shells:[2,8,18,5],p:4,g:15,note:'化合物には強い毒性を持つものがある。'},
+  {z:34,sym:'Se',name:'セレン',mass:79.0,weight:'78.97',cat:'nonmetal',shells:[2,8,18,6],p:4,g:16,note:'必須微量元素の一つ。'},
+  {z:35,sym:'Br',name:'臭素',mass:80.0,weight:'79.90',cat:'halogen',shells:[2,8,18,7],p:4,g:17,note:'常温で液体の非金属という珍しい元素。赤褐色。'},
+  {z:36,sym:'Kr',name:'クリプトン',mass:84.0,weight:'83.80',cat:'noble',shells:[2,8,18,8],p:4,g:18,note:'高輝度ランプなどに利用される希ガス。'},
+  {z:47,sym:'Ag',name:'銀',mass:108.0,weight:'107.87',cat:'transition',shells:[2,8,18,18,1],note:'金属の中で電気伝導性・熱伝導性が最大。装飾品や写真フィルムに利用。'},
+  {z:50,sym:'Sn',name:'スズ',mass:119.0,weight:'118.71',cat:'metal',shells:[2,8,18,18,4],note:'青銅（銅との合金）やめっきに利用。'},
+  {z:53,sym:'I',name:'ヨウ素',mass:127.0,weight:'126.90',cat:'halogen',shells:[2,8,18,18,7],note:'常温で黒紫色の固体、昇華性を持つ。うがい薬などに利用。'},
+  {z:56,sym:'Ba',name:'バリウム',mass:137.0,weight:'137.33',cat:'alkearth',shells:[2,8,18,18,8,2],note:'X線検査の造影剤（硫酸バリウム）に利用。'},
+  {z:78,sym:'Pt',name:'白金',mass:195.0,weight:'195.08',cat:'transition',shells:[2,8,18,32,17,1],note:'化学的に非常に安定。触媒や装飾品に利用。'},
+  {z:79,sym:'Au',name:'金',mass:197.0,weight:'196.97',cat:'transition',shells:[2,8,18,32,18,1],note:'イオン化傾向が最小で最も反応しにくい金属。'},
+  {z:80,sym:'Hg',name:'水銀',mass:201.0,weight:'200.59',cat:'transition',shells:[2,8,18,32,18,2],note:'常温で唯一液体の金属。'},
+  {z:82,sym:'Pb',name:'鉛',mass:207.0,weight:'207.2',cat:'metal',shells:[2,8,18,32,18,4],note:'鉛蓄電池の電極に利用。'},
+];
+const MAIN_ELEMENTS = ELEMENTS.filter(e=>e.z<=36);
+const EXTRA_ELEMENTS = ELEMENTS.filter(e=>e.z>36);
+
+const CPK = { H:'#f4f6fa', C:'#33383d', N:'#2f5fe0', O:'#e0342f', Cl:'#3fbf3f', S:'#e8d020' };
+const CPK_R = { H:0.32, C:0.42, N:0.4, O:0.4, Cl:0.5, S:0.5 };
+
+const MOLECULES = [
+  {id:'h2', name:'水素 H₂', atoms:[{el:'H',x:-0.7,y:0,z:0},{el:'H',x:0.7,y:0,z:0}], bonds:[[0,1,1]],
+    shape:'直線形', polarity:'無極性分子', structural:'H − H', note:'最も軽い気体。単体は二原子分子として存在する。'},
+  {id:'o2', name:'酸素 O₂', atoms:[{el:'O',x:-0.6,y:0,z:0},{el:'O',x:0.6,y:0,z:0}], bonds:[[0,1,2]],
+    shape:'直線形', polarity:'無極性分子', structural:'O = O', note:'空気の約21%を占める。酸素原子間は二重結合。'},
+  {id:'n2', name:'窒素 N₂', atoms:[{el:'N',x:-0.55,y:0,z:0},{el:'N',x:0.55,y:0,z:0}], bonds:[[0,1,3]],
+    shape:'直線形', polarity:'無極性分子', structural:'N ≡ N', note:'空気の約78%を占める。三重結合のため非常に安定。'},
+  {id:'cl2', name:'塩素 Cl₂', atoms:[{el:'Cl',x:-1.0,y:0,z:0},{el:'Cl',x:1.0,y:0,z:0}], bonds:[[0,1,1]],
+    shape:'直線形', polarity:'無極性分子', structural:'Cl − Cl', note:'黄緑色の有毒な気体。'},
+  {id:'hcl', name:'塩化水素 HCl', atoms:[{el:'H',x:-0.6,y:0,z:0},{el:'Cl',x:0.7,y:0,z:0}], bonds:[[0,1,1]],
+    shape:'直線形', polarity:'極性分子', structural:'H − Cl', note:'電気陰性度の差により極性をもつ。水に溶けて塩酸となる。'},
+  {id:'co', name:'一酸化炭素 CO', atoms:[{el:'C',x:-0.55,y:0,z:0},{el:'O',x:0.55,y:0,z:0}], bonds:[[0,1,3]],
+    shape:'直線形', polarity:'極性分子（弱い）', structural:'C ≡ O', note:'窒素分子と等電子的で三重結合を持つ。有毒な気体。'},
+  {id:'co2', name:'二酸化炭素 CO₂', atoms:[{el:'O',x:-1.16,y:0,z:0},{el:'C',x:0,y:0,z:0},{el:'O',x:1.16,y:0,z:0}], bonds:[[0,1,2],[1,2,2]],
+    shape:'直線形', polarity:'無極性分子（対称なため双極子が打ち消し合う）', structural:'O = C = O', note:'ドライアイスは固体のCO₂。温室効果ガスの代表。'},
+  {id:'h2o', name:'水 H₂O', atoms:[{el:'O',x:0,y:0.15,z:0},{el:'H',x:-0.76,y:-0.5,z:0},{el:'H',x:0.76,y:-0.5,z:0}], bonds:[[0,1,1],[0,2,1]],
+    shape:'折れ線形（約104.5°）', polarity:'極性分子', structural:'H − O − H', note:'水素結合により同族の水素化合物より沸点が異常に高い。'},
+  {id:'nh3', name:'アンモニア NH₃', atoms:[{el:'N',x:0,y:0.35,z:0},{el:'H',x:0.94,y:-0.15,z:0},{el:'H',x:-0.47,y:-0.15,z:0.82},{el:'H',x:-0.47,y:-0.15,z:-0.82}],
+    bonds:[[0,1,1],[0,2,1],[0,3,1]], shape:'三角錐形', polarity:'極性分子', structural:'N(H)₃（非共有電子対1組）', note:'刺激臭のある気体。水によく溶け、弱塩基性を示す。配位結合でNH₄⁺になる。'},
+  {id:'ch4', name:'メタン CH₄', atoms:[{el:'C',x:0,y:0,z:0},{el:'H',x:0.63,y:0.63,z:0.63},{el:'H',x:-0.63,y:-0.63,z:0.63},{el:'H',x:-0.63,y:0.63,z:-0.63},{el:'H',x:0.63,y:-0.63,z:-0.63}],
+    bonds:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]], shape:'正四面体形', polarity:'無極性分子', structural:'C(H)₄', note:'天然ガスの主成分。対称性が高く無極性。'},
+  {id:'c2h4', name:'エチレン C₂H₄', atoms:[{el:'C',x:-0.67,y:0,z:0},{el:'C',x:0.67,y:0,z:0},{el:'H',x:-1.23,y:0.93,z:0},{el:'H',x:-1.23,y:-0.93,z:0},{el:'H',x:1.23,y:0.93,z:0},{el:'H',x:1.23,y:-0.93,z:0}],
+    bonds:[[0,1,2],[0,2,1],[0,3,1],[1,4,1],[1,5,1]], shape:'平面形（各C原子は正三角形状）', polarity:'無極性分子', structural:'H₂C = CH₂', note:'C=C二重結合を持つ。植物ホルモンとしても働き、果実の成熟を促す。'},
+  {id:'c2h2', name:'アセチレン C₂H₂', atoms:[{el:'H',x:-1.66,y:0,z:0},{el:'C',x:-0.6,y:0,z:0},{el:'C',x:0.6,y:0,z:0},{el:'H',x:1.66,y:0,z:0}],
+    bonds:[[0,1,1],[1,2,3],[2,3,1]], shape:'直線形', polarity:'無極性分子', structural:'H − C ≡ C − H', note:'燃焼時に高温を出すため溶接（アセチレンガス）に利用。'},
+  {id:'so2', name:'二酸化硫黄 SO₂', atoms:[{el:'S',x:0,y:0.2,z:0},{el:'O',x:-1.0,y:-0.4,z:0},{el:'O',x:1.0,y:-0.4,z:0}], bonds:[[0,1,2],[0,2,2]],
+    shape:'折れ線形', polarity:'極性分子', structural:'O = S = O（折れ線）', note:'刺激臭のある有毒気体。硫黄の燃焼で生じ、酸性雨の原因物質の一つ。'},
+  {id:'etoh', name:'エタノール C₂H₅OH', atoms:[{el:'C',x:-1.5,y:0.3,z:0},{el:'H',x:-2.1,y:1.0,z:0.6},{el:'H',x:-2.1,y:1.0,z:-0.6},{el:'H',x:-1.9,y:-0.6,z:0},{el:'C',x:-0.2,y:0.3,z:0},{el:'H',x:0.2,y:1.1,z:0.6},{el:'H',x:0.2,y:1.1,z:-0.6},{el:'O',x:0.9,y:-0.5,z:0},{el:'H',x:1.9,y:-0.2,z:0}],
+    bonds:[[0,1,1],[0,2,1],[0,3,1],[0,4,1],[4,5,1],[4,6,1],[4,7,1],[7,8,1]],
+    shape:'鎖状構造（ヒドロキシ基-OHを持つ）', polarity:'極性分子（-OHのため）', structural:'CH₃ − CH₂ − OH', note:'酒類に含まれるアルコール。-OH基（ヒドロキシ基）を持つため水によく溶ける。'},
+];
+
+/* ============ Tabs ============ */
+function switchTab(name){
+  document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="'+name+'"]').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+
+/* ============ Atom model ============ */
+function fillAtomSelect(){
+  const sel = document.getElementById('atomSelect');
+  sel.innerHTML = ELEMENTS.map(e=>`<option value="${e.z}">${e.z}. ${e.sym} ${e.name}</option>`).join('');
+}
+function stepElement(dir){
+  const sel = document.getElementById('atomSelect');
+  let idx = [...sel.options].findIndex(o=>o.selected);
+  idx = (idx + dir + sel.options.length) % sel.options.length;
+  sel.selectedIndex = idx;
+  renderAtom(sel.value);
+}
+function renderAtom(z){
+  z = parseInt(z);
+  const el = ELEMENTS.find(e=>e.z===z);
+  if(!el) return;
+  document.getElementById('atomSelect').value = z;
+  const cx=200, cy=200;
+  const nucleusR = Math.min(40, 18 + Math.round(el.mass)/12);
+  let svg = `<svg viewBox="0 0 400 400" width="100%">`;
+  svg += `<defs><radialGradient id="nucGrad" cx="35%" cy="35%"><stop offset="0%" stop-color="#ffb199"/><stop offset="60%" stop-color="#e8590c"/><stop offset="100%" stop-color="#b3400a"/></radialGradient>
+    <radialGradient id="eGrad" cx="35%" cy="35%"><stop offset="0%" stop-color="#a5d8ff"/><stop offset="100%" stop-color="#1971c2"/></radialGradient></defs>`;
+  el.shells.forEach((n,i)=>{
+    const r = 55 + i*36;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#c3cbe0" stroke-width="1.2" stroke-dasharray="2,3"/>`;
+    const dur = 6 + i*4;
+    const dir = i%2===0 ? 'normal' : 'reverse';
+    svg += `<g style="transform-origin:${cx}px ${cy}px; animation: spin${dir} ${dur}s linear infinite;">`;
+    for(let k=0;k<n;k++){
+      const ang = (2*Math.PI/n)*k;
+      const ex = cx + r*Math.cos(ang), ey = cy + r*Math.sin(ang);
+      svg += `<circle cx="${ex}" cy="${ey}" r="7" fill="url(#eGrad)" stroke="#0b4a91" stroke-width="0.8"/>`;
+    }
+    svg += `</g>`;
+  });
+  svg += `<circle cx="${cx}" cy="${cy}" r="${nucleusR}" fill="url(#nucGrad)" stroke="#a13a00" stroke-width="1.5"/>`;
+  svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">${el.sym}</text>`;
+  svg += `<style>@keyframes spinnormal{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes spinreverse{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}</style>`;
+  svg += `</svg>`;
+  document.getElementById('atomSvgHolder').innerHTML = svg;
+
+  const neutrons = Math.round(el.mass) - el.z;
+  const valence = el.cat==='noble' ? 0 : el.shells[el.shells.length-1];
+  document.getElementById('atomName').textContent = `${el.sym}　${el.name}`;
+  document.getElementById('infoZ').textContent = el.z;
+  document.getElementById('infoMass').textContent = Math.round(el.mass);
+  document.getElementById('infoWeight').textContent = el.weight;
+  document.getElementById('infoPN').textContent = `${el.z} / ${neutrons}`;
+  document.getElementById('infoConfig').textContent = el.shells.join(', ');
+  document.getElementById('infoValence').textContent = valence;
+  document.getElementById('infoPeriodGroup').textContent = el.p ? `第${el.p}周期 / ${el.g}族` : '(周期表タブの「その他」参照)';
+  document.getElementById('infoCategory').innerHTML = `<span class="legend-dot" style="background:${CAT_COLOR[el.cat]}"></span>${CAT_LABEL[el.cat]}`;
+  document.getElementById('atomNote').textContent = el.note;
+}
+
+/* ============ 3D engine (shared by molecule & crystal) ============ */
+function makeStage3D(stageId, modelId, radiusFn){
+  const stage = document.getElementById(stageId);
+  const model = document.getElementById(modelId);
+  const state = { rx:-18, ry:25, dragging:false, lastX:0, lastY:0, auto:true };
+  function apply(){
+    model.style.transform = `rotateX(${state.rx}deg) rotateY(${state.ry}deg)`;
+    // 球は毎フレーム逆回転させ、常にカメラ正面を向かせる（平板化を防ぐ）
+    model.querySelectorAll('.atom3d').forEach(a=>{
+      a.style.transform = `${a.dataset.base} rotateY(${-state.ry}deg) rotateX(${-state.rx}deg)`;
+    });
+  }
+  stage.addEventListener('pointerdown', e=>{ state.dragging=true; state.auto=false; state.lastX=e.clientX; state.lastY=e.clientY; stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener('pointermove', e=>{
+    if(!state.dragging) return;
+    state.ry += (e.clientX-state.lastX)*0.5;
+    state.rx -= (e.clientY-state.lastY)*0.5;
+    state.rx = Math.max(-85, Math.min(85, state.rx));
+    state.lastX=e.clientX; state.lastY=e.clientY; apply();
+  });
+  ['pointerup','pointerleave'].forEach(ev=>stage.addEventListener(ev, ()=>{ state.dragging=false; setTimeout(()=>state.auto=true,1500); }));
+  (function loop(){ if(state.auto) state.ry += 0.25; apply(); requestAnimationFrame(loop); })();
+  return state;
+}
+const molStageState = makeStage3D('molStage','molModel');
+const crystalStageState = makeStage3D('crystalStage','crystalModel');
+
+function clearModel(id){ document.getElementById(id).innerHTML=''; }
+
+function addAtomSphere(modelId, p, color, r, scale){
+  const el = document.createElement('div');
+  el.className='atom3d';
+  const px = p.x*scale, py = p.y*scale, pz = p.z*scale;
+  const size = r*2;
+  el.style.width = size+'px'; el.style.height = size+'px';
+  el.style.left = (-size/2)+'px'; el.style.top = (-size/2)+'px';
+  el.style.background = color;
+  el.dataset.base = `translate3d(${px}px, ${py}px, ${pz}px)`;
+  el.style.transform = el.dataset.base;
+  document.getElementById(modelId).appendChild(el);
+}
+function addBondBetween(modelId, p1, p2, order, scale, colorOverride){
+  const dx=(p2.x-p1.x), dy=(p2.y-p1.y), dz=(p2.z-p1.z);
+  const len = Math.sqrt(dx*dx+dy*dy+dz*dz);
+  const ux=dx/len, uy=dy/len, uz=dz/len;
+  const a = Math.atan2(uy,ux) * 180/Math.PI;
+  const b = Math.atan2(-uz, Math.sqrt(ux*ux+uy*uy)) * 180/Math.PI;
+  const refUp = Math.abs(uy) < 0.99 ? {x:0,y:1,z:0} : {x:1,y:0,z:0};
+  const perp = { x: uy*refUp.z-uz*refUp.y, y: uz*refUp.x-ux*refUp.z, z: ux*refUp.y-uy*refUp.x };
+  const plen = Math.sqrt(perp.x*perp.x+perp.y*perp.y+perp.z*perp.z) || 1;
+  perp.x/=plen; perp.y/=plen; perp.z/=plen;
+  const gap = 0.16;
+  for(let i=0;i<order;i++){
+    const off = (i - (order-1)/2) * gap;
+    const mx = (p1.x+p2.x)/2 + perp.x*off, my = (p1.y+p2.y)/2 + perp.y*off, mz = (p1.z+p2.z)/2 + perp.z*off;
+    const bond = document.createElement('div');
+    bond.className='bond3d';
+    bond.style.width = (len*scale)+'px'; bond.style.height='6px';
+    bond.style.left = (-len*scale/2)+'px'; bond.style.top='-3px';
+    bond.style.background = colorOverride || 'linear-gradient(90deg,#ccc,#999)';
+    bond.style.transform = `translate3d(${mx*scale}px, ${my*scale}px, ${mz*scale}px) rotateZ(${a}deg) rotateY(${b}deg)`;
+    document.getElementById(modelId).appendChild(bond);
+  }
+}
+
+/* ---------- Molecule rendering ---------- */
+function fillMolSelect(){
+  document.getElementById('molSelect').innerHTML = MOLECULES.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+}
+function renderMolecule(id){
+  const m = MOLECULES.find(x=>x.id===id) || MOLECULES[0];
+  document.getElementById('molSelect').value = m.id;
+  clearModel('molModel');
+  const scale = 70;
+  m.bonds.forEach(([a,b,order])=> addBondBetween('molModel', m.atoms[a], m.atoms[b], order, scale));
+  m.atoms.forEach(p=> addAtomSphere('molModel', p, CPK[p.el]||'#aaa', (CPK_R[p.el]||0.4)*scale, scale));
+  document.getElementById('molName').textContent = m.name;
+  document.getElementById('molBadges').innerHTML = `<span class="badge">${m.shape}</span><span class="badge ${m.polarity.includes('極性分子）')||m.polarity.startsWith('極')?'warn':''}">${m.polarity}</span>`;
+  document.getElementById('molStructural').textContent = m.structural;
+  document.getElementById('molNote').textContent = m.note;
+}
+
+/* ---------- Crystal rendering ---------- */
+function cubeCorners(){
+  const pts=[];
+  [-1,1].forEach(x=>[-1,1].forEach(y=>[-1,1].forEach(z=>pts.push({x:x*0.9,y:y*0.9,z:z*0.9}))));
+  return pts;
+}
+function cubeEdges(pts){
+  const edges=[];
+  for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+    const d = Math.abs(pts[i].x-pts[j].x)+Math.abs(pts[i].y-pts[j].y)+Math.abs(pts[i].z-pts[j].z);
+    if(Math.abs(d-1.8)<0.01) edges.push([pts[i],pts[j]]);
+  }
+  return edges;
+}
+const CRYSTALS = {
+  simple:{ name:'単純立方格子', info:{'単位格子中の原子数':'1個','配位数':'6','充填率':'約52%'},
+    note:'原子は立方体の8頂点だけに存在し、各頂点の原子は8つの単位格子で共有されるため、1つの単位格子に含まれる原子数は 1/8 × 8 = 1個です。すき間が多く、実在する金属の結晶構造としてはほとんど見られません。' },
+  bcc:{ name:'体心立方格子', info:{'単位格子中の原子数':'2個','配位数':'8','充填率':'約68%'},
+    note:'8頂点の原子（1/8×8=1個）に加え、立方体の中心に原子が1個入るため、合計2個の原子を含みます。Na, K, Feなどがこの構造をとります。' },
+  fcc:{ name:'面心立方格子', info:{'単位格子中の原子数':'4個','配位数':'12','充填率':'約74%'},
+    note:'8頂点（1個）に加え、6つの面の中心にそれぞれ原子があり（1/2×6=3個）、合計4個の原子を含みます。最密構造の一つで、Cu, Ag, Al, Auなどがこの構造をとります。' },
+  nacl:{ name:'NaCl型イオン結晶', info:{'配位数':'6（Na⁺, Cl⁻とも）','構造':'岩塩型'},
+    note:'Na⁺（紫）とCl⁻（緑）が交互に規則正しく並んだ構造です。それぞれのイオンは反対符号のイオン6個に取り囲まれています（配位数6）。' },
+};
+function renderCrystal(type){
+  document.getElementById('crystalSelect').value = type;
+  clearModel('crystalModel');
+  const scale = 95;
+  const c = CRYSTALS[type];
+  const corners = cubeCorners();
+  if(type==='simple' || type==='bcc' || type==='fcc'){
+    cubeEdges(corners).forEach(([p1,p2])=> addBondBetween('crystalModel', p1, p2, 1, scale, 'rgba(120,140,180,0.5)'));
+    corners.forEach(p=> addAtomSphere('crystalModel', p, 'radial-gradient(circle at 35% 30%, #9fc7ff, #3b6fd6)', 20, scale));
+    if(type==='bcc') addAtomSphere('crystalModel', {x:0,y:0,z:0}, 'radial-gradient(circle at 35% 30%, #9fc7ff, #3b6fd6)', 22, scale);
+    if(type==='fcc'){
+      const faces = [{x:0,y:0,z:0.9},{x:0,y:0,z:-0.9},{x:0,y:0.9,z:0},{x:0,y:-0.9,z:0},{x:0.9,y:0,z:0},{x:-0.9,y:0,z:0}];
+      faces.forEach(p=> addAtomSphere('crystalModel', p, 'radial-gradient(circle at 35% 30%, #9fc7ff, #3b6fd6)', 20, scale));
+    }
+  } else if(type==='nacl'){
+    for(let x=-1;x<=1;x++) for(let y=-1;y<=1;y++) for(let z=-1;z<=1;z++){
+      const isNa = (x+y+z+6)%2===0;
+      addAtomSphere('crystalModel', {x:x*0.75,y:y*0.75,z:z*0.75},
+        isNa ? 'radial-gradient(circle at 35% 30%, #d9b3ff, #8a3ffc)' : 'radial-gradient(circle at 35% 30%, #b3ffcf, #12b886)',
+        isNa? 16:12, scale);
+    }
+  }
+  document.getElementById('crystalName').textContent = c.name;
+  document.getElementById('crystalInfo').innerHTML = Object.entries(c.info).map(([k,v])=>`<div class="cell">${k}<b>${v}</b></div>`).join('');
+  document.getElementById('crystalNote').textContent = c.note;
+}
+
+/* ============ Periodic table ============ */
+function fillPeriodicTable(){
+  const grid = document.getElementById('ptableGrid');
+  grid.innerHTML = MAIN_ELEMENTS.map(e=>
+    `<div class="pcell" style="grid-column:${e.g}; grid-row:${e.p}; background:${CAT_COLOR[e.cat]}22; border-color:${CAT_COLOR[e.cat]};" onclick="openPopup(${e.z})">
+      <div class="z">${e.z}</div><div class="sym">${e.sym}</div><div class="nm">${e.name}</div>
+    </div>`).join('');
+  document.getElementById('extraElems').innerHTML = EXTRA_ELEMENTS.map(e=>
+    `<div class="extra-chip" onclick="openPopup(${e.z})"><div class="sym">${e.sym}</div><div class="nm">${e.z} ${e.name}</div></div>`).join('');
+}
+let popupZ = null;
+function openPopup(z){
+  const el = ELEMENTS.find(e=>e.z===z);
+  popupZ = z;
+  document.getElementById('popSym').textContent = `${el.sym}　${el.name}（原子番号 ${el.z}）`;
+  document.getElementById('popBody').innerHTML = `
+    原子量: <b>${el.weight}</b><br>
+    電子配置: <b>${el.shells.join(', ')}</b><br>
+    分類: <b>${CAT_LABEL[el.cat]}</b><br>
+    ${el.p? `周期・族: <b>第${el.p}周期 / ${el.g}族</b><br>`:''}
+    ${el.note}`;
+  document.getElementById('elemPopup').style.display='flex';
+}
+function closePopup(){ document.getElementById('elemPopup').style.display='none'; }
+document.getElementById('popJump').addEventListener('click', ()=>{
+  closePopup(); switchTab('atom'); renderAtom(popupZ);
+});
+document.getElementById('elemPopup').addEventListener('click', e=>{ if(e.target.id==='elemPopup') closePopup(); });
+
+/* ============ Guide TOC & search ============ */
+function buildTOC(){
+  const parts = document.querySelectorAll('#guideContent .part');
+  let html = '';
+  parts.forEach(part=>{
+    const title = part.querySelector('h2').textContent;
+    html += `<div class="part-title">${title}</div>`;
+    part.querySelectorAll('details.chapter').forEach(ch=>{
+      const summary = ch.querySelector('summary').textContent;
+      html += `<a href="#${ch.id}" onclick="openChapter('${ch.id}')">${summary}</a>`;
+    });
+  });
+  document.getElementById('tocList').innerHTML = html;
+}
+function openChapter(id){
+  const ch = document.getElementById(id);
+  ch.open = true;
+  setTimeout(()=> ch.scrollIntoView({behavior:'smooth', block:'start'}), 50);
+}
+function filterGuide(q){
+  q = q.trim().toLowerCase();
+  document.querySelectorAll('#guideContent details.chapter').forEach(ch=>{
+    const hit = !q || ch.textContent.toLowerCase().includes(q);
+    ch.style.display = hit ? '' : 'none';
+    if(q && hit) ch.open = true;
+  });
+  document.querySelectorAll('#guideContent .part').forEach(part=>{
+    const anyVisible = [...part.querySelectorAll('details.chapter')].some(ch=>ch.style.display!=='none');
+    part.style.display = anyVisible ? '' : 'none';
+  });
+  document.querySelectorAll('#tocList a').forEach(a=>{
+    const id = a.getAttribute('href').slice(1);
+    const ch = document.getElementById(id);
+    a.style.display = (!q || ch.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+}
+
+/* ============ Calculators ============ */
+function calcMol(){
+  const M = parseFloat(document.getElementById('calcM').value);
+  let n = parseFloat(document.getElementById('calcN').value);
+  let w = parseFloat(document.getElementById('calcW').value);
+  const out = document.getElementById('calcMolResult');
+  if(!M || M<=0){ out.textContent='モル質量を入力してください。'; return; }
+  if(isNaN(n) && isNaN(w)){ out.textContent='物質量か質量のどちらかを入力してください。'; return; }
+  if(!isNaN(n)){ w = n*M; } else { n = w/M; }
+  const particles = n*6.02e23;
+  out.innerHTML = `物質量 n = ${n.toPrecision(3)} mol　／　質量 w = ${w.toPrecision(3)} g　／　粒子数 ≒ ${particles.toExponential(2)} 個`;
+}
+function calcConc(){
+  const n = parseFloat(document.getElementById('concN').value);
+  const vmL = parseFloat(document.getElementById('concV').value);
+  const out = document.getElementById('calcConcResult');
+  if(!n || !vmL){ out.textContent='物質量と体積を入力してください。'; return; }
+  const c = n / (vmL/1000);
+  out.textContent = `モル濃度 = ${c.toPrecision(3)} mol/L`;
+}
+function calcPH(){
+  const type = document.getElementById('phType').value;
+  const c = parseFloat(document.getElementById('phC').value);
+  const v = parseFloat(document.getElementById('phV').value) || 1;
+  const out = document.getElementById('calcPHResult');
+  if(!c || c<=0){ out.textContent='正の濃度を入力してください。'; return; }
+  const conc = c*v;
+  if(type==='acid'){
+    const pH = -Math.log10(conc);
+    out.textContent = `[H⁺] = ${conc.toExponential(2)} mol/L　→　pH ≒ ${pH.toFixed(2)}`;
+  } else {
+    const pOH = -Math.log10(conc);
+    const pH = 14 - pOH;
+    out.textContent = `[OH⁻] = ${conc.toExponential(2)} mol/L　→　pOH ≒ ${pOH.toFixed(2)}　→　pH ≒ ${pH.toFixed(2)}`;
+  }
+}
+
+/* ============ init ============ */
+fillAtomSelect(); renderAtom(1);
+fillMolSelect(); renderMolecule('h2o');
+renderCrystal('bcc');
+fillPeriodicTable();
+buildTOC();
+</script>
+</body>
+</html>
