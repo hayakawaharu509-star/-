@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI食事分析 - 栄養チェッカー</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: linear-gradient(135deg, #e8f5ff 0%, #f0fff4 50%, #fff8e8 100%);
+    color: #1f2d3d;
+    font-family: 'Segoe UI', 'Hiragino Sans', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+  header {
+    text-align: center;
+    padding: 18px 16px 14px;
+    color: #fff;
+    background: linear-gradient(90deg, #00b894, #0984e3, #6c5ce7);
+    box-shadow: 0 4px 16px rgba(9,132,227,0.25);
+  }
+  header h1 { font-size: 1.45rem; letter-spacing: 1px; }
+  header p { font-size: 0.8rem; opacity: 0.9; margin-top: 4px; }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 10px 0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    border: none;
+    background: #ffffffcc;
+    color: #5a6a7a;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(31,45,61,0.08);
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: linear-gradient(90deg, #00b894, #0984e3);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(9,132,227,0.3);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .container { max-width: 640px; margin: 0 auto; padding: 16px; }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(31,45,61,0.08);
+    border: 1px solid rgba(31,45,61,0.05);
+  }
+  .card h2 {
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #0984e3;
+  }
+  .hint { font-size: 0.78rem; color: #8a97a5; margin-top: 6px; line-height: 1.5; }
+
+  label { font-size: 0.8rem; color: #5a6a7a; display: block; margin-bottom: 4px; font-weight: 600; }
+  input[type=text], input[type=number], input[type=password], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #dfe6ec;
+    background: #f7fafc;
+    color: #1f2d3d;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+  input:focus, textarea:focus, select:focus {
+    border-color: #0984e3;
+    box-shadow: 0 0 0 3px rgba(9,132,227,0.12);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+
+  .btn {
+    display: inline-block;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: linear-gradient(90deg, #00b894, #0984e3);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(9,132,227,0.3);
+    width: 100%;
+  }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-secondary { background: #eef3f7; color: #33475b; }
+  .btn-danger { background: #ffe3e3; color: #c0392b; }
+  .btn-small { padding: 8px 14px; font-size: 0.82rem; }
+
+  /* drop zone */
+  .drop-zone {
+    border: 2.5px dashed #b8c6d4;
+    border-radius: 14px;
+    padding: 26px 14px;
+    text-align: center;
+    color: #7b8a99;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 12px;
+  }
+  .drop-zone.dragover { border-color: #00b894; background: #eafff7; }
+  .drop-zone .dz-icon { font-size: 2.2rem; margin-bottom: 6px; }
+  .drop-zone p { font-size: 0.85rem; line-height: 1.6; }
+  #photoPreviewWrap { display: none; text-align: center; margin-bottom: 12px; }
+  #photoPreview {
+    max-width: 100%;
+    max-height: 320px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(31,45,61,0.18);
+  }
+
+  /* loading */
+  .loading { display: none; text-align: center; padding: 22px 10px; }
+  .spinner {
+    width: 38px; height: 38px;
+    border: 4px solid #dfe6ec;
+    border-top-color: #0984e3;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading p { font-size: 0.85rem; color: #5a6a7a; }
+
+  .error-box {
+    display: none;
+    background: #fff2f0;
+    border: 1.5px solid #ffb3ab;
+    color: #c0392b;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    white-space: pre-wrap;
+  }
+
+  /* result */
+  #resultArea { display: none; }
+  .score-ring-wrap { text-align: center; margin-bottom: 14px; }
+  .score-ring {
+    width: 118px; height: 118px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .score-ring-inner {
+    width: 92px; height: 92px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-num { font-size: 1.9rem; font-weight: 800; line-height: 1; }
+  .score-label { font-size: 0.65rem; color: #8a97a5; margin-top: 2px; }
+
+  .dish-list { list-style: none; margin-bottom: 4px; }
+  .dish-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 4px;
+    border-bottom: 1px dashed #e3eaf0;
+    font-size: 0.9rem;
+  }
+  .dish-list li:last-child { border-bottom: none; }
+  .dish-kcal { color: #e67e22; font-weight: 700; white-space: nowrap; margin-left: 10px; }
+
+  .nutri-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .nutri-item {
+    background: #f5f9fc;
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .nutri-item .nv { font-size: 1.1rem; font-weight: 800; }
+  .nutri-item .nl { font-size: 0.68rem; color: #8a97a5; margin-top: 2px; }
+
+  .eval-text { font-size: 0.9rem; line-height: 1.7; }
+  .point-list { list-style: none; }
+  .point-list li {
+    font-size: 0.87rem;
+    line-height: 1.6;
+    padding: 6px 0 6px 26px;
+    position: relative;
+  }
+  .point-list li::before { position: absolute; left: 0; top: 6px; }
+  .point-list.good li::before { content: "✅"; }
+  .point-list.improve li::before { content: "💡"; }
+  .advice-box {
+    background: linear-gradient(135deg, #eafff7, #eaf4ff);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  /* goals */
+  .goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+
+  /* progress */
+  .progress-row { margin-bottom: 12px; }
+  .progress-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  .progress-head .pname { font-weight: 700; color: #33475b; }
+  .progress-head .pval { color: #8a97a5; }
+  .progress-bar {
+    height: 12px;
+    background: #edf2f6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #00b894, #0984e3);
+    transition: width 0.4s;
+  }
+  .progress-fill.over { background: linear-gradient(90deg, #e67e22, #e74c3c); }
+
+  /* history */
+  .history-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e3eaf0;
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-thumb {
+    width: 62px; height: 62px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #edf2f6;
+  }
+  .history-info { flex: 1; min-width: 0; }
+  .history-info .h-date { font-size: 0.72rem; color: #8a97a5; }
+  .history-info .h-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-info .h-kcal { font-size: 0.8rem; color: #e67e22; font-weight: 700; }
+  .history-score {
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 5px 10px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .empty-msg { text-align: center; color: #8a97a5; font-size: 0.85rem; padding: 18px 0; }
+
+  .notice {
+    background: #fff8e6;
+    border: 1.5px solid #ffe1a1;
+    color: #8a6d1a;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 0.83rem;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+  .notice a { color: #0984e3; }
+
+  @media (max-width: 480px) {
+    .goal-grid, .profile-grid { grid-template-columns: 1fr; gap: 0; }
+    .nutri-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍽️ AI食事分析</h1>
+  <p>写真を撮るだけで、AIが栄養素を分析して目標達成をサポート</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="analyze">📷 分析</button>
+  <button class="tab-btn" data-tab="goals">🎯 目標設定</button>
+  <button class="tab-btn" data-tab="history">📊 履歴</button>
+  <button class="tab-btn" data-tab="settings">⚙️ 設定</button>
+</nav>
+
+<div class="container">
+
+  <!-- ============ 分析タブ ============ -->
+  <section class="tab-panel active" id="tab-analyze">
+    <div class="notice" id="apiKeyNotice" style="display:none;">
+      ⚠️ AI分析には Anthropic APIキーが必要です。<b>「⚙️ 設定」タブ</b>でAPIキーを登録してください。
+    </div>
+
+    <div class="card">
+      <h2>📷 食事の写真を分析</h2>
+      <div class="drop-zone" id="dropZone">
+        <div class="dz-icon">📸</div>
+        <p><b>タップして撮影 / 写真を選択</b><br>またはここに画像をドラッグ&ドロップ</p>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;">
+      <div id="photoPreviewWrap">
+        <img id="photoPreview" alt="食事の写真プレビュー">
+        <div style="margin-top:8px;">
+          <button class="btn btn-secondary btn-small" id="clearPhotoBtn">写真を変更</button>
+        </div>
+      </div>
+
+      <label for="mealNote">メモ(任意・分析精度アップ)</label>
+      <textarea id="mealNote" placeholder="例: 朝食 / コンビニ弁当 / ラーメン大盛り など"></textarea>
+
+      <label for="mealType">食事の種類</label>
+      <select id="mealType">
+        <option value="朝食">朝食</option>
+        <option value="昼食">昼食</option>
+        <option value="夕食">夕食</option>
+        <option value="間食">間食</option>
+      </select>
+
+      <button class="btn btn-primary" id="analyzeBtn" disabled>🤖 AIで栄養分析する</button>
+      <p class="hint">写真はお使いの端末からAnthropic APIへ直接送信されます。分析には10〜30秒ほどかかります。</p>
+    </div>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="loading" id="loadingBox">
+      <div class="spinner"></div>
+      <p>AIが食事を分析しています…<br>栄養素を推定し、目標と比較中です</p>
+    </div>
+
+    <!-- 結果 -->
+    <div id="resultArea">
+      <div class="card">
+        <h2>🏆 総合評価</h2>
+        <div class="score-ring-wrap">
+          <div class="score-ring" id="scoreRing">
+            <div class="score-ring-inner">
+              <div class="score-num" id="scoreNum">--</div>
+              <div class="score-label">/ 100点</div>
+            </div>
+          </div>
+        </div>
+        <p class="eval-text" id="evalText"></p>
+      </div>
+
+      <div class="card">
+        <h2>🍛 検出された料理</h2>
+        <ul class="dish-list" id="dishList"></ul>
+      </div>
+
+      <div class="card">
+        <h2>🧪 推定栄養素</h2>
+        <div class="nutri-grid" id="nutriGrid"></div>
+        <p class="hint">※ 写真からのAIによる推定値です。実際の値とは差がある場合があります。</p>
+      </div>
+
+      <div class="card">
+        <h2>✨ 良い点</h2>
+        <ul class="point-list good" id="goodList"></ul>
+      </div>
+
+      <div class="card">
+        <h2>💡 改善点</h2>
+        <ul class="point-list improve" id="improveList"></ul>
+      </div>
+
+      <div class="card">
+        <h2>🥗 次の食事へのアドバイス</h2>
+        <div class="advice-box" id="adviceBox"></div>
+        <div style="margin-top:14px;">
+          <button class="btn btn-primary" id="saveHistoryBtn">📊 この結果を履歴に保存</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 目標設定タブ ============ -->
+  <section class="tab-panel" id="tab-goals">
+    <div class="card">
+      <h2>🧮 推奨値を自動計算(任意)</h2>
+      <p class="hint" style="margin-bottom:10px;">プロフィールを入力すると、1日の推奨摂取量を計算して下の目標欄に反映できます。</p>
+      <div class="profile-grid">
+        <div>
+          <label for="pAge">年齢</label>
+          <input type="number" id="pAge" min="6" max="120" placeholder="例: 16">
+        </div>
+        <div>
+          <label for="pSex">性別</label>
+          <select id="pSex">
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+          </select>
+        </div>
+        <div>
+          <label for="pHeight">身長 (cm)</label>
+          <input type="number" id="pHeight" min="80" max="250" placeholder="例: 170">
+        </div>
+        <div>
+          <label for="pWeight">体重 (kg)</label>
+          <input type="number" id="pWeight" min="20" max="250" placeholder="例: 60">
+        </div>
+      </div>
+      <label for="pActivity">活動量</label>
+      <select id="pActivity">
+        <option value="1.2">低い(ほとんど運動しない)</option>
+        <option value="1.375">やや低い(週1〜2回の軽い運動)</option>
+        <option value="1.55" selected>普通(週3〜5回の運動・部活)</option>
+        <option value="1.725">高い(ほぼ毎日ハードな運動)</option>
+      </select>
+      <button class="btn btn-secondary" id="calcBtn" style="width:100%;">📐 推奨値を計算して目標に反映</button>
+      <p class="hint" id="calcResult"></p>
+    </div>
+
+    <div class="card">
+      <h2>🎯 1日の目標値</h2>
+      <div class="goal-grid">
+        <div>
+          <label for="gCalories">カロリー (kcal)</label>
+          <input type="number" id="gCalories" min="500" max="6000" placeholder="例: 2200">
+        </div>
+        <div>
+          <label for="gProtein">たんぱく質 (g)</label>
+          <input type="number" id="gProtein" min="10" max="400" placeholder="例: 80">
+        </div>
+        <div>
+          <label for="gFat">脂質 (g)</label>
+          <input type="number" id="gFat" min="10" max="300" placeholder="例: 60">
+        </div>
+        <div>
+          <label for="gCarbs">炭水化物 (g)</label>
+          <input type="number" id="gCarbs" min="20" max="800" placeholder="例: 300">
+        </div>
+        <div>
+          <label for="gSalt">塩分上限 (g)</label>
+          <input type="number" id="gSalt" min="1" max="30" step="0.5" placeholder="例: 7.5">
+        </div>
+      </div>
+      <button class="btn btn-primary" id="saveGoalsBtn">💾 目標を保存</button>
+      <p class="hint" id="goalsSavedMsg"></p>
+    </div>
+  </section>
+
+  <!-- ============ 履歴タブ ============ -->
+  <section class="tab-panel" id="tab-history">
+    <div class="card">
+      <h2>📅 今日の摂取量 vs 目標</h2>
+      <div id="todayProgress"></div>
+    </div>
+    <div class="card">
+      <h2>📊 食事履歴</h2>
+      <div id="historyList"></div>
+    </div>
+  </section>
+
+  <!-- ============ 設定タブ ============ -->
+  <section class="tab-panel" id="tab-settings">
+    <div class="card">
+      <h2>🔑 Anthropic APIキー</h2>
+      <p class="hint" style="margin-bottom:10px;">
+        AI分析には <a href="https://platform.claude.com/" target="_blank" rel="noopener">Anthropic Console</a> で取得したAPIキーが必要です。
+        キーは<b>この端末のブラウザ内(localStorage)にのみ保存</b>され、Anthropic API以外へ送信されることはありません。
+      </p>
+      <label for="apiKeyInput">APIキー (sk-ant-...)</label>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off">
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-primary" id="saveKeyBtn" style="flex:1;">💾 保存</button>
+        <button class="btn btn-danger btn-small" id="deleteKeyBtn">削除</button>
+      </div>
+      <p class="hint" id="keyStatusMsg"></p>
+    </div>
+
+    <div class="card">
+      <h2>🗑️ データ管理</h2>
+      <button class="btn btn-danger" id="clearHistoryBtn" style="width:100%;">食事履歴をすべて削除</button>
+      <p class="hint">目標設定・APIキーは削除されません。</p>
+    </div>
+
+    <div class="card">
+      <h2>ℹ️ このアプリについて</h2>
+      <p class="hint">
+        食事の写真をAI(Claude)が分析し、料理の内容・栄養素を推定して、あなたが設定した目標に対する評価と改善アドバイスを表示します。<br><br>
+        1. 「⚙️ 設定」でAPIキーを登録<br>
+        2. 「🎯 目標設定」で1日の目標を設定<br>
+        3. 「📷 分析」で食事の写真をアップロードして分析<br>
+        4. 結果を履歴に保存すると「📊 履歴」で1日の進捗を確認できます<br><br>
+        ※ 栄養素はAIによる推定値であり、医療・診断目的には使用できません。
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+
+/* ========== 定数・状態 ========== */
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-opus-4-8";
+const LS_KEYS = {
+  apiKey: "mealai_apikey",
+  goals: "mealai_goals",
+  profile: "mealai_profile",
+  history: "mealai_history",
+};
+const DEFAULT_GOALS = { calories: 2200, protein: 80, fat: 60, carbs: 300, salt: 7.5 };
+
+let currentImage = null;   // { base64, mediaType, thumb }
+let currentResult = null;  // 分析結果(保存用)
+
+const NUTRITION_SCHEMA = {
+  type: "object",
+  properties: {
+    is_food: { type: "boolean", description: "画像に食事が写っているか" },
+    dishes: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          name: { type: "string", description: "料理名(日本語)" },
+          calories: { type: "integer", description: "推定カロリー(kcal)" },
+        },
+        required: ["name", "calories"],
+        additionalProperties: false,
+      },
+    },
+    total: {
+      type: "object",
+      properties: {
+        calories: { type: "integer" },
+        protein_g: { type: "number" },
+        fat_g: { type: "number" },
+        carbs_g: { type: "number" },
+        fiber_g: { type: "number" },
+        salt_g: { type: "number" },
+      },
+      required: ["calories", "protein_g", "fat_g", "carbs_g", "fiber_g", "salt_g"],
+      additionalProperties: false,
+    },
+    score: { type: "integer", description: "目標に対する総合評価 0-100" },
+    evaluation: { type: "string", description: "目標に対する評価コメント(2-3文、日本語)" },
+    good_points: { type: "array", items: { type: "string" } },
+    improvements: { type: "array", items: { type: "string" } },
+    advice: { type: "string", description: "次の食事への具体的なアドバイス(日本語)" },
+  },
+  required: ["is_food", "dishes", "total", "score", "evaluation", "good_points", "improvements", "advice"],
+  additionalProperties: false,
+};
+
+/* ========== ユーティリティ ========== */
+const $ = (id) => document.getElementById(id);
+const lsGet = (key, fallback) => {
+  try {
+    const v = localStorage.getItem(key);
+    return v === null ? fallback : JSON.parse(v);
+  } catch { return fallback; }
+};
+const lsSet = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const todayStr = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+
+/* ========== タブ切り替え ========== */
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+    btn.classList.add("active");
+    $("tab-" + btn.dataset.tab).classList.add("active");
+    if (btn.dataset.tab === "history") renderHistory();
+    if (btn.dataset.tab === "analyze") updateApiKeyNotice();
+  });
+});
+
+/* ========== APIキー管理 ========== */
+function getApiKey() { return lsGet(LS_KEYS.apiKey, ""); }
+
+function updateApiKeyNotice() {
+  $("apiKeyNotice").style.display = getApiKey() ? "none" : "block";
+}
+function updateKeyStatus() {
+  const key = getApiKey();
+  $("keyStatusMsg").textContent = key
+    ? `✅ APIキー登録済み(${key.slice(0, 12)}...${key.slice(-4)})`
+    : "APIキーは未登録です。";
+}
+
+$("saveKeyBtn").addEventListener("click", () => {
+  const key = $("apiKeyInput").value.trim();
+  if (!key) { alert("APIキーを入力してください。"); return; }
+  if (!key.startsWith("sk-ant-")) {
+    if (!confirm("キーが sk-ant- で始まっていません。このまま保存しますか?")) return;
+  }
+  lsSet(LS_KEYS.apiKey, key);
+  $("apiKeyInput").value = "";
+  updateKeyStatus();
+  updateApiKeyNotice();
+});
+$("deleteKeyBtn").addEventListener("click", () => {
+  if (!confirm("保存したAPIキーを削除しますか?")) return;
+  localStorage.removeItem(LS_KEYS.apiKey);
+  updateKeyStatus();
+  updateApiKeyNotice();
+});
+
+/* ========== 写真の読み込み・リサイズ ========== */
+const dropZone = $("dropZone");
+const photoInput = $("photoInput");
+
+dropZone.addEventListener("click", () => photoInput.click());
+dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("dragover"); });
+dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("dragover");
+  const file = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (file) loadImageFile(file);
+});
+photoInput.addEventListener("change", () => {
+  const file = photoInput.files && photoInput.files[0];
+  if (file) loadImageFile(file);
+});
+$("clearPhotoBtn").addEventListener("click", () => {
+  currentImage = null;
+  photoInput.value = "";
+  $("photoPreviewWrap").style.display = "none";
+  dropZone.style.display = "block";
+  $("analyzeBtn").disabled = true;
+});
+
+function loadImageFile(file) {
+  if (!file.type.startsWith("image/")) {
+    showError("画像ファイルを選択してください。");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      // 分析用: 長辺1568pxにリサイズしてJPEG化(トークン・サイズ節約)
+      currentImage = {
+        ...resizeToJpeg(img, 1568, 0.85),
+        thumb: resizeToJpeg(img, 240, 0.7).dataUrl, // 履歴サムネイル用
+      };
+      $("photoPreview").src = currentImage.dataUrl;
+      $("photoPreviewWrap").style.display = "block";
+      dropZone.style.display = "none";
+      $("analyzeBtn").disabled = false;
+      hideError();
+    };
+    img.onerror = () => showError("画像の読み込みに失敗しました。別の画像をお試しください。");
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function resizeToJpeg(img, maxSide, quality) {
+  const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+  const w = Math.round(img.width * scale);
+  const h = Math.round(img.height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+  const dataUrl = canvas.toDataURL("image/jpeg", quality);
+  return { dataUrl, base64: dataUrl.split(",")[1], mediaType: "image/jpeg" };
+}
+
+/* ========== エラー表示 ========== */
+function showError(msg) {
+  const box = $("errorBox");
+  box.textContent = msg;
+  box.style.display = "block";
+}
+function hideError() { $("errorBox").style.display = "none"; }
+
+/* ========== AI分析 ========== */
+$("analyzeBtn").addEventListener("click", analyze);
+
+async function analyze() {
+  hideError();
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    showError("APIキーが未登録です。「⚙️ 設定」タブでAnthropic APIキーを登録してください。");
+    return;
+  }
+  if (!currentImage) {
+    showError("先に食事の写真を選択してください。");
+    return;
+  }
+
+  const goals = lsGet(LS_KEYS.goals, DEFAULT_GOALS);
+  const todayTotals = getTodayTotals();
+  const note = $("mealNote").value.trim();
+  const mealType = $("mealType").value;
+
+  const system = [
+    "あなたは経験豊富な管理栄養士AIです。食事の写真を分析し、料理と栄養素を推定して、ユーザーの目標に対する評価と改善アドバイスを日本語で提供します。",
+    "",
+    "## ユーザーの1日の目標",
+    `- カロリー: ${goals.calories} kcal`,
+    `- たんぱく質: ${goals.protein} g`,
+    `- 脂質: ${goals.fat} g`,
+    `- 炭水化物: ${goals.carbs} g`,
+    `- 塩分上限: ${goals.salt} g`,
+    "",
+    "## 今日ここまでの摂取量(この食事を除く)",
+    `- カロリー: ${todayTotals.calories} kcal / たんぱく質: ${todayTotals.protein_g} g / 脂質: ${todayTotals.fat_g} g / 炭水化物: ${todayTotals.carbs_g} g / 塩分: ${todayTotals.salt_g} g`,
+    "",
+    "## 評価のルール",
+    "- score は、この食事が目標達成にどれだけ貢献するかを 0〜100 で採点する(栄養バランス、目標との整合性、1食として適切な量かを考慮)。",
+    "- evaluation は目標との比較を踏まえた2〜3文のコメント。",
+    "- good_points / improvements はそれぞれ2〜4個、具体的に。",
+    "- advice は今日の残りの食事で何を食べるべきかの具体的な提案。",
+    "- 量が不明確な場合は一般的な1人前として推定する。",
+    "- 画像に食事が写っていない場合は is_food を false にし、他のフィールドは空またはゼロにする。",
+  ].join("\n");
+
+  const userText = [
+    `この${mealType}の写真を分析してください。`,
+    note ? `ユーザーのメモ: ${note}` : "",
+  ].filter(Boolean).join("\n");
+
+  $("analyzeBtn").disabled = true;
+  $("loadingBox").style.display = "block";
+  $("resultArea").style.display = "none";
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 4096,
+        system: system,
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "image",
+                source: {
+                  type: "base64",
+                  media_type: currentImage.mediaType,
+                  data: currentImage.base64,
+                },
+              },
+              { type: "text", text: userText },
+            ],
+          },
+        ],
+        output_config: {
+          format: { type: "json_schema", schema: NUTRITION_SCHEMA },
+        },
+      }),
+    });
+
+    if (!res.ok) {
+      let detail = "";
+      try { detail = (await res.json()).error?.message || ""; } catch {}
+      throw new Error(httpErrorMessage(res.status, detail));
+    }
+
+    const data = await res.json();
+    if (data.stop_reason === "refusal") {
+      throw new Error("AIがこのリクエストの処理を拒否しました。別の写真でお試しください。");
+    }
+    const textBlock = (data.content || []).find((b) => b.type === "text");
+    if (!textBlock) throw new Error("AIから有効な応答が得られませんでした。もう一度お試しください。");
+
+    const result = JSON.parse(textBlock.text);
+    if (!result.is_food) {
+      throw new Error("写真から食事を検出できませんでした。食事全体が写るように撮影してください。");
+    }
+    currentResult = result;
+    renderResult(result);
+  } catch (err) {
+    if (err instanceof TypeError) {
+      showError("ネットワークエラーが発生しました。インターネット接続を確認してもう一度お試しください。");
+    } else {
+      showError(err.message || "分析中にエラーが発生しました。");
+    }
+  } finally {
+    $("loadingBox").style.display = "none";
+    $("analyzeBtn").disabled = false;
+  }
+}
+
+function httpErrorMessage(status, detail) {
+  const map = {
+    400: "リクエストが不正です。",
+    401: "APIキーが無効です。「⚙️ 設定」タブでAPIキーを確認してください。",
+    403: "APIキーに権限がありません。",
+    413: "画像サイズが大きすぎます。別の写真でお試しください。",
+    429: "リクエストが多すぎます。しばらく待ってからお試しください。",
+    500: "Anthropic側で一時的なエラーが発生しました。時間をおいてお試しください。",
+    529: "AIサービスが混雑しています。時間をおいてお試しください。",
+  };
+  const base = map[status] || `エラーが発生しました (HTTP ${status})。`;
+  return detail ? `${base}\n詳細: ${detail}` : base;
+}
+
+/* ========== 結果表示 ========== */
+function scoreColor(score) {
+  if (score >= 80) return "#00b894";
+  if (score >= 60) return "#0984e3";
+  if (score >= 40) return "#e67e22";
+  return "#e74c3c";
+}
+
+function renderResult(r) {
+  // スコアリング
+  const color = scoreColor(r.score);
+  $("scoreNum").textContent = r.score;
+  $("scoreNum").style.color = color;
+  $("scoreRing").style.background =
+    `conic-gradient(${color} ${r.score * 3.6}deg, #edf2f6 ${r.score * 3.6}deg)`;
+  $("evalText").textContent = r.evaluation;
+
+  // 料理リスト
+  $("dishList").innerHTML = r.dishes.map((d) =>
+    `<li><span>${esc(d.name)}</span><span class="dish-kcal">${d.calories} kcal</span></li>`
+  ).join("") || `<li>検出なし</li>`;
+
+  // 栄養素
+  const t = r.total;
+  const items = [
+    { l: "カロリー", v: `${t.calories}`, u: "kcal" },
+    { l: "たんぱく質", v: t.protein_g.toFixed(1), u: "g" },
+    { l: "脂質", v: t.fat_g.toFixed(1), u: "g" },
+    { l: "炭水化物", v: t.carbs_g.toFixed(1), u: "g" },
+    { l: "食物繊維", v: t.fiber_g.toFixed(1), u: "g" },
+    { l: "塩分", v: t.salt_g.toFixed(1), u: "g" },
+  ];
+  $("nutriGrid").innerHTML = items.map((i) =>
+    `<div class="nutri-item"><div class="nv">${esc(i.v)}<small style="font-size:0.65rem;"> ${i.u}</small></div><div class="nl">${i.l}</div></div>`
+  ).join("");
+
+  $("goodList").innerHTML = r.good_points.map((p) => `<li>${esc(p)}</li>`).join("") || "<li>-</li>";
+  $("improveList").innerHTML = r.improvements.map((p) => `<li>${esc(p)}</li>`).join("") || "<li>-</li>";
+  $("adviceBox").textContent = r.advice;
+
+  $("saveHistoryBtn").disabled = false;
+  $("saveHistoryBtn").textContent = "📊 この結果を履歴に保存";
+  $("resultArea").style.display = "block";
+  $("resultArea").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ========== 履歴 ========== */
+$("saveHistoryBtn").addEventListener("click", () => {
+  if (!currentResult) return;
+  const history = lsGet(LS_KEYS.history, []);
+  history.unshift({
+    id: Date.now(),
+    date: todayStr(),
+    time: new Date().toTimeString().slice(0, 5),
+    mealType: $("mealType").value,
+    thumb: currentImage ? currentImage.thumb : null,
+    dishes: currentResult.dishes,
+    total: currentResult.total,
+    score: currentResult.score,
+  });
+  // localStorage容量対策: 最新60件まで保持
+  try {
+    lsSet(LS_KEYS.history, history.slice(0, 60));
+  } catch {
+    // 容量超過時はサムネイルを間引いて再保存
+    const slim = history.slice(0, 30).map((h, i) => (i < 10 ? h : { ...h, thumb: null }));
+    try { lsSet(LS_KEYS.history, slim); } catch {}
+  }
+  $("saveHistoryBtn").disabled = true;
+  $("saveHistoryBtn").textContent = "✅ 保存しました";
+});
+
+function getTodayTotals() {
+  const history = lsGet(LS_KEYS.history, []);
+  const today = todayStr();
+  const totals = { calories: 0, protein_g: 0, fat_g: 0, carbs_g: 0, salt_g: 0 };
+  history.filter((h) => h.date === today).forEach((h) => {
+    totals.calories += h.total.calories || 0;
+    totals.protein_g += h.total.protein_g || 0;
+    totals.fat_g += h.total.fat_g || 0;
+    totals.carbs_g += h.total.carbs_g || 0;
+    totals.salt_g += h.total.salt_g || 0;
+  });
+  totals.protein_g = Math.round(totals.protein_g * 10) / 10;
+  totals.fat_g = Math.round(totals.fat_g * 10) / 10;
+  totals.carbs_g = Math.round(totals.carbs_g * 10) / 10;
+  totals.salt_g = Math.round(totals.salt_g * 10) / 10;
+  return totals;
+}
+
+function renderHistory() {
+  const goals = lsGet(LS_KEYS.goals, DEFAULT_GOALS);
+  const totals = getTodayTotals();
+
+  const rows = [
+    { name: "カロリー", cur: totals.calories, goal: goals.calories, unit: "kcal" },
+    { name: "たんぱく質", cur: totals.protein_g, goal: goals.protein, unit: "g" },
+    { name: "脂質", cur: totals.fat_g, goal: goals.fat, unit: "g" },
+    { name: "炭水化物", cur: totals.carbs_g, goal: goals.carbs, unit: "g" },
+    { name: "塩分", cur: totals.salt_g, goal: goals.salt, unit: "g" },
+  ];
+  $("todayProgress").innerHTML = rows.map((r) => {
+    const pct = r.goal > 0 ? Math.min(100, (r.cur / r.goal) * 100) : 0;
+    const over = r.cur > r.goal;
+    return `<div class="progress-row">
+      <div class="progress-head">
+        <span class="pname">${r.name}</span>
+        <span class="pval">${r.cur} / ${r.goal} ${r.unit}${over ? " ⚠️超過" : ""}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill${over ? " over" : ""}" style="width:${pct}%;"></div></div>
+    </div>`;
+  }).join("");
+
+  const history = lsGet(LS_KEYS.history, []);
+  if (history.length === 0) {
+    $("historyList").innerHTML = `<p class="empty-msg">まだ履歴がありません。<br>「📷 分析」タブで食事を分析して保存しましょう。</p>`;
+    return;
+  }
+  $("historyList").innerHTML = history.map((h) => {
+    const name = h.dishes.map((d) => d.name).join("・") || "食事";
+    const color = scoreColor(h.score);
+    return `<div class="history-item">
+      ${h.thumb ? `<img class="history-thumb" src="${h.thumb}" alt="">` : `<div class="history-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🍽️</div>`}
+      <div class="history-info">
+        <div class="h-date">${esc(h.date)} ${esc(h.time)} ・ ${esc(h.mealType)}</div>
+        <div class="h-name">${esc(name)}</div>
+        <div class="h-kcal">${h.total.calories} kcal</div>
+      </div>
+      <span class="history-score" style="color:${color};background:${color}18;">${h.score}点</span>
+      <button class="btn btn-danger btn-small" data-del="${h.id}">削除</button>
+    </div>`;
+  }).join("");
+
+  $("historyList").querySelectorAll("[data-del]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!confirm("この履歴を削除しますか?")) return;
+      const next = lsGet(LS_KEYS.history, []).filter((h) => h.id !== Number(btn.dataset.del));
+      lsSet(LS_KEYS.history, next);
+      renderHistory();
+    });
+  });
+}
+
+$("clearHistoryBtn").addEventListener("click", () => {
+  if (!confirm("食事履歴をすべて削除しますか?この操作は取り消せません。")) return;
+  localStorage.removeItem(LS_KEYS.history);
+  alert("履歴を削除しました。");
+});
+
+/* ========== 目標設定 ========== */
+function loadGoalsToForm() {
+  const g = lsGet(LS_KEYS.goals, DEFAULT_GOALS);
+  $("gCalories").value = g.calories;
+  $("gProtein").value = g.protein;
+  $("gFat").value = g.fat;
+  $("gCarbs").value = g.carbs;
+  $("gSalt").value = g.salt;
+
+  const p = lsGet(LS_KEYS.profile, null);
+  if (p) {
+    $("pAge").value = p.age || "";
+    $("pSex").value = p.sex || "male";
+    $("pHeight").value = p.height || "";
+    $("pWeight").value = p.weight || "";
+    $("pActivity").value = p.activity || "1.55";
+  }
+}
+
+$("saveGoalsBtn").addEventListener("click", () => {
+  const goals = {
+    calories: Number($("gCalories").value) || DEFAULT_GOALS.calories,
+    protein: Number($("gProtein").value) || DEFAULT_GOALS.protein,
+    fat: Number($("gFat").value) || DEFAULT_GOALS.fat,
+    carbs: Number($("gCarbs").value) || DEFAULT_GOALS.carbs,
+    salt: Number($("gSalt").value) || DEFAULT_GOALS.salt,
+  };
+  lsSet(LS_KEYS.goals, goals);
+  $("goalsSavedMsg").textContent = "✅ 目標を保存しました。次回の分析からこの目標で評価されます。";
+  setTimeout(() => { $("goalsSavedMsg").textContent = ""; }, 4000);
+});
+
+$("calcBtn").addEventListener("click", () => {
+  const age = Number($("pAge").value);
+  const sex = $("pSex").value;
+  const height = Number($("pHeight").value);
+  const weight = Number($("pWeight").value);
+  const activity = Number($("pActivity").value);
+  if (!age || !height || !weight) {
+    $("calcResult").textContent = "⚠️ 年齢・身長・体重をすべて入力してください。";
+    return;
+  }
+  lsSet(LS_KEYS.profile, { age, sex, height, weight, activity: String(activity) });
+
+  // ハリス・ベネディクト式(改良版)で基礎代謝 → 活動係数を掛けてTDEE
+  const bmr = sex === "male"
+    ? 13.397 * weight + 4.799 * height - 5.677 * age + 88.362
+    : 9.247 * weight + 3.098 * height - 4.330 * age + 447.593;
+  const tdee = Math.round(bmr * activity);
+
+  // PFCバランス: たんぱく質15% / 脂質25% / 炭水化物60%
+  const protein = Math.round((tdee * 0.15) / 4);
+  const fat = Math.round((tdee * 0.25) / 9);
+  const carbs = Math.round((tdee * 0.60) / 4);
+  const salt = sex === "male" ? 7.5 : 6.5; // 日本の食事摂取基準の目標量
+
+  $("gCalories").value = tdee;
+  $("gProtein").value = protein;
+  $("gFat").value = fat;
+  $("gCarbs").value = carbs;
+  $("gSalt").value = salt;
+  $("calcResult").textContent =
+    `📐 推定消費カロリー ${tdee} kcal/日 をもとに目標欄へ反映しました。「💾 目標を保存」を押して確定してください。`;
+});
+
+/* ========== 初期化 ========== */
+loadGoalsToForm();
+updateKeyStatus();
+updateApiKeyNotice();
+</script>
+</body>
+</html>
