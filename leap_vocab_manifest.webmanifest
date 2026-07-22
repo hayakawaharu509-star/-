@@ -1,0 +1,21 @@
+{
+  "name": "AI単語帳 | 自分の単語帳＋LEAP英単語",
+  "short_name": "AI単語帳",
+  "description": "LEAP英単語2300語と自分の単語帳を、カード・クイズ・間隔反復で学べるアプリ",
+  "id": "./leap_vocab_flashcards.html",
+  "start_url": "./leap_vocab_flashcards.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#111827",
+  "orientation": "portrait-primary",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "./leap_vocab_icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">AI単語帳</title>
+  <rect width="512" height="512" rx="112" fill="#111827"/>
+  <rect x="92" y="94" width="328" height="324" rx="52" fill="#ffffff"/>
+  <rect x="124" y="126" width="264" height="60" rx="22" fill="#e0e7ff"/>
+  <path d="M152 232h208M152 282h168M152 332h116" fill="none" stroke="#6366f1" stroke-linecap="round" stroke-width="26"/>
+  <circle cx="360" cy="352" r="72" fill="#4f46e5"/>
+  <path d="m331 352 20 20 39-44" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+</svg>
