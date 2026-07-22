@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイアプリ ポータル</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: linear-gradient(135deg, #e8f5ff 0%, #f0fff4 50%, #fff8e8 100%);
+    color: #1f2d3d;
+    font-family: 'Segoe UI', 'Hiragino Sans', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+  header {
+    text-align: center;
+    padding: 26px 16px 20px;
+    color: #fff;
+    background: linear-gradient(90deg, #00b894, #0984e3, #6c5ce7);
+    box-shadow: 0 4px 16px rgba(9,132,227,0.25);
+  }
+  header h1 { font-size: 1.5rem; letter-spacing: 1px; }
+  header p { font-size: 0.82rem; opacity: 0.9; margin-top: 6px; }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    display: grid;
+    gap: 14px;
+  }
+  .app-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 6px 20px rgba(31,45,61,0.08);
+    border: 1px solid rgba(31,45,61,0.05);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .app-card:hover, .app-card:active {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(9,132,227,0.18);
+  }
+  .app-icon {
+    font-size: 2.1rem;
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .app-info h2 { font-size: 1.02rem; margin-bottom: 3px; }
+  .app-info p { font-size: 0.8rem; color: #7b8a99; line-height: 1.5; }
+  .arrow { margin-left: auto; color: #b8c6d4; font-size: 1.2rem; flex-shrink: 0; }
+
+  footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #8a97a5;
+    padding: 10px 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📱 マイアプリ ポータル</h1>
+  <p>作ったアプリの一覧です。タップして開いてください。</p>
+</header>
+
+<div class="container">
+
+  <a class="app-card" href="meal_analyzer.html">
+    <div class="app-icon" style="background:#eafff7;">🍽️</div>
+    <div class="app-info">
+      <h2>AI食事分析</h2>
+      <p>食事の写真をAIが分析。栄養素の推定と目標に対する評価・アドバイス。</p>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <a class="app-card" href="leap_vocab_flashcards.html">
+    <div class="app-icon" style="background:#f3efff;">📚</div>
+    <div class="app-info">
+      <h2>AI単語帳</h2>
+      <p>自分の単語帳+LEAP英単語で暗記学習。</p>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <a class="app-card" href="chemistry_basics.html">
+    <div class="app-icon" style="background:#eaf4ff;">⚗️</div>
+    <div class="app-info">
+      <h2>化学基礎 総合学習サイト</h2>
+      <p>原子・分子モデルと解説で学ぶ化学基礎。</p>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <a class="app-card" href="soccer_formation_simulator.html">
+    <div class="app-icon" style="background:#f0fff0;">⚽</div>
+    <div class="app-info">
+      <h2>サッカーフォーメーションシミュレーター</h2>
+      <p>フォーメーションを自由に配置して戦術を検討。</p>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <a class="app-card" href="minecraft.html">
+    <div class="app-icon" style="background:#fff8e6;">⛏️</div>
+    <div class="app-info">
+      <h2>Minecraft風ボクセルゲーム</h2>
+      <p>ブラウザで遊べるボクセル建築ゲーム。</p>
+    </div>
+    <span class="arrow">›</span>
+  </a>
+
+  <!-- 新しいアプリを追加するときは、上のカードをコピーして
+       href / アイコン / タイトル / 説明 を書き換えるだけ -->
+
+</div>
+
+<footer>hayakawaharu509-star / 簡易的なゲームやWebサイト開発</footer>
+
+</body>
+</html>

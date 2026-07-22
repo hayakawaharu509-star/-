@@ -119,13 +119,13 @@
     padding: 26px 14px;
     text-align: center;
     color: #7b8a99;
-    cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
     margin-bottom: 12px;
   }
   .drop-zone.dragover { border-color: #00b894; background: #eafff7; }
   .drop-zone .dz-icon { font-size: 2.2rem; margin-bottom: 6px; }
-  .drop-zone p { font-size: 0.85rem; line-height: 1.6; }
+  .drop-zone p { font-size: 0.78rem; line-height: 1.6; }
+  .dz-buttons { display: grid; gap: 8px; margin: 4px 0 10px; }
   #photoPreviewWrap { display: none; text-align: center; margin-bottom: 12px; }
   #photoPreview {
     max-width: 100%;
@@ -334,9 +334,14 @@
       <h2>📷 食事の写真を分析</h2>
       <div class="drop-zone" id="dropZone">
         <div class="dz-icon">📸</div>
-        <p><b>タップして撮影 / 写真を選択</b><br>またはここに画像をドラッグ&ドロップ</p>
+        <div class="dz-buttons">
+          <button type="button" class="btn btn-primary" id="cameraBtn">📷 カメラで撮影</button>
+          <button type="button" class="btn btn-secondary" id="libraryBtn">🖼️ 撮影済みの写真から選ぶ</button>
+        </div>
+        <p>PCの場合は、ここに画像をドラッグ&ドロップでもOK</p>
       </div>
       <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;">
+      <input type="file" id="libraryInput" accept="image/*" style="display:none;">
       <div id="photoPreviewWrap">
         <img id="photoPreview" alt="食事の写真プレビュー">
         <div style="margin-top:8px;">
@@ -645,8 +650,10 @@ $("deleteKeyBtn").addEventListener("click", () => {
 /* ========== 写真の読み込み・リサイズ ========== */
 const dropZone = $("dropZone");
 const photoInput = $("photoInput");
+const libraryInput = $("libraryInput");
 
-dropZone.addEventListener("click", () => photoInput.click());
+$("cameraBtn").addEventListener("click", () => photoInput.click());   // その場で撮影
+$("libraryBtn").addEventListener("click", () => libraryInput.click()); // 撮影済みの写真(アルバム)から選択
 dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("dragover"); });
 dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
 dropZone.addEventListener("drop", (e) => {
@@ -655,13 +662,16 @@ dropZone.addEventListener("drop", (e) => {
   const file = e.dataTransfer.files && e.dataTransfer.files[0];
   if (file) loadImageFile(file);
 });
-photoInput.addEventListener("change", () => {
-  const file = photoInput.files && photoInput.files[0];
-  if (file) loadImageFile(file);
+[photoInput, libraryInput].forEach((input) => {
+  input.addEventListener("change", () => {
+    const file = input.files && input.files[0];
+    if (file) loadImageFile(file);
+  });
 });
 $("clearPhotoBtn").addEventListener("click", () => {
   currentImage = null;
   photoInput.value = "";
+  libraryInput.value = "";
   $("photoPreviewWrap").style.display = "none";
   dropZone.style.display = "block";
   $("analyzeBtn").disabled = true;
@@ -687,7 +697,7 @@ function loadImageFile(file) {
       $("analyzeBtn").disabled = false;
       hideError();
     };
-    img.onerror = () => showError("画像の読み込みに失敗しました。別の画像をお試しください。");
+    img.onerror = () => showError("画像の読み込みに失敗しました。HEIC形式などブラウザが表示できない形式の可能性があります。JPEG/PNGに変換するか、写真のスクリーンショットでお試しください。");
     img.src = reader.result;
   };
   reader.readAsDataURL(file);
