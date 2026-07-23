@@ -214,13 +214,67 @@
   .diagram-box { background: #fff; border-radius: 18px; padding: 20px; text-align: center; max-width: 320px; width: 100%; }
   .diagram-box h3 { font-size: 1.5rem; margin-bottom: 4px; }
   .diagram-box .sub { color: var(--sub); font-size: 0.8rem; margin-bottom: 8px; }
+
+  /* スケール・理論 */
+  .scale-info {
+    background: #fffdf9; border: 1px solid rgba(31,45,61,0.08);
+    border-radius: 12px; padding: 10px 14px; margin-top: 10px;
+    font-size: 0.82rem; line-height: 1.7;
+  }
+  .scale-info b.note-chip {
+    display: inline-block; background: #fff2e5; color: var(--main-dark);
+    border-radius: 6px; padding: 1px 7px; margin: 1px 2px; font-size: 0.8rem;
+  }
+  .diatonic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; margin-top: 10px; }
+  .dia-cell {
+    background: #fffdf9; border: 1.5px solid rgba(31,45,61,0.1); border-radius: 12px;
+    padding: 8px 4px; text-align: center; cursor: pointer; transition: transform 0.1s;
+  }
+  .dia-cell:active { transform: scale(0.95); }
+  .dia-cell .roman { font-size: 0.7rem; color: var(--sub); }
+  .dia-cell .cname { font-weight: bold; font-size: 1.0rem; margin: 2px 0; }
+  .dia-cell .cname7 { font-size: 0.72rem; color: #4a5560; }
+  .dia-cell .func { font-size: 0.62rem; margin-top: 3px; border-radius: 99px; display: inline-block; padding: 1px 7px; }
+  .func.T { background: #d3f7ea; color: #00795f; }
+  .func.SD { background: #fff3d1; color: #9c6b00; }
+  .func.D { background: #ffd5d5; color: #b32020; }
+
+  table.iv-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-top: 8px; }
+  table.iv-table th, table.iv-table td { border: 1px solid #e3e8ee; padding: 6px 6px; text-align: center; }
+  table.iv-table th { background: #f4f6f8; font-weight: bold; }
+  table.iv-table td button {
+    border: 1px solid var(--main); color: var(--main-dark); background: #fff;
+    border-radius: 8px; padding: 3px 9px; cursor: pointer; font-family: inherit; font-size: 0.72rem;
+  }
+
+  .circle-wrap { display: flex; justify-content: center; }
+  .circle-wrap svg { max-width: 340px; width: 100%; height: auto; }
+
+  /* AIチューター */
+  .ai-chat { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; max-height: 380px; overflow-y: auto; }
+  .ai-msg { max-width: 88%; padding: 9px 12px; border-radius: 14px; font-size: 0.84rem; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+  .ai-msg.user { align-self: flex-end; background: #fff2e5; border-bottom-right-radius: 4px; }
+  .ai-msg.ai { align-self: flex-start; background: #f4f6f8; border-bottom-left-radius: 4px; }
+  .ai-msg.loading { color: var(--sub); font-style: italic; }
+  .ai-input-row { display: flex; gap: 8px; }
+  .ai-input-row textarea {
+    flex: 1; border: 1.5px solid rgba(31,45,61,0.15); border-radius: 12px; padding: 9px 12px;
+    font-family: inherit; font-size: 0.85rem; resize: none; min-height: 44px;
+  }
+  .ai-key-row { display: flex; gap: 8px; margin-top: 8px; }
+  .ai-key-row input {
+    flex: 1; border: 1.5px solid rgba(31,45,61,0.15); border-radius: 10px; padding: 8px 10px;
+    font-family: inherit; font-size: 0.8rem;
+  }
+  .ai-status { font-size: 0.75rem; margin-top: 6px; color: var(--sub); }
+  .err-box { background: #ffd5d5; color: #b32020; border-radius: 10px; padding: 8px 12px; font-size: 0.8rem; margin-top: 8px; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>🎸 ギター学習アプリ</h1>
-  <p>コード・チューナー・メトロノーム・指板トレーニング</p>
+  <p>コード・スケール・音楽理論・チューナー・メトロノーム・AIチューター</p>
 </header>
 
 <div class="container">
@@ -330,14 +384,100 @@
     </div>
   </section>
 
-  <!-- ============ 指板 ============ -->
-  <section class="tab" id="tab-fret">
+  <!-- ============ スケール ============ -->
+  <section class="tab" id="tab-scale">
     <div class="card">
-      <h2>🗺️ 指板マップ <small>タップすると音名と音が確認できます</small></h2>
-      <div class="fb-wrap"><svg id="fretboardSvg"></svg></div>
-      <p class="hint">上が1弦(高いE)、下が6弦(低いE)。5フレット・7フレット等の目印(ポジションマーク)ごと覚えると早いです。</p>
+      <h2>🎼 スケール探検 <small>キーとスケールを選んで指板で確認</small></h2>
+      <div class="chip-row" id="keyChips"></div>
+      <div class="chip-row" id="scaleChips"></div>
+      <div class="chip-row" id="scaleOptChips"></div>
+      <div class="fb-wrap"><svg id="scaleFbSvg"></svg></div>
+      <div class="scale-info" id="scaleInfo"></div>
+      <div class="center-row">
+        <button class="btn" id="scalePlayBtn">▶ スケールを弾く</button>
+      </div>
+      <p class="hint">赤=ルート音(キーの中心)、青=スケール構成音。丸をタップすると音が鳴ります。「度数」表示にすると音の役割(R=ルート、3=3度…)が分かります。ポジションを選ぶと5フレット幅の「手の形」で覚えられます。</p>
     </div>
 
+    <div class="card">
+      <h2>🗺️ 指板マップ(全音名) <small>タップすると音名と音が確認できます</small></h2>
+      <div class="fb-wrap"><svg id="fretboardSvg"></svg></div>
+      <p class="hint">上が1弦(高いE)、下が6弦(低いE)。まずは6弦・5弦の音名から覚えるとコードやスケールの位置がすぐ分かるようになります。目印: 5F=A(6弦)、7F=B(6弦)、12Fで1周。</p>
+    </div>
+  </section>
+
+  <!-- ============ 理論 ============ -->
+  <section class="tab" id="tab-theory">
+    <div class="card">
+      <h2>🎹 ダイアトニックコード <small>キーの中で使える7つのコード</small></h2>
+      <div class="chip-row" id="theoryKeyChips"></div>
+      <div class="chip-row" id="theoryModeChips"></div>
+      <div class="diatonic-grid" id="diatonicGrid"></div>
+      <p class="hint">タップすると音が鳴ります。<b>T(トニック)</b>=安定・帰る場所 / <b>SD(サブドミナント)</b>=少し不安定・広がり / <b>D(ドミナント)</b>=不安定・Tに戻りたい。この3つの役割の組み合わせがコード進行の基本です。下段は4和音(セブンス)の名前。</p>
+    </div>
+
+    <div class="card">
+      <h2>⭕ 五度圏(サークル・オブ・フィフス) <small>タップでキーを変更</small></h2>
+      <div class="circle-wrap"><svg id="circleSvg"></svg></div>
+      <p class="hint">外側=メジャーキー、内側=その平行短調(同じ構成音のマイナーキー)。隣同士のキーは構成音が1つしか違わないので相性が良く、転調やコード借用でよく使われます。右回りに♯が1つずつ増え、左回りに♭が増えます。</p>
+    </div>
+
+    <div class="card">
+      <h2>📏 音程(インターバル)早見表 <small>音と音の距離が理論の基本</small></h2>
+      <table class="iv-table">
+        <tr><th>半音数</th><th>名前</th><th>例(Cから)</th><th>響き</th><th>聴く</th></tr>
+        <tbody id="ivTableBody"></tbody>
+      </table>
+      <p class="hint">コードもスケールも「ルートからどれだけ離れた音を重ねるか」で決まります。例: メジャーコード=R+長3度+完全5度、マイナーコード=R+短3度+完全5度。3度が長か短かで明るさが決まる!</p>
+    </div>
+
+    <div class="card">
+      <h2>📖 理論ミニガイド</h2>
+      <details class="guide">
+        <summary>スケールの成り立ち(全音・半音)</summary>
+        <p>メジャースケールは「<b>全・全・半・全・全・全・半</b>」の間隔で並んだ7音。ギターでは全音=2フレット、半音=1フレット。この並びをどの音から始めるかで12個のメジャーキーができます。ナチュラルマイナーは「全・半・全・全・半・全・全」で、メジャースケールを6番目の音から始めたものと同じ(平行調)。</p>
+      </details>
+      <details class="guide">
+        <summary>ペンタトニックが最強な理由</summary>
+        <p>ペンタトニックは7音スケールから「ぶつかりやすい音」を2つ抜いた5音スケール。どの音を伸ばしてもコードと喧嘩しにくいので、アドリブやソロの入門に最適です。ロック/ブルースのソロの大半はマイナーペンタ+ブルーノート(♭5)でできています。まずはAマイナーペンタの5フレット付近のポジション1を暗記しましょう。</p>
+      </details>
+      <details class="guide">
+        <summary>コード進行の作り方(超入門)</summary>
+        <p>①キーを決める(例: C) ②ダイアトニックコードから選ぶ ③「T→SD→D→T」の流れを意識する。定番: I-V-vi-IV(C-G-Am-F)、ii-V-I(Dm-G7-C)。迷ったらIで始めてVかV7からIに戻ると「終わった感」が出ます。理論タブのダイアトニック表とコードタブの進行プレイヤーで試してみてください。</p>
+      </details>
+      <details class="guide">
+        <summary>キーとカポの関係</summary>
+        <p>カポをNフレットに付けると、開放コードの形のまま実際の響きが半音×N上がります。例: カポ2でCの形を弾くと実音はD。歌いにくい曲はカポ位置でキーを調整しましょう。五度圏で数えると便利です。</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>🤖 AIギター理論チューター <small>Claude APIで質問し放題</small></h2>
+      <details class="guide" id="aiKeySetup">
+        <summary>🔑 APIキー設定(最初に1回)</summary>
+        <p>
+          <a href="https://platform.claude.com/" target="_blank" rel="noopener">Anthropic Console</a> で取得したAPIキーが必要です。
+          キーは<b>この端末のブラウザ内(localStorage)にのみ保存</b>され、Anthropic API以外へ送信されることはありません。
+        </p>
+        <div class="ai-key-row">
+          <input type="password" id="aiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off">
+          <button class="btn small" id="aiKeySaveBtn">保存</button>
+          <button class="btn ghost small" id="aiKeyDelBtn">削除</button>
+        </div>
+        <div class="ai-status" id="aiKeyStatus"></div>
+      </details>
+      <div class="chip-row" id="aiQuickChips"></div>
+      <div class="ai-chat" id="aiChat"></div>
+      <div class="ai-input-row">
+        <textarea id="aiInput" placeholder="例: FとGの間に入れるといい感じのコードは?"></textarea>
+        <button class="btn" id="aiSendBtn">送信</button>
+      </div>
+      <p class="hint">今選んでいるキー・スケールを踏まえて、Claude(AI)がギター理論の質問に答えます。作りたい曲の雰囲気からコード進行を提案してもらうこともできます。</p>
+    </div>
+  </section>
+
+  <!-- ============ クイズ ============ -->
+  <section class="tab" id="tab-quiz">
     <div class="card">
       <h2>❓ 指板ノートクイズ <small>光った場所の音名は?</small></h2>
       <div class="fb-wrap"><svg id="quizFbSvg"></svg></div>
@@ -349,10 +489,19 @@
       </div>
       <div class="quiz-score" id="fretQuizScore"></div>
     </div>
-  </section>
 
-  <!-- ============ コードクイズ ============ -->
-  <section class="tab" id="tab-quiz">
+    <div class="card">
+      <h2>🎧 音程聴き取りクイズ <small>2つの音の距離を当てよう(耳トレ)</small></h2>
+      <div class="quiz-q" id="intQuizQ">「クイズ開始」を押してね</div>
+      <div class="quiz-opts" id="intQuizOpts"></div>
+      <div class="quiz-fb" id="intQuizFb"></div>
+      <div class="center-row">
+        <button class="btn" id="intQuizBtn">クイズ開始</button>
+        <button class="btn ghost small" id="intQuizReplay">🔊 もう一度聴く</button>
+      </div>
+      <div class="quiz-score" id="intQuizScore"></div>
+      <p class="hint">低い音→高い音の順に鳴ります。長3度=明るい(メジャー感)、短3度=切ない(マイナー感)、完全5度=パワーコードの響き。曲の出だしで覚えるのもおすすめ(完全4度=ウェディングマーチ、完全5度=きらきら星 等)。</p>
+    </div>
     <div class="card">
       <h2>🃏 コード当てクイズ <small>ダイアグラムを見てコード名を当てよう</small></h2>
       <div style="text-align:center;" id="chordQuizDiagram"></div>
@@ -384,9 +533,10 @@
 
 <nav>
   <button data-tab="tab-chords" class="active"><span class="ico">🎵</span>コード</button>
+  <button data-tab="tab-scale"><span class="ico">🎼</span>スケール</button>
+  <button data-tab="tab-theory"><span class="ico">📖</span>理論</button>
   <button data-tab="tab-tuner"><span class="ico">🎯</span>チューナー</button>
   <button data-tab="tab-metro"><span class="ico">⏱️</span>リズム</button>
-  <button data-tab="tab-fret"><span class="ico">🗺️</span>指板</button>
   <button data-tab="tab-quiz"><span class="ico">🃏</span>クイズ</button>
 </nav>
 
@@ -909,6 +1059,24 @@ function drawFretboard(svgEl, opts) {
       }
     }
   }
+  // スケール表示 (root=ルートpc, degreeOf: pc→度数ラベル, window: [lo,hi]表示範囲)
+  if (opts && opts.scale) {
+    const sc = opts.scale;
+    for (let row = 0; row < 6; row++) {
+      const stringIdx = 5 - row;
+      const y = top + row * strGap;
+      for (let f = 0; f <= numFrets; f++) {
+        const pc = (OPEN_NOTE_IDX[stringIdx] + f) % 12;
+        if (!(pc in sc.degreeOf)) continue;
+        if (sc.window && (f < sc.window[0] || f > sc.window[1])) continue;
+        const x = f === 0 ? left - 16 : left + (f - 0.5) * fretW;
+        const isRoot = pc === sc.root;
+        const label = sc.showDegrees ? sc.degreeOf[pc] : NOTE_NAMES[pc];
+        s += `<circle cx="${x}" cy="${y}" r="9" fill="${isRoot ? '#d63031' : '#0984e3'}" stroke="#fff" stroke-width="1.5" data-s="${stringIdx}" data-f="${f}" style="cursor:pointer"/>`;
+        s += `<text x="${x}" y="${y + 3}" text-anchor="middle" font-size="${label.length > 2 ? 7 : 8.5}" fill="#fff" font-weight="bold" pointer-events="none">${label}</text>`;
+      }
+    }
+  }
   svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svgEl.setAttribute('width', W);
   svgEl.setAttribute('height', H);
@@ -1034,6 +1202,474 @@ function nextChordQuiz() {
 }
 chordQuizBtn.onclick = () => { getCtx(); nextChordQuiz(); chordQuizBtn.textContent = '次の問題へスキップ'; };
 chordQuizSound.onclick = () => { if (quizChord) strumChord(quizChord.frets); };
+
+/* ================= 音楽理論: スケール ================= */
+const SCALES = [
+  { name: 'メジャー', intervals: [0,2,4,5,7,9,11], degrees: ['R','2','3','4','5','6','7'], pattern: '全・全・半・全・全・全・半', desc: '明るく王道の響き。すべての理論の出発点。まずはこれ!' },
+  { name: 'ナチュラルマイナー', intervals: [0,2,3,5,7,8,10], degrees: ['R','2','♭3','4','5','♭6','♭7'], pattern: '全・半・全・全・半・全・全', desc: '切ない・哀愁の響き。メジャーの6番目から始めた平行調。' },
+  { name: 'メジャーペンタ', intervals: [0,2,4,7,9], degrees: ['R','2','3','5','6'], pattern: 'メジャーから4度と7度を抜いた5音', desc: '明るくカントリー/ポップなソロに。外しにくい安心スケール。' },
+  { name: 'マイナーペンタ', intervals: [0,3,5,7,10], degrees: ['R','♭3','4','5','♭7'], pattern: 'マイナーから2度と6度を抜いた5音', desc: 'ロック/ブルースのソロの主役。最初に覚えるべきスケールNo.1。' },
+  { name: 'ブルース', intervals: [0,3,5,6,7,10], degrees: ['R','♭3','4','♭5','5','♭7'], pattern: 'マイナーペンタ+♭5(ブルーノート)', desc: '泣きのブルースサウンド。♭5は経過音的にサッと使うのがコツ。' },
+  { name: 'ハーモニックマイナー', intervals: [0,2,3,5,7,8,11], degrees: ['R','2','♭3','4','5','♭6','7'], pattern: '全・半・全・全・半・増2・半', desc: 'クラシカルで妖艶。マイナーキーのV7上で映える。' },
+  { name: 'ドリアン', intervals: [0,2,3,5,7,9,10], degrees: ['R','2','♭3','4','5','6','♭7'], pattern: 'マイナーの♭6を6に上げた形', desc: 'マイナーなのに少しおしゃれで浮遊感。ファンク/ジャズ風。' },
+  { name: 'ミクソリディアン', intervals: [0,2,4,5,7,9,10], degrees: ['R','2','3','4','5','6','♭7'], pattern: 'メジャーの7を♭7に下げた形', desc: 'ブルージーなメジャー感。7thコード上にぴったり。' },
+];
+
+let curKey = 0;       // 0 = C
+let curScaleIdx = 3;  // マイナーペンタから
+let showDegrees = false;
+let curPosAnchor = -1; // -1 = 全体表示
+
+const keyChipsEl = document.getElementById('keyChips');
+const theoryKeyChipsEl = document.getElementById('theoryKeyChips');
+const scaleChipsEl = document.getElementById('scaleChips');
+const scaleOptChipsEl = document.getElementById('scaleOptChips');
+const scaleFbSvg = document.getElementById('scaleFbSvg');
+const scaleInfoEl = document.getElementById('scaleInfo');
+
+function scaleDegreeMap() {
+  const sc = SCALES[curScaleIdx];
+  const map = {};
+  sc.intervals.forEach((iv, i) => { map[(curKey + iv) % 12] = sc.degrees[i]; });
+  return map;
+}
+// 6弦上でスケール音があるフレット = ポジションの起点
+function positionAnchors() {
+  const map = scaleDegreeMap();
+  const anchors = [];
+  for (let f = 0; f < 12; f++) {
+    if (((OPEN_NOTE_IDX[0] + f) % 12) in map) anchors.push(f);
+  }
+  return anchors;
+}
+
+function setKey(k) {
+  curKey = ((k % 12) + 12) % 12;
+  curPosAnchor = -1;
+  renderKeyChips(); renderScaleUI(); renderTheory();
+}
+
+function renderKeyChips() {
+  [keyChipsEl, theoryKeyChipsEl].forEach(el => {
+    el.innerHTML = '';
+    NOTE_NAMES.forEach((n, i) => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (i === curKey ? ' active' : '');
+      b.textContent = n;
+      b.onclick = () => setKey(i);
+      el.appendChild(b);
+    });
+  });
+}
+
+function renderScaleUI() {
+  // スケール選択チップ
+  scaleChipsEl.innerHTML = '';
+  SCALES.forEach((sc, i) => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (i === curScaleIdx ? ' active' : '');
+    b.textContent = sc.name;
+    b.onclick = () => { curScaleIdx = i; curPosAnchor = -1; renderScaleUI(); };
+    scaleChipsEl.appendChild(b);
+  });
+  // 表示オプション: 音名/度数 + ポジション
+  scaleOptChipsEl.innerHTML = '';
+  const dispBtn = document.createElement('button');
+  dispBtn.className = 'chip active';
+  dispBtn.textContent = showDegrees ? '表示: 度数' : '表示: 音名';
+  dispBtn.onclick = () => { showDegrees = !showDegrees; renderScaleUI(); };
+  scaleOptChipsEl.appendChild(dispBtn);
+  const allBtn = document.createElement('button');
+  allBtn.className = 'chip' + (curPosAnchor === -1 ? ' active' : '');
+  allBtn.textContent = '全体';
+  allBtn.onclick = () => { curPosAnchor = -1; renderScaleUI(); };
+  scaleOptChipsEl.appendChild(allBtn);
+  positionAnchors().forEach((a, i) => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (curPosAnchor === a ? ' active' : '');
+    b.textContent = `P${i + 1} (${a}F〜)`;
+    b.onclick = () => { curPosAnchor = a; renderScaleUI(); };
+    scaleOptChipsEl.appendChild(b);
+  });
+  // 指板描画
+  const map = scaleDegreeMap();
+  drawFretboard(scaleFbSvg, {
+    scale: {
+      root: curKey,
+      degreeOf: map,
+      showDegrees,
+      window: curPosAnchor === -1 ? null : [curPosAnchor, curPosAnchor + 4],
+    },
+  });
+  // 情報表示
+  const sc = SCALES[curScaleIdx];
+  const notes = sc.intervals.map((iv, i) =>
+    `<b class="note-chip">${NOTE_NAMES[(curKey + iv) % 12]}<small style="opacity:.7"> ${sc.degrees[i]}</small></b>`).join('');
+  scaleInfoEl.innerHTML =
+    `<b>${NOTE_NAMES[curKey]} ${sc.name}スケール</b><br>構成音: ${notes}<br>` +
+    `並び: ${sc.pattern}<br>${sc.desc}`;
+}
+
+scaleFbSvg.addEventListener('click', (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.s !== undefined) {
+    playPluck(freqAt(Number(t.dataset.s), Number(t.dataset.f)), null, 0.6);
+  }
+});
+
+// スケール再生 (上行→下行)
+document.getElementById('scalePlayBtn').onclick = () => {
+  const ctx = getCtx();
+  const sc = SCALES[curScaleIdx];
+  // ルートをA2(110Hz)〜G#3の範囲に
+  const rootFreq = 110 * Math.pow(2, ((curKey - 9 + 12) % 12) / 12);
+  const up = [...sc.intervals, 12];
+  const seq = [...up, ...up.slice(0, -1).reverse()];
+  const t0 = ctx.currentTime + 0.05;
+  seq.forEach((iv, i) => playPluck(rootFreq * Math.pow(2, iv / 12), t0 + i * 0.3, 0.55));
+};
+
+/* ================= 音楽理論: ダイアトニックコード ================= */
+const DIATONIC = {
+  major: {
+    label: 'メジャーキー',
+    steps: [0,2,4,5,7,9,11],
+    triadSuffix: ['','m','m','','','m','dim'],
+    seventhSuffix: ['maj7','m7','m7','maj7','7','m7','m7♭5'],
+    roman: ['I','ii','iii','IV','V','vi','vii°'],
+    func: ['T','SD','T','SD','D','T','D'],
+    triadIv: [[0,4,7],[0,3,7],[0,3,7],[0,4,7],[0,4,7],[0,3,7],[0,3,6]],
+  },
+  minor: {
+    label: 'マイナーキー',
+    steps: [0,2,3,5,7,8,10],
+    triadSuffix: ['m','dim','','m','m','',''],
+    seventhSuffix: ['m7','m7♭5','maj7','m7','m7','maj7','7'],
+    roman: ['i','ii°','III','iv','v','VI','VII'],
+    func: ['T','SD','T','SD','D','T','SD'],
+    triadIv: [[0,3,7],[0,3,6],[0,4,7],[0,3,7],[0,3,7],[0,4,7],[0,4,7]],
+  },
+};
+let theoryMode = 'major';
+
+const theoryModeChipsEl = document.getElementById('theoryModeChips');
+const diatonicGridEl = document.getElementById('diatonicGrid');
+
+// 汎用トライアド再生 (コード辞典にない場合)
+function playTriad(rootPc, intervals) {
+  const ctx = getCtx();
+  const base = 130.81 * Math.pow(2, rootPc / 12); // C3基準
+  const t0 = ctx.currentTime + 0.02;
+  intervals.forEach((iv, i) => {
+    playPluck(base * Math.pow(2, iv / 12), t0 + i * 0.03, 0.4);
+    playPluck(base * Math.pow(2, (iv + 12) / 12), t0 + i * 0.03 + 0.09, 0.22);
+  });
+}
+
+function renderTheory() {
+  theoryModeChipsEl.innerHTML = '';
+  Object.entries(DIATONIC).forEach(([mode, d]) => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (mode === theoryMode ? ' active' : '');
+    b.textContent = d.label;
+    b.onclick = () => { theoryMode = mode; renderTheory(); };
+    theoryModeChipsEl.appendChild(b);
+  });
+  const d = DIATONIC[theoryMode];
+  diatonicGridEl.innerHTML = '';
+  d.steps.forEach((st, i) => {
+    const pc = (curKey + st) % 12;
+    const name = NOTE_NAMES[pc] + d.triadSuffix[i];
+    const name7 = NOTE_NAMES[pc] + d.seventhSuffix[i];
+    const cell = document.createElement('div');
+    cell.className = 'dia-cell';
+    cell.innerHTML = `<div class="roman">${d.roman[i]}</div><div class="cname">${name}</div>` +
+      `<div class="cname7">${name7}</div><span class="func ${d.func[i]}">${d.func[i]}</span>`;
+    cell.onclick = () => {
+      const dict = CHORDS.find(c => c.name === name);
+      if (dict) strumChord(dict.frets);
+      else playTriad(pc, d.triadIv[i]);
+    };
+    diatonicGridEl.appendChild(cell);
+  });
+  drawCircle();
+}
+
+/* ================= 五度圏 ================= */
+const circleSvg = document.getElementById('circleSvg');
+const FIFTHS = [0,7,2,9,4,11,6,1,8,3,10,5]; // C G D A E B F# C# G# D# A# F
+const FLAT_NAMES = { 6:'F#', 1:'D♭', 8:'A♭', 3:'E♭', 10:'B♭', 5:'F' };
+
+function arcPath(cx, cy, r1, r2, a0, a1) {
+  const p = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+  const [x0, y0] = p(r2, a0), [x1, y1] = p(r2, a1);
+  const [x2, y2] = p(r1, a1), [x3, y3] = p(r1, a0);
+  return `M${x0.toFixed(1)},${y0.toFixed(1)} A${r2},${r2} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)} ` +
+         `L${x2.toFixed(1)},${y2.toFixed(1)} A${r1},${r1} 0 0 0 ${x3.toFixed(1)},${y3.toFixed(1)} Z`;
+}
+
+function drawCircle() {
+  const W = 340, cx = W / 2, cy = W / 2;
+  let s = '';
+  const seg = Math.PI * 2 / 12;
+  for (let i = 0; i < 12; i++) {
+    const pc = FIFTHS[i];
+    const relPc = (pc + 9) % 12;
+    const a0 = i * seg - seg / 2, a1 = a0 + seg;
+    const mid = (a0 + a1) / 2;
+    const isCur = pc === curKey;
+    const isRel = relPc === ((curKey + 9) % 12) && isCur;
+    // 外側 (メジャー)
+    s += `<path d="${arcPath(cx, cy, 105, 150, a0, a1)}" fill="${isCur ? '#e17055' : '#fff'}" stroke="#c4cdd6" data-key="${pc}" style="cursor:pointer"/>`;
+    const [mx, my] = [cx + 128 * Math.sin(mid), cy - 128 * Math.cos(mid)];
+    s += `<text x="${mx}" y="${my + 5}" text-anchor="middle" font-size="16" font-weight="bold" fill="${isCur ? '#fff' : '#2d3436'}" pointer-events="none">${i > 5 && FLAT_NAMES[pc] && i !== 6 ? FLAT_NAMES[pc] : NOTE_NAMES[pc]}</text>`;
+    // 内側 (平行短調)
+    s += `<path d="${arcPath(cx, cy, 62, 105, a0, a1)}" fill="${isRel ? '#fdcb6e' : '#f4f6f8'}" stroke="#c4cdd6" data-key="${pc}" style="cursor:pointer"/>`;
+    const [ix, iy] = [cx + 83 * Math.sin(mid), cy - 83 * Math.cos(mid)];
+    s += `<text x="${ix}" y="${iy + 4}" text-anchor="middle" font-size="11" fill="#4a5560" pointer-events="none">${NOTE_NAMES[relPc]}m</text>`;
+    // 調号 (♯/♭の数)
+    if (i !== 0) {
+      const [sx, sy] = [cx + 55 * Math.sin(mid), cy - 55 * Math.cos(mid)];
+      s += `<text x="${sx}" y="${sy + 3}" text-anchor="middle" font-size="8" fill="#8a97a5" pointer-events="none">${i <= 6 ? '♯' + i : '♭' + (12 - i)}</text>`;
+    }
+  }
+  s += `<text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3436">キー</text>`;
+  s += `<text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="14" font-weight="bold" fill="#d63031">${NOTE_NAMES[curKey]}</text>`;
+  circleSvg.setAttribute('viewBox', `0 0 ${W} ${W}`);
+  circleSvg.innerHTML = s;
+}
+circleSvg.addEventListener('click', (e) => {
+  const k = e.target.dataset && e.target.dataset.key;
+  if (k !== undefined && k !== null && k !== '') setKey(Number(k));
+});
+
+/* ================= 音程表 ================= */
+const INTERVALS = [
+  { semi: 0, name: '完全1度', ex: 'C→C', feel: '同じ音' },
+  { semi: 1, name: '短2度', ex: 'C→D♭', feel: '強い緊張・ぶつかる' },
+  { semi: 2, name: '長2度', ex: 'C→D', feel: 'となりの音' },
+  { semi: 3, name: '短3度', ex: 'C→E♭', feel: '切ない(マイナーの素)' },
+  { semi: 4, name: '長3度', ex: 'C→E', feel: '明るい(メジャーの素)' },
+  { semi: 5, name: '完全4度', ex: 'C→F', feel: '素直・開けた響き' },
+  { semi: 6, name: '増4度/減5度', ex: 'C→F♯', feel: '不気味(ブルーノート)' },
+  { semi: 7, name: '完全5度', ex: 'C→G', feel: '力強い(パワーコード)' },
+  { semi: 8, name: '短6度', ex: 'C→A♭', feel: 'ドラマチック' },
+  { semi: 9, name: '長6度', ex: 'C→A', feel: '甘く優しい' },
+  { semi: 10, name: '短7度', ex: 'C→B♭', feel: 'ブルージー(7thの素)' },
+  { semi: 11, name: '長7度', ex: 'C→B', feel: 'おしゃれ(maj7の素)' },
+  { semi: 12, name: 'オクターブ', ex: 'C→C(高)', feel: '同じ音の高低' },
+];
+function playInterval(semi, base) {
+  const ctx = getCtx();
+  const f0 = base || 196; // G3あたり
+  playPluck(f0, ctx.currentTime + 0.02, 0.55);
+  playPluck(f0 * Math.pow(2, semi / 12), ctx.currentTime + 0.62, 0.55);
+}
+const ivBody = document.getElementById('ivTableBody');
+INTERVALS.forEach(iv => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${iv.semi}</td><td>${iv.name}</td><td>${iv.ex}</td><td>${iv.feel}</td><td><button>♪</button></td>`;
+  tr.querySelector('button').onclick = () => playInterval(iv.semi);
+  ivBody.appendChild(tr);
+});
+
+/* ================= 音程聴き取りクイズ ================= */
+const INT_QUIZ_SET = INTERVALS.filter(iv => [2,3,4,5,7,9,12].includes(iv.semi));
+stats.intOk = stats.intOk || 0;
+stats.intNg = stats.intNg || 0;
+const intQuizQ = document.getElementById('intQuizQ');
+const intQuizOpts = document.getElementById('intQuizOpts');
+const intQuizFb = document.getElementById('intQuizFb');
+const intQuizScore = document.getElementById('intQuizScore');
+let intAnswer = null, intBase = 196;
+
+function updateIntScore() {
+  const total = stats.intOk + stats.intNg;
+  intQuizScore.textContent = total ? `通算成績: ${stats.intOk}/${total} 正解 (${Math.round(stats.intOk / total * 100)}%)` : '';
+}
+updateIntScore();
+
+function nextIntQuiz() {
+  intAnswer = INT_QUIZ_SET[Math.floor(Math.random() * INT_QUIZ_SET.length)];
+  intBase = 147 * Math.pow(2, Math.floor(Math.random() * 12) / 12); // D3〜C#4
+  intQuizQ.textContent = 'この2音の音程は?';
+  intQuizFb.textContent = '';
+  const opts = new Set([intAnswer]);
+  while (opts.size < 4) opts.add(INT_QUIZ_SET[Math.floor(Math.random() * INT_QUIZ_SET.length)]);
+  const arr = [...opts].sort(() => Math.random() - 0.5);
+  intQuizOpts.innerHTML = '';
+  arr.forEach(iv => {
+    const b = document.createElement('button');
+    b.textContent = iv.name;
+    b.onclick = () => {
+      if (intQuizFb.textContent) return;
+      if (iv === intAnswer) {
+        b.classList.add('correct');
+        intQuizFb.textContent = '⭕ 正解!';
+        intQuizFb.style.color = 'var(--ok)';
+        stats.intOk++;
+      } else {
+        b.classList.add('wrong');
+        [...intQuizOpts.children].find(x => x.textContent === intAnswer.name).classList.add('correct');
+        intQuizFb.textContent = `❌ 正解は ${intAnswer.name}`;
+        intQuizFb.style.color = 'var(--ng)';
+        stats.intNg++;
+      }
+      saveStats(); updateIntScore();
+      setTimeout(nextIntQuiz, 1600);
+    };
+    intQuizOpts.appendChild(b);
+  });
+  playInterval(intAnswer.semi, intBase);
+}
+document.getElementById('intQuizBtn').onclick = () => {
+  getCtx();
+  nextIntQuiz();
+  document.getElementById('intQuizBtn').textContent = '次の問題へスキップ';
+};
+document.getElementById('intQuizReplay').onclick = () => { if (intAnswer) playInterval(intAnswer.semi, intBase); };
+
+/* ================= AIギター理論チューター ================= */
+const AI_API_URL = 'https://api.anthropic.com/v1/messages';
+const AI_MODEL = 'claude-opus-4-8';
+const AI_KEY_LS = 'guitar_ai_apikey';
+
+const aiKeyInput = document.getElementById('aiKeyInput');
+const aiKeyStatus = document.getElementById('aiKeyStatus');
+const aiChatEl = document.getElementById('aiChat');
+const aiInputEl = document.getElementById('aiInput');
+const aiSendBtn = document.getElementById('aiSendBtn');
+const aiQuickChipsEl = document.getElementById('aiQuickChips');
+let aiHistory = [];
+let aiBusy = false;
+
+function getAiKey() { return localStorage.getItem(AI_KEY_LS) || ''; }
+function updateAiKeyStatus() {
+  const k = getAiKey();
+  aiKeyStatus.textContent = k
+    ? `✅ APIキー登録済み (${k.slice(0, 12)}...${k.slice(-4)})`
+    : 'APIキーは未登録です。上の欄に入力して保存してください。';
+  document.getElementById('aiKeySetup').open = !k;
+}
+document.getElementById('aiKeySaveBtn').onclick = () => {
+  const k = aiKeyInput.value.trim();
+  if (!k) { alert('APIキーを入力してください。'); return; }
+  if (!k.startsWith('sk-ant-')) {
+    if (!confirm('キーが「sk-ant-」で始まっていません。このまま保存しますか?')) return;
+  }
+  localStorage.setItem(AI_KEY_LS, k);
+  aiKeyInput.value = '';
+  updateAiKeyStatus();
+};
+document.getElementById('aiKeyDelBtn').onclick = () => {
+  if (!confirm('保存したAPIキーを削除しますか?')) return;
+  localStorage.removeItem(AI_KEY_LS);
+  updateAiKeyStatus();
+};
+updateAiKeyStatus();
+
+const AI_QUICK = [
+  'このキーを初心者向けに解説して',
+  'このキーで定番のコード進行を3つ教えて',
+  'このスケールの使いどころは?',
+  'Fコードを使わずに弾く方法は?',
+];
+AI_QUICK.forEach(q => {
+  const b = document.createElement('button');
+  b.className = 'chip';
+  b.textContent = q;
+  b.onclick = () => sendToAI(q);
+  aiQuickChipsEl.appendChild(b);
+});
+
+function addAiMsg(text, cls) {
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + cls;
+  div.textContent = text;
+  aiChatEl.appendChild(div);
+  aiChatEl.scrollTop = aiChatEl.scrollHeight;
+  return div;
+}
+
+async function sendToAI(question) {
+  if (aiBusy) return;
+  const apiKey = getAiKey();
+  if (!apiKey) {
+    addAiMsg('先にAPIキーを設定してください(このカード上部の「APIキー設定」)。', 'ai');
+    document.getElementById('aiKeySetup').open = true;
+    return;
+  }
+  aiBusy = true;
+  aiSendBtn.disabled = true;
+  addAiMsg(question, 'user');
+  const loading = addAiMsg('考え中…🎸', 'ai loading');
+
+  const context = `【現在アプリで選択中】キー: ${NOTE_NAMES[curKey]} / スケール: ${NOTE_NAMES[curKey]} ${SCALES[curScaleIdx].name} / ダイアトニック表示: ${DIATONIC[theoryMode].label}`;
+  aiHistory.push({ role: 'user', content: `${context}\n\n質問: ${question}` });
+  if (aiHistory.length > 12) aiHistory = aiHistory.slice(-12);
+
+  try {
+    const res = await fetch(AI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: AI_MODEL,
+        max_tokens: 1500,
+        system: 'あなたは経験豊富で気さくなギター講師です。日本語で、ギター初心者〜中級者に分かりやすく答えてください。' +
+          '音楽理論の質問には、必ずギターの指板やコードフォームと結びつけた具体例を入れてください。' +
+          '長すぎる説明は避け、要点を箇条書き中心に400字程度でまとめてください。マークダウン記法(#や**)は使わず、絵文字と改行・「・」の箇条書きで読みやすくしてください。',
+        messages: aiHistory,
+      }),
+    });
+    if (!res.ok) {
+      const errMap = {
+        401: 'APIキーが無効です。「APIキー設定」で確認してください。',
+        403: 'APIキーに権限がありません。',
+        429: 'リクエストが多すぎます。少し待ってからお試しください。',
+        529: 'AIが混み合っています。時間をおいてお試しください。',
+      };
+      let detail = '';
+      try { detail = (await res.json()).error?.message || ''; } catch (e) {}
+      throw new Error(errMap[res.status] || `エラーが発生しました (${res.status}) ${detail}`);
+    }
+    const data = await res.json();
+    if (data.stop_reason === 'refusal') {
+      throw new Error('AIがこの質問への回答を控えました。別の聞き方でお試しください。');
+    }
+    const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
+    aiHistory.push({ role: 'assistant', content: text });
+    loading.classList.remove('loading');
+    loading.textContent = text || '(応答が空でした)';
+  } catch (err) {
+    aiHistory.pop(); // 失敗した質問は履歴から外す
+    loading.classList.remove('loading');
+    loading.textContent = '⚠️ ' + err.message;
+  } finally {
+    aiBusy = false;
+    aiSendBtn.disabled = false;
+    aiChatEl.scrollTop = aiChatEl.scrollHeight;
+  }
+}
+
+aiSendBtn.onclick = () => {
+  const q = aiInputEl.value.trim();
+  if (!q) return;
+  aiInputEl.value = '';
+  sendToAI(q);
+};
+aiInputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) aiSendBtn.onclick();
+});
+
+// 初期描画
+renderKeyChips();
+renderScaleUI();
+renderTheory();
 
 /* ================= タブ切替 ================= */
 document.querySelectorAll('nav button').forEach(btn => {
