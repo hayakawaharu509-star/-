@@ -1459,6 +1459,8 @@
     loading(true, '準備中…');
     await sleep(30);
 
+    var snap, out;
+    // --- データ取得とコース探索 ---
     try {
       if (!osmUsable(S.start.lat, S.start.lon, radius, S.mode) || !S.graph) {
         loading(true, '地図データを取得中…', '半径 ' + (radius / 1000).toFixed(1) + ' km' +
@@ -1480,16 +1482,16 @@
 
       loading(true, 'スタート地点を道路に合わせています…');
       await sleep(20);
-      var snap = E.snapStart(g, S.start.lat, S.start.lon);
+      snap = E.snapStart(g, S.start.lat, S.start.lon);
       if (snap.node < 0) { loading(false); toast('近くに道路が見つかりませんでした'); return; }
 
       loading(true, 'コースを探索中…', S.targetKm.toFixed(1) + ' km / ' + (S.shape === 'loop' ? '周回' : '往復'));
       await sleep(30);
       var t0 = performance.now();
-      var out = E.generateCourses(g, snap.node, {
+      out = E.generateCourses(g, snap.node, {
         targetKm: S.targetKm, shape: S.shape, count: 3, bearing: S.bearing
       });
-      var ms = Math.round(performance.now() - t0);
+      console.log('[route-maker] nodes=' + g.nc + ' 探索 ' + Math.round(performance.now() - t0) + 'ms');
 
       if (!out.courses.length) {
         loading(false);
@@ -1498,35 +1500,42 @@
           : 'コースを作れませんでした。距離や場所を変えてみてください。');
         return;
       }
-
-      S.courses = out.courses;
-      S.selected = 0;
-      assignNames();
-      loading(false);
-      showView('result');
-      drawCourse();
-      renderCandidates();
-      renderDetail();
-      fitCourse();
-
-      if (snap.dist > 400) toast('スタート地点から約 ' + Math.round(snap.dist) + ' m 離れた道路を起点にしました');
-      var err = Math.abs(S.courses[0].stats.lengthM - targetM) / targetM;
-      if (err > 0.18) {
-        toast(E.radiusCapped(targetM, S.shape)
-          ? '目標距離が大きいため、取得できる範囲で作れる最長のコースになりました（' +
-            fmtKm(S.courses[0].stats.lengthM) + '）。周回モードのほうが長い距離を作りやすいです。'
-          : 'この周辺の道路では目標距離ちょうどのコースが作れませんでした（' +
-            fmtKm(S.courses[0].stats.lengthM) + '）。距離を変えるか、別のコースをお試しください。', 5600);
-      }
-      console.log('[route-maker] nodes=' + g.nc + ' 探索 ' + ms + 'ms');
-
-      fetchElevations();
     } catch (err) {
       loading(false);
       console.error(err);
       toast('地図データを取得できませんでした：' + (err && err.message ? err.message : '通信エラー') +
         '。時間をおいて再試行するか、距離を短くしてみてください。', 5200);
+      return;
     }
+
+    // --- 表示（ここでの失敗はデータの問題ではないので分けて扱う）---
+    S.courses = out.courses;
+    S.selected = 0;
+    loading(false);
+    try {
+      assignNames();
+      showView('result');
+      drawCourse();
+      renderCandidates();
+      renderDetail();
+      fitCourse();
+    } catch (err) {
+      console.error(err);
+      toast('コースは作れましたが、表示中に問題が起きました：' +
+        (err && err.message ? err.message : '不明なエラー'), 5200);
+    }
+
+    if (snap.dist > 400) toast('スタート地点から約 ' + Math.round(snap.dist) + ' m 離れた道路を起点にしました');
+    var derr = Math.abs(S.courses[0].stats.lengthM - targetM) / targetM;
+    if (derr > 0.18) {
+      toast(E.radiusCapped(targetM, S.shape)
+        ? '目標距離が大きいため、取得できる範囲で作れる最長のコースになりました（' +
+          fmtKm(S.courses[0].stats.lengthM) + '）。周回モードのほうが長い距離を作りやすいです。'
+        : 'この周辺の道路では目標距離ちょうどのコースが作れませんでした（' +
+          fmtKm(S.courses[0].stats.lengthM) + '）。距離を変えるか、別のコースをお試しください。', 5600);
+    }
+
+    fetchElevations();
   }
 
   /* ---------------- 標高 ---------------- */
@@ -1579,7 +1588,8 @@
         next += step;
       }
     }
-    if (S.startMarker) S.startMarker.bringToFront();
+    // スタートのピンは常に手前に。Marker に bringToFront() は無いので zIndexOffset を使う
+    if (S.startMarker) S.startMarker.setZIndexOffset(1000);
   }
 
   function fitCourse() {
