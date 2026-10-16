@@ -1591,6 +1591,25 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
 @media(max-width:360px){.leap-header.study-page-header h1{font-size:25px}.study-main-menu button{font-size:10px}.study-decks-toolbar{gap:7px}.study-decks-new{padding:10px}.study-material-card{padding:18px}}
 @media(prefers-reduced-motion:reduce){.study-main-menu button{transition:none}}
 
+
+/* Word-confusion feedback stays readable on narrow phones. */
+.leap-confusion-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.leap-confusion-heading h3{flex:1;min-width:170px}
+.leap-confusion-badge{font-size:11px;font-weight:700;border:1px solid #cbd5e1;border-radius:999px;padding:3px 8px;background:#fff;color:#475569}
+.leap-word-contrast{margin:12px 0;padding:12px;border:1px solid #cbd5e1;border-radius:12px;background:#fff}
+.leap-word-contrast>div{display:grid;grid-template-columns:3em minmax(0,1fr);align-items:baseline;gap:10px;margin-top:8px}
+.leap-word-contrast>div>span{font-size:12px;color:#475569}
+.leap-word-contrast strong{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:clamp(18px,5vw,24px);font-weight:600;letter-spacing:.03em;white-space:pre-wrap;overflow-wrap:anywhere}
+.leap-word-contrast mark{background:#fef08a;color:#713f12;border-radius:3px;text-decoration:underline;text-underline-offset:3px}
+.leap-vocabulary-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.leap-vocabulary-pair .leap-vocabulary-item{margin:0;min-width:0;overflow-wrap:anywhere}
+.leap-candidate-spelling,.leap-saved-comparison{margin-top:12px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;overflow:hidden}
+.leap-candidate-spelling>summary,.leap-saved-comparison>summary{padding:12px;min-height:44px;cursor:pointer;font-size:13px;font-weight:700;color:#334155;overflow-wrap:anywhere}
+.leap-candidate-spelling>.leap-spelling-review,.leap-saved-comparison>.leap-vocabulary-review{margin:0;border:0;border-radius:0;padding:12px}
+.leap-vocabulary-review .learn-confusion{margin:12px 0}
+.leap-vocabulary-review .learn-confusion summary{min-height:44px;align-content:center}
+@media(max-width:560px){.leap-vocabulary-pair{grid-template-columns:minmax(0,1fr)}.leap-vocabulary-title strong{overflow-wrap:anywhere;min-width:0}}
+
 </style>
 </head>
 <body>
@@ -1878,29 +1897,111 @@ function spellingComparison(value,item) {
   for(const cell of result.cells) if(cell.kind!=='match') result.counts[cell.kind]++;
   return result;
 }
-function enteredWordComparison(answer,item,wordPool) {
-  if(!normalizeSpelling(answer)||spellingIsCorrect(answer,item)) return null;
-  const entered=wordPool.find(word=>spellingAnswers(word).includes(normalizeSpelling(answer)));
-  if(!entered) return null;
+// Comparisons use the saved vocabulary and reviewed usage notes; no network request.
+const confusionPoolCache=new WeakMap();
+function confusionLessonsFor(item,other){
+  const keys=spellingAnswers(typeof item==='string'?{w:item}:item);
+  const others=other?spellingAnswers(typeof other==='string'?{w:other}:other):[];
+  return CONFUSION_LESSONS.filter(lesson=>lesson.words.some(w=>keys.includes(w))&&
+    (!other||lesson.words.some(w=>others.includes(w))));
+}
+function confusionWordIndex(wordPool){
+  if(confusionPoolCache.has(wordPool))return confusionPoolCache.get(wordPool);
+  const exact=new Map(),lengths=new Map();
+  const references=CONFUSION_LESSONS.flatMap(lesson=>lesson.entries||[]);
+  for(const word of [...wordPool,...references]){
+    if(!word.w||!word.m)continue;
+    for(const spelling of spellingAnswers(word)){
+      if(exact.has(spelling))continue;
+      exact.set(spelling,word);
+      if(!lengths.has(spelling.length))lengths.set(spelling.length,[]);
+      lengths.get(spelling.length).push({spelling,word});
+    }
+  }
+  const index={exact,lengths};confusionPoolCache.set(wordPool,index);return index;
+}
+function vocabularySharesMeaning(a,b){
   const tokens=word=>word._tok||(typeof senseTokens==='function'?senseTokens(word.m):[word.m]);
-  const sharedMeaning=tokens(item).some(a=>tokens(entered).some(b=>a&&b&&
-    (a===b||(a.length>=3&&b.includes(a))||(b.length>=3&&a.includes(b)))));
-  return {entered,sharedMeaning};
+  return tokens(a).some(x=>tokens(b).some(y=>x&&y&&
+    (x===y||(x.length>=3&&y.includes(x))||(y.length>=3&&x.includes(y)))));
 }
-function VocabularyComparison({item,comparison}) {
-  const h=React.createElement;
+// Exactly one insertion/deletion/substitution, or one adjacent transposition.
+function oneSpellingEdit(a,b){
+  if(a===b||Math.abs(a.length-b.length)>1)return false;
+  let i=0;while(i<Math.min(a.length,b.length)&&a[i]===b[i])i++;
+  if(a.length!==b.length){
+    const longer=a.length>b.length?a:b,shorter=a.length>b.length?b:a;
+    return longer.slice(i+1)===shorter.slice(i);
+  }
+  return a.slice(i+1)===b.slice(i+1)||(a[i]===b[i+1]&&a[i+1]===b[i]&&a.slice(i+2)===b.slice(i+2));
+}
+function enteredWordComparison(answer,item,wordPool=[]){
+  const actual=normalizeSpelling(answer);
+  if(!actual||spellingIsCorrect(actual,item))return null;
+  const index=confusionWordIndex(wordPool);
+  const make=(entered,matchedSpelling,matchType)=>({entered,actual,matchedSpelling,matchType,
+    sharedMeaning:vocabularySharesMeaning(item,entered),lessons:confusionLessonsFor(item,entered)});
+  const exact=index.exact.get(actual);
+  if(exact)return make(exact,actual,'exact');
+  // Short/unfinished answers and ordinary near-misses of the correct word are
+  // not enough evidence to identify a different word.
+  if(actual.length<4||actual.length>80||!/^[a-z][a-z '\-]*$/.test(actual))return null;
+  if(spellingComparison(actual,item).distance<3)return null;
+  const near=new Map();
+  for(let length=actual.length-1;length<=actual.length+1;length++){
+    for(const entry of index.lengths.get(length)||[]){
+      if(oneSpellingEdit(actual,entry.spelling)){
+        const key=normalizeSpelling(entry.word.studyAnswer||entry.word.w);
+        if(!near.has(key))near.set(key,entry);
+      }
+    }
+  }
+  // Even a relevant candidate is not singled out when a second word is equally close.
+  if(near.size!==1)return null;
+  const candidate=[...near.values()][0],result=make(candidate.word,candidate.spelling,'near');
+  // A shared Japanese gloss alone is not enough to infer what the learner meant.
+  if(!result.lessons.length)return null;
+  return result;
+}
+function VocabularyComparison({item,comparison}){
+  const h=React.createElement,near=comparison.matchType==='near',other=comparison.entered;
+  const expected=spellingAnswers(item)[0],matched=comparison.matchedSpelling||spellingAnswers(other)[0];
+  const alignment=alignSpelling(matched,expected);
+  const letters=side=>alignment.cells.map((cell,i)=>{
+    const text=cell[side];if(!text)return null;
+    return h(cell.kind==='match'?'span':'mark',{key:i},text);
+  });
   return h('section',{className:'leap-vocabulary-review','aria-label':'入力した単語との比較'},
-    h('h3',null,comparison.sharedMeaning?'類義語を比べて学ぶ':'入力した単語の意味も確認'),
-    h('p',{className:'leap-spelling-note'},comparison.sharedMeaning
-      ? '入力した単語も正しいスペルです。意味が近い単語なので、指定語との使い分けを例文で確認しましょう。'
-      : '入力したつづりも辞書にある単語です。意味と使い方を比べてみましょう。'),
-    h(ConfusionLesson,{word:item.w,other:comparison.entered.w}),[item,comparison.entered].map((word,i)=>h('article',{key:i,className:'leap-vocabulary-item'},
-      h('p',{className:'leap-vocabulary-label'},i===0?'今回の指定語':'あなたが入力した単語'),
+    h('div',{className:'leap-confusion-heading'},
+      h('h3',null,near?'この単語との混同かもしれません':comparison.sharedMeaning?'類義語を比べて学ぶ':'別の単語との違いを確認'),
+      h('span',{className:'leap-confusion-badge'},near?'推定の候補':'別の単語に一致')),
+    h('p',{className:'leap-spelling-note'},near
+      ? `入力「${comparison.actual}」は「${matched}」に近いつづりです。正解よりつづりが近く、取り違えやすい組み合わせとして解説があるため、比較候補として表示しています。`
+      : `入力「${comparison.actual||matched}」も単語・表現として登録されています。正解「${expected}」と意味・使い方を比べましょう。`),
+    comparison.sharedMeaning&&h('p',{className:'leap-spelling-note'},'日本語訳が似ていても、今回はこの単語帳の指定語を答える問題です。文の中での使い方も確認しましょう。'),
+    h('div',{className:'leap-word-contrast','aria-label':'2つの単語のつづりの違い'},
+      h('p',{className:'leap-help'},'色付きの部分が、2つのつづりの違いです。'),
+      h('div',null,h('span',null,'正解'),h('strong',{lang:'en'},letters('expected'))),
+      h('div',null,h('span',null,near?'候補':'入力'),h('strong',{lang:'en'},letters('actual')))),
+    h(ConfusionLesson,{word:item,other}),
+    h('div',{className:'leap-vocabulary-pair'},[item,other].map((word,i)=>h('article',{key:i,className:'leap-vocabulary-item'},
+      h('p',{className:'leap-vocabulary-label'},i===0?'正解の単語・表現':near?'混同した可能性がある単語・表現':'入力した単語・表現'),
       h('div',{className:'leap-vocabulary-title'},h('strong',{lang:'en'},word.w),
-        h('button',{type:'button',className:'leap-audio-button',onClick:()=>speak(word.w),'aria-label':`${word.w}の発音を聞く`},h(Volume2,{size:18}))),
+        h('button',{type:'button',className:'leap-audio-button',onClick:()=>speak(spellingAnswers(word)[0]),'aria-label':`${word.w}の発音を聞く`},h(Volume2,{size:18}))),
       h('p',null,word.m),
-      word.ee&&word.ee!=='―'&&h('div',{className:'leap-example'},h('p',{lang:'en'},word.ee),h('p',null,word.ej)))));
+      word.ee&&word.ee!=='―'&&h('div',{className:'leap-example'},h('p',{lang:'en'},word.ee),h('p',null,word.ej))))),
+    near&&h('details',{className:'leap-candidate-spelling'},
+      h('summary',null,'入力と候補のスペルも確認'),h(SpellingFeedback,{answer:comparison.actual,item:{...other,w:matched,studyAnswer:matched,answers:[matched]}})));
 }
+function MistakeComparison({item,mistake,wordPool}){
+  const h=React.createElement;
+  const comparison=mistake.answer&&mistake.format!=='card'&&!['timeout','skip'].includes(mistake.reason)
+    ? enteredWordComparison(mistake.answer,item,wordPool):null;
+  return comparison?h('details',{className:'leap-saved-comparison'},
+    h('summary',null,comparison.matchType==='near'?`混同の候補：${comparison.entered.w} と比べる`:`${comparison.entered.w} と正解の違いを確認`),
+    h(VocabularyComparison,{item,comparison})):h(ConfusionLesson,{word:item});
+}
+
 function SpellingFeedback({answer,item,timedOut}) {
   const h=React.createElement;
   const comparison=spellingComparison(answer,item);
@@ -2030,7 +2131,7 @@ function QuizQuestion({question, questionId, index, total, score, format, direct
   const displayRemaining=Math.ceil(remaining);
   const timePercent=seconds?Math.max(0,Math.min(100,remaining/seconds*100)):0;
   const initial=Array.from(spellingAnswers(item)[0]||item.w)[0]||'';
-  const vocabulary=typing&&picked&&!picked.correct?enteredWordComparison(picked.answer,item,wordPool):null;
+  const vocabulary=typing&&picked&&!picked.correct&&!picked.timedOut&&!picked.skipped?enteredWordComparison(picked.answer,item,wordPool):null;
   return h('section', {className:'leap-quiz-question'+(typing?' leap-typing-question':'')+(paused?' learn-is-paused':''),'aria-label':'クイズ問題'},
     h('div', {className:'leap-question-meta'},
       h('span',null,`${index+1} / ${total}`),h('span',null,`正解 ${score}`),!picked&&h('button',{type:'button',className:'learn-pause',onClick:togglePause},paused?'再開':'一時停止')),
@@ -2077,9 +2178,9 @@ function QuizQuestion({question, questionId, index, total, score, format, direct
           onClick:()=>submit(option.w,option)},h('span',{className:'learn-option-number','aria-hidden':true},i+1),jpToEn?option.w:shortMeaning(option.m));
       })),
     picked && h('div',{className:'leap-answer-feedback '+(picked.correct?'leap-feedback-correct':vocabulary?.sharedMeaning?'leap-feedback-related':'leap-feedback-wrong'),role:'status','aria-live':'polite'},
-      h('strong',null,picked.timedOut?'時間切れ':picked.correct?'正解！':picked.skipped?'答えを確認':vocabulary?.sharedMeaning?'意味が近い別の単語です':'不正解'),
+      h('strong',null,picked.timedOut?'時間切れ':picked.correct?'正解！':picked.skipped?'答えを確認':vocabulary?.matchType==='near'?'混同の候補を確認':vocabulary?.sharedMeaning?'意味が近い別の単語です':vocabulary?'別の単語を入力しています':'不正解'),
       h('p',{className:'leap-correct-answer'},'正解：',item.w),
-      typing&&!picked.correct&&!vocabulary?.sharedMeaning&&h(SpellingFeedback,{answer:picked.answer,item,timedOut:picked.timedOut}),
+      typing&&!picked.correct&&!vocabulary&&h(SpellingFeedback,{answer:picked.answer,item,timedOut:picked.timedOut}),
       vocabulary&&h(VocabularyComparison,{item,comparison:vocabulary}),
       h('button',{type:'button',className:'leap-audio-button',onClick:()=>speak(item.w),'aria-label':'正解の発音を聞く'},h(Volume2,{size:18}), ' 発音'),
       h('p',null,item.m),h(StudySourceNote,{word:item}),
@@ -2125,7 +2226,7 @@ function learningRecord(state,item,correct,detail={},now=Date.now()){
   const days={...state.days,[day]:{attempts:(Number(prev.attempts)||0)+1,right:(Number(prev.right)||0)+(correct?1:0),keys:[...new Set([...(Array.isArray(prev.keys)?prev.keys:[]),key])]}};
   for(const d of Object.keys(days).sort().slice(0,-730))delete days[d];
   const mistakes={...state.mistakes};
-  if(!correct)mistakes[key]={answer:String(detail.answer||'').slice(0,200),format:detail.format||'card',at:now,count:(Number(old?.count)||0)+1,relatedWord:detail.relatedWord||'',reason:detail.timedOut?'timeout':detail.skipped?'skip':'wrong',resolved:false};
+  if(!correct)mistakes[key]={answer:String(detail.answer||'').slice(0,200),format:detail.format||'card',at:now,count:(Number(old?.count)||0)+1,relatedWord:detail.relatedWord||'',relatedMatch:detail.relatedMatch||'',reason:detail.timedOut?'timeout':detail.skipped?'skip':'wrong',resolved:false};
   else if(old&&(old.format===(detail.format||'card')||(old.format==='card'&&correct)))mistakes[key]={...old,resolved:true,resolvedAt:now};
   return {...state,days,mistakes};
 }
@@ -2205,15 +2306,15 @@ function LearningHub({words,stats,learning,setLearning,onPractice,onOpen,onAddWo
         h('button',{type:'button',onClick:()=>practice(shuffleArr(english),'listening','聞き取り練習')},'音から覚える',h('small',null,'聞いた英語を入力')),
         h('button',{type:'button',onClick:()=>practice(shuffleArr(english),'cloze','例文穴埋め')},'文の中で覚える',h('small',null,'使い方とスペルを確認'))),
       h('p',{className:'learn-muted'},'正解した語は1・3・7・14・30・60日後に復習。同じ日に繰り返しても、復習間隔はむやみに延びません。')),
-    tab==='mistakes'&&h('div',{className:'learn-panel'},h('h2',null,'間違いを、次の正解へ'),h('p',{className:'learn-muted'},'入力した答えと例文を保存。同じ練習形式で正解すると「克服済み」に。カードで間違えた語は、どの形式で正解しても克服済みになります。'),
+    tab==='mistakes'&&h('div',{className:'learn-panel'},h('h2',null,'間違いを、次の正解へ'),h('p',{className:'learn-muted'},'入力した答えを保存。別の単語との比較解説もここから確認できます。同じ練習形式で正解すると「克服済み」に。カードで間違えた語は、どの形式で正解しても克服済みになります。'),
       h('div',{className:'learn-filter'},h('input',{type:'search',value:search,'aria-label':'苦手ノートを検索',placeholder:'単語・意味・入力した答えで検索',onChange:e=>{setSearch(e.target.value);setLimit(20);}}),h('select',{value:filter,'aria-label':'苦手ノートの表示',onChange:e=>{setFilter(e.target.value);setLimit(20);}},h('option',{value:'active'},'未克服'),h('option',{value:'all'},'克服済みも表示'))),
       entries.length>0&&h('button',{type:'button',className:'learn-wide',onClick:()=>practice(entries,'typing','苦手ノートから復習')},`この${entries.length}語から入力練習`),
       !entries.length&&h('p',{className:'learn-empty'},'該当する間違いはありません。クイズで間違えた語がここに集まります。'),
       entries.slice(0,limit).map(w=>{const k=w.p+w.n,m=learning.mistakes[k];return h('article',{key:k,className:'learn-mistake'},h('div',{className:'learn-row'},h('button',{type:'button',className:'learn-word-link',onClick:()=>onOpen(w)},w.w),h('span',{className:'learn-tag'},m.resolved?'克服済み':`${m.count}回ミス`)),h('p',null,w.m),
         h('p',{className:'learn-muted'},`${LEARNING_FORMATS[m.format]||'練習'} · ${new Date(m.at).toLocaleDateString('ja-JP')}`),
-        h('p',{className:'learn-previous'},'前回の回答：',h('strong',null,m.answer||'未入力'),m.reason==='timeout'?'（時間切れ）':m.relatedWord?'（別の単語と混同）':''),
+        h('p',{className:'learn-previous'},'前回の回答：',h('strong',null,m.answer||'未入力'),m.reason==='timeout'?'（時間切れ）':m.relatedMatch==='near'?'（混同の候補あり）':m.relatedWord?'（別の単語に一致）':''),
         w.ee&&w.ee!=='―'&&h('details',null,h('summary',null,'例文・発音を確認'),h('p',{lang:'en'},w.ee),h('p',{className:'learn-muted'},w.ej),h(AudioPractice,{text:w.ee})),
-        h(ConfusionLesson,{word:w.w}),h('button',{type:'button',className:'learn-small-button',onClick:()=>practice([w],m.format==='card'?'typing':m.format,'この語を練習')},'もう一度練習'));}),
+        h(MistakeComparison,{item:w,mistake:m,wordPool:words}),h('button',{type:'button',className:'learn-small-button',onClick:()=>practice([w],m.format==='card'?'typing':m.format,'この語を練習')},'もう一度練習'));}),
       entries.length>limit&&h('button',{type:'button',className:'learn-wide',onClick:()=>setLimit(n=>n+20)},'さらに20語表示')));
 }
 function WordLearningNote({word,learning,setLearning,stats}){
@@ -2269,6 +2370,80 @@ function BackupPanel(){
 }
 
 // Short editorial lessons: examples are written for this app.
+// Reviewed comparison examples also supply words missing from a learner's deck.
+// These references are for feedback only and do not add quiz items or change IDs.
+const SPELLING_CONFUSION_LESSONS=[
+ {title:'原則・主要な／校長',tip:'principle は「原則・主義」という名詞。principal は「主要な」という形容詞、または「校長」という名詞です。最後の -ple / -pal を見分けましょう。',entries:[
+  ['principle','［名詞］原則、主義','We follow this principle.','私たちはこの原則に従います。'],
+  ['principal','［形容詞］主要な／［名詞］校長','The principal greeted us.','校長が私たちに挨拶しました。']]},
+ {title:'砂漠・デザート',tip:'desert は「砂漠」という名詞では最初の音節に強勢。dessert は「食後のデザート」で s が2つ、後ろに強勢があります。desert には「見捨てる」という動詞の用法もあります。',entries:[
+  ['desert','［名詞］砂漠／［動詞］見捨てる','Few plants grow in this desert.','この砂漠で育つ植物はほとんどありません。'],
+  ['dessert','［名詞］食後のデザート','We had cake for dessert.','デザートにケーキを食べました。']]},
+ {title:'かなり・静かな',tip:'quite は程度を表す副詞（quite good）。quiet は「静かな」という形容詞（a quiet room）。末尾の -te / -et が逆です。quite の強さは、後ろの語や英米の用法によっても変わります。',entries:[
+  ['quite','［副詞］かなり、まったく','The film was quite good.','その映画はなかなかよかったです。'],
+  ['quiet','［形容詞］静かな','Please be quiet.','静かにしてください。']]},
+ {title:'失う・ゆるい',tip:'lose は「失う・負ける」という動詞で o が1つ、最後の音は /z/。loose は「ゆるい」という形容詞で o が2つ、最後の音は /s/ です。',entries:[
+  ['lose','［動詞］失う、負ける','Do not lose your ticket.','切符をなくさないでください。'],
+  ['loose','［形容詞］ゆるい、固定されていない','This shirt is too loose.','このシャツはゆるすぎます。']]},
+ {title:'後で・後者の',tip:'later は late の比較級で「より遅い・後で」。latter は2つ挙げたものの「後者（の）」で、前者は former。latter の t は2つです。',entries:[
+  ['later','［副詞・形容詞］後で、より遅い','I will call you later.','後で電話します。'],
+  ['latter','［形容詞・名詞］後者の、後者','Of tea and coffee, I prefer the latter.','紅茶とコーヒーなら、私は後者が好きです。']]},
+ {title:'個人の・職員',tip:'personal は「個人の」という形容詞（personal information）。personnel は「職員・人員」をまとめて表す名詞。-al と -nel の違い、personnel の n が2つある点を確認します。',entries:[
+  ['personal','［形容詞］個人の、個人的な','Do not share personal information.','個人情報を共有しないでください。'],
+  ['personnel','［名詞］職員、人員','Only authorized personnel may enter.','許可された職員だけが入れます。']]},
+ {title:'隣に・それに加えて',tip:'beside は位置を表す「～の隣に」。besides は「～に加えて」という前置詞、または「そのうえ」という副詞です。最後の s で意味が変わります。',entries:[
+  ['beside','［前置詞］～の隣に','She sat beside me.','彼女は私の隣に座りました。'],
+  ['besides','［前置詞］～に加えて／［副詞］そのうえ','Besides English, he speaks French.','英語に加えて、彼はフランス語も話します。']]},
+ {title:'補う・褒める',tip:'complement は不足を補って組み合わせをよくすること。compliment は褒め言葉・賛辞、または褒めること。真ん中の e / i を区別します。',entries:[
+  ['complement','［動詞］補完する／［名詞］補うもの','Their skills complement each other.','彼らの技能は互いに補い合っています。'],
+  ['compliment','［名詞］褒め言葉／［動詞］褒める','She paid me a compliment.','彼女は私を褒めてくれました。']]},
+ {title:'意識のある・良心',tip:'conscious は「意識がある・気づいている」という形容詞で、be conscious of ～。conscience は「良心」という名詞です。語尾 -scious / -science と品詞を区別します。',entries:[
+  ['conscious','［形容詞］意識がある、気づいている','He was still conscious after the accident.','事故の後も彼には意識がありました。'],
+  ['conscience','［名詞］良心','My conscience would not let me lie.','良心がとがめて、私はうそをつけませんでした。']]},
+ {title:'分別のある・敏感な',tip:'sensible は判断が賢明で分別があること。sensitive は刺激・感情などに敏感なこと（sensitive to ～）。日本語の「センシティブ」は sensitive に対応します。',entries:[
+  ['sensible','［形容詞］分別のある、賢明な','That is a sensible decision.','それは賢明な判断です。'],
+  ['sensitive','［形容詞］敏感な、繊細な','My skin is sensitive to sunlight.','私の肌は日光に敏感です。']]},
+ {title:'適応させる・採用する',tip:'adapt は環境や用途に合わせて変えること（adapt to ～）。adopt は案・方法を採用する、または養子にすること。真ん中の a / o を確認します。',entries:[
+  ['adapt','［動詞］適応する、適応させる、改作する','We must adapt to change.','私たちは変化に適応しなければなりません。'],
+  ['adopt','［動詞］採用する、養子にする','They adopted a new policy.','彼らは新しい方針を採用しました。']]},
+ {title:'角度・天使',tip:'angle は「角度」で -gle。angel は「天使」で -gel。l と e の順番を確認し、発音も聞き比べましょう。',entries:[
+  ['angle','［名詞］角度、観点','Measure this angle.','この角度を測ってください。'],
+  ['angel','［名詞］天使','The painting shows an angel.','その絵には天使が描かれています。']]},
+ {title:'先行する・進む',tip:'precede は「～に先行する」という動詞で目的語を直接続けます。proceed は「進む・続行する」で proceed with ～ / proceed to ～。pre- / pro- と -cede / -ceed の両方を確認します。',entries:[
+  ['precede','［動詞］～に先行する、～の前に来る','A short talk preceded the concert.','コンサートの前に短い話がありました。'],
+  ['proceed','［動詞］進む、続行する','We will proceed with the plan.','私たちはその計画を進めます。']]},
+ {title:'天気・～かどうか',tip:'weather は「天気」という名詞。whether は「～かどうか」という接続詞で whether A or B の形にも使います。同じ発音でもつづりと役割が異なります。',entries:[
+  ['weather','［名詞］天気','The weather is fine today.','今日はよい天気です。'],
+  ['whether','［接続詞］～かどうか、～であろうと','I do not know whether he will come.','彼が来るかどうか分かりません。']]},
+ {title:'影響する動詞・効果という名詞',tip:'affect は通常「影響する」という動詞。effect は通常「影響・効果」という名詞で have an effect on ～。先頭の a / e と、文の中で必要な品詞を確認します。effect にも「実現する」という動詞の用法があります。',entries:[
+  ['affect','［動詞］影響する、作用する','Sleep affects memory.','睡眠は記憶に影響します。'],
+  ['effect','［名詞］影響、効果','Sleep has an effect on memory.','睡眠は記憶に影響を与えます。']]},
+ {title:'助言という名詞・助言する動詞',tip:'advice は数えられない名詞で a piece of advice。advise は動詞で advise 人 to do。c / s の違いに加え、最後の音も advice /s/、advise /z/ です。',entries:[
+  ['advice','［名詞］助言、忠告（不可算）','She gave me some advice.','彼女は私に助言をくれました。'],
+  ['advise','［動詞］助言する、忠告する','She advised me to rest.','彼女は私に休むよう勧めました。']]},
+ {title:'経済の・無駄が少ない',tip:'economic は経済に関すること（economic growth）。economical はお金・燃料などの無駄が少ないこと。-al が付くと、単に「経済の」ではなく「経済的な・節約になる」という意味になります。',entries:[
+  ['economic','［形容詞］経済の、経済上の','We discussed economic growth.','私たちは経済成長について話し合いました。'],
+  ['economical','［形容詞］無駄の少ない、節約になる','This car is economical to run.','この車は維持費があまりかかりません。']]},
+ {title:'受け入れる・～を除いて',tip:'accept は「受け入れる」という動詞。except は「～を除いて」を表す前置詞などとして使います。ac- / ex- の違いと、意味を対応させましょう。',entries:[
+  ['accept','［動詞］受け入れる','I accepted the offer.','私はその申し出を受け入れました。'],
+  ['except','［前置詞］～を除いて','Everyone came except Tom.','トム以外は全員来ました。']]},
+ {title:'値段・賞',tip:'price は値段、prize は賞・賞品。c / z に加え、最後の音も price /s/ と prize /z/ で区別します。',entries:[
+  ['price','［名詞］価格、値段','What is the price?','値段はいくらですか。'],
+  ['prize','［名詞］賞、賞品','She won first prize.','彼女は1等賞を取りました。']]},
+ {title:'間に合う・時刻どおり',tip:'in time は必要な時までに間に合うこと（in time for ～ / in time to do）。on time は予定の時刻どおり。予定より早く着いても in time ですが、on time は予定時刻に注目します。',entries:[
+  ['in time','間に合って','We arrived in time for the meeting.','私たちは会議に間に合いました。'],
+  ['on time','予定の時刻どおりに','The train left on time.','列車は定刻に出発しました。']]},
+ {title:'以前はした・することに慣れている',tip:'used to do は過去の習慣・状態で to は不定詞。be used to doing は「～することに慣れている」で to は前置詞なので、後ろは名詞や動名詞です。be の有無と do / doing を確認します。',entries:[
+  ['used to do','以前は～したものだ','I used to get up late.','私は以前は遅く起きていました。'],
+  ['be used to doing','～することに慣れている','I am used to getting up early.','私は早起きに慣れています。']]},
+ {title:'探す・世話をする',tip:'look for は「～を探す」、look after は「～の世話をする」。look が同じでも、後ろの語で意味が変わるので、ひとかたまりで覚えます。',entries:[
+  ['look for','～を探す','I am looking for my keys.','私は鍵を探しています。'],
+  ['look after','～の世話をする','She looks after her brother.','彼女は弟の世話をしています。']]}
+].map(lesson=>{
+ const entries=lesson.entries.map(([w,m,ee,ej])=>({w,m,ee,ej}));
+ return {...lesson,entries,words:entries.map(word=>word.w),examples:entries.map(word=>word.ee+' — '+word.ej)};
+});
+
 const CONFUSION_LESSONS=[
  {words:['borrow','lend'],title:'借りる側・貸す側',tip:'borrow は借りる人が主語。borrow A from B。lend は貸す人が主語。lend A to B / lend B A。',examples:['Can I borrow your pen? — ペンを借りてもいい？','I can lend you my pen. — 私のペンを貸せます。']},
  {words:['learn','teach'],title:'学ぶ・教える',tip:'learn は知識や技能を身につけること。teach は相手に教えること。learn from 人 / teach 人 物事。',examples:['I learn English from her. — 彼女から英語を学びます。','She teaches me English. — 彼女は私に英語を教えます。']},
@@ -2290,10 +2465,11 @@ const CONFUSION_LESSONS=[
  {words:['suggest','propose'],title:'提案する2語の形',tip:'suggest は案や行動を勧める表現。propose は計画・案を提示する表現で、やや改まった場面でも使います。両方とも -ing や that節を使えます。suggest 人 to do は避けます。',examples:['I suggest taking a break. — 休憩することを提案します。','They proposed a new plan. — 彼らは新しい計画を提案しました。']},
  {words:['because','because of'],title:'後ろに文・後ろに名詞',tip:'because の後ろは主語＋動詞。because of の後ろは名詞や名詞句。意味だけでなく後ろの形を見ます。',examples:['We stayed home because it rained. — 雨が降ったので家にいました。','We stayed home because of the rain. — 雨のため家にいました。']},
  {words:['during','while'],title:'期間を表す名詞・進行中の文',tip:'during は前置詞で、後ろに期間や出来事の名詞。while は接続詞で、基本的に主語＋動詞を続けます。',examples:['I slept during the flight. — 飛行中に眠りました。','I slept while she was driving. — 彼女が運転している間、私は眠りました。']}
-];
+].filter(lesson=>!SPELLING_CONFUSION_LESSONS.some(extra=>extra.words.length===lesson.words.length&&extra.words.every(w=>lesson.words.includes(w))))
+.concat(SPELLING_CONFUSION_LESSONS);
 function ConfusionLesson({word,other}){
- const h=React.createElement,key=normalizeSpelling(word),pair=normalizeSpelling(other);
- const lessons=CONFUSION_LESSONS.filter(l=>l.words.includes(key)&&(!pair||l.words.includes(pair)));
+ const h=React.createElement;
+ const lessons=confusionLessonsFor(word,other);
  if(!lessons.length)return null;
  return h('section',{className:'learn-confusion','aria-label':'似た単語の使い分け'},lessons.map(l=>h('details',{key:l.title,open:!!other},h('summary',null,'使い分け：'+l.words.join(' / ')),h('h4',null,l.title),h('p',null,l.tip),l.examples.map(e=>h('p',{key:e,className:'learn-confusion-example'},e)))));
 }
@@ -2749,8 +2925,8 @@ useEffect(()=>{if(mode==='quiz'&&started)buildQuiz(baseList);},[mode,started,bas
 const cards=order.map(i=>baseList[i]).filter(Boolean);const card=cards[pos];const total=cards.length;const recordStudy=(item,correct,detail={})=>{
 if(!item)return;const key=item.p+item.n,now=Date.now();
 setStudyStats(stats=>({...stats,[key]:scheduleStudy(stats[key],correct,now,detail.quality)}));
-const related=!correct&&detail.answer?enteredWordComparison(detail.answer,item,allWords):null;
-setLearning(s=>learningRecord(s,item,correct,{...detail,relatedWord:related?.entered.w||''},now));
+const related=!correct&&detail.answer&&!detail.timedOut&&!detail.skipped?enteredWordComparison(detail.answer,item,allWords):null;
+setLearning(s=>learningRecord(s,item,correct,{...detail,relatedWord:related?.entered.w||'',relatedMatch:related?.matchType||''},now));
 };
 const go=d=>{setFlipped(false);setPos(p=>Math.max(0,Math.min(total-1,p+d)));};const rateCard=quality=>{
 if(!card||!flipped||cardRatingLock.current===pos)return;
