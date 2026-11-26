@@ -3112,9 +3112,10 @@ function readStudyChat(words){
 }
 function studyChatContext(scope,words,decks){
  const byKey=new Map(words.map(w=>[w.p+w.n,w]));let selected=[],name='資料なし';
- if(scope==='final'){name='2学期期末テスト：LEAP 1131〜1537';selected=words.filter(w=>/^Part [1-4]$/.test(w.p)&&w.n>=1131&&w.n<=1537).sort((a,b)=>a.n-b.n);}
+ if(scope==='leap'){name='LEAP全体';const parts=new Set(PARTS.slice(1));selected=words.filter(w=>parts.has(w.p)).sort((a,b)=>a.n-b.n);}
+ else if(scope==='final'){name='2学期期末テスト：LEAP 1131〜1537';selected=words.filter(w=>/^Part [1-4]$/.test(w.p)&&w.n>=1131&&w.n<=1537).sort((a,b)=>a.n-b.n);}
  else if(scope.startsWith('deck:')){const deck=decks.find(d=>'deck:'+d.id===scope);if(deck){name=deck.name;selected=deck.keys.map(k=>byKey.get(k)).filter(Boolean);}}
- const limited=selected.slice(0,500);return {name,total:selected.length,count:limited.length,text:limited.length?JSON.stringify({name,total:selected.length,words:limited.map(w=>({key:w.p+w.n,n:w.n,w:studyChatText(w.w,200),m:studyChatText(w.m,240)}))}):''};
+ const limited=scope==='leap'?selected:selected.slice(0,500);return {name,total:selected.length,count:limited.length,text:limited.length?JSON.stringify({name,total:selected.length,words:limited.map(w=>({key:w.p+w.n,n:w.n,w:studyChatText(w.w,200),m:studyChatText(w.m,240)}))}):''};
 }
 function studyChatMessages(history,text){return [...history.map(m=>({role:m.role,content:m.role==='assistant'?studyChatText(JSON.stringify({reply:m.text,deck:m.deck?{name:m.deck.name,words:m.deck.words.map(w=>({key:w.key,w:w.w,m:studyChatText(w.m,240),customize:w.customize||undefined}))}:null}),50000):studyChatText(m.text,4000)})),{role:'user',content:text}];}
 function AiStudyChat({words,decks,active=true,onReviewDeck,onSettings}){
@@ -3125,7 +3126,7 @@ function AiStudyChat({words,decks,active=true,onReviewDeck,onSettings}){
  const [optionsOpen,setOptionsOpen]=React.useState(false),[showLatest,setShowLatest]=React.useState(false);
  const job=React.useRef(null),shell=React.useRef(null),messages=React.useRef(null),input=React.useRef(null),nearBottom=React.useRef(true),composing=React.useRef(false),compositionEnded=React.useRef(0),historyRef=React.useRef(history);historyRef.current=history;
  const context=React.useMemo(()=>studyChatContext(scope,words,decks),[scope,words,decks]);
- const validScope=scope==='none'||scope==='final'||decks.some(d=>'deck:'+d.id===scope);
+ const validScope=scope==='none'||scope==='leap'||scope==='final'||decks.some(d=>'deck:'+d.id===scope);
  React.useEffect(()=>{if(!validScope)setScope('none');},[validScope]);
  React.useEffect(()=>{try{localStorage.setItem(STUDY_CHAT_KEY,JSON.stringify({version:1,scope,messages:history}));setSaveError('');}catch{setSaveError('この端末に会話を保存できません。現在の画面では続けられます。');}},[history,scope]);
  function latest(behavior='auto'){const node=messages.current;if(!node)return;nearBottom.current=true;setShowLatest(false);node.scrollTo({top:node.scrollHeight,behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':behavior});}
@@ -3173,7 +3174,7 @@ function AiStudyChat({words,decks,active=true,onReviewDeck,onSettings}){
    h('button',{type:'button',className:'study-chat-scope-button','aria-label':'添える単語帳を選ぶ','aria-expanded':optionsOpen,'aria-controls':'study-chat-options',onClick:()=>setOptionsOpen(v=>!v)},bookIcon(),h('span',null,context.count?context.name:'単語帳を添える'),context.count>0&&h('small',null,context.count+'語'),icon(['m9 10 3 3 3-3'],16)),
    h('button',{type:'button',className:'study-chat-options-button','aria-label':optionsOpen?'チャットの設定を閉じる':'チャットの設定を開く','aria-expanded':optionsOpen,'aria-controls':'study-chat-options',onClick:()=>setOptionsOpen(v=>!v)},optionsOpen?icon(['m6 6 12 12','M6 18 18 6']):icon(['M5 12h.01','M12 12h.01','M19 12h.01'])),
    optionsOpen&&h('div',{id:'study-chat-options',className:'study-chat-options',role:'region','aria-label':'チャットの設定',onKeyDown:e=>{if(e.key==='Escape'){setOptionsOpen(false);shell.current?.querySelector('.study-chat-options-button')?.focus();}}},
-    h('div',{className:'study-chat-context'},h('label',{htmlFor:'study-chat-scope'},'次の送信に添える単語帳'),h('select',{id:'study-chat-scope',value:validScope?scope:'none',disabled:!!pending,onChange:e=>setScope(e.target.value)},h('option',{value:'none'},'資料なし（自由に相談）'),h('option',{value:'final'},'2学期期末テスト · LEAP 1131〜1537'),decks.map(d=>h('option',{key:d.id,value:'deck:'+d.id},d.name))),h('p',null,context.count?`${context.count}語を参照します。${context.total>context.count?'先頭500語までを送ります。':''}`:'番号で相談するときは、単語帳を選んでください。')),
+    h('div',{className:'study-chat-context'},h('label',{htmlFor:'study-chat-scope'},'次の送信に添える単語帳'),h('select',{id:'study-chat-scope',value:validScope?scope:'none',disabled:!!pending,onChange:e=>setScope(e.target.value)},h('option',{value:'none'},'資料なし（自由に相談）'),h('option',{value:'leap'},'LEAP全体 · Part 1〜4・＋α'),h('option',{value:'final'},'2学期期末テスト · LEAP 1131〜1537'),decks.map(d=>h('option',{key:d.id,value:'deck:'+d.id},d.name))),h('p',null,context.count?`${context.count}語を参照します。${context.total>context.count?'先頭500語までを送ります。':''}`:'番号で相談するときは、単語帳を選んでください。')),
     h('div',{className:'study-chat-tools'},h('button',{type:'button',onClick:onSettings},'AIの設定'),h('button',{type:'button',disabled:!!pending||(!history.length&&!failed),onClick:()=>setConfirmClear(v=>!v)},'会話を消す')),
     confirmClear&&h('div',{className:'study-chat-clear',role:'group','aria-label':'会話の削除を確認'},h('p',null,'この端末の会話を消します。保存済みの単語帳は残ります。'),h('button',{type:'button',onClick:clear},'会話を削除する'),h('button',{type:'button',onClick:()=>setConfirmClear(false)},'キャンセル')),
     h('p',{className:'study-chat-privacy'},'会話はこの端末に保存します。送信時に直近の会話と選んだ単語帳をAIに送ります。長い会話は古い部分から省略します。API利用料がかかります。'))),
