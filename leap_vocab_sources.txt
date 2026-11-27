@@ -1,0 +1,1002 @@
+LEAP単語帳　例文・言い換えの出典
+
+既存の見出し語・和訳・番号付き用例は、このアプリに収録されていた教材に基づきます。
+補足例文には、本アプリ用に作成した英文と和訳、既存カードの関連用例、次の公開資料の文例を使用しています。
+類義語・英語による言い換え・語法メモは、本アプリの学習用に編集したものです。
+
+Tatoeba Project / ManyThings.org
+https://tatoeba.org/　https://www.manythings.org/anki/
+ManyThings.org 配布の日本語・英語対訳データ（2026-02-13版）から選んだ例文です。
+Tatoebaへの投稿文はCC BY 2.0 FR、または各投稿者によるより開放的なライセンスで提供されています。
+https://creativecommons.org/licenses/by/2.0/fr/　https://tatoeba.org/ja/terms_of_use
+下記の各番号は https://tatoeba.org/ja/sentences/show/ の後に付けると原文を開けます。
+見出し語 | 英文番号・投稿者 | 日本語訳番号・投稿者
+blame | 8980390 CK | 232598 small_snow
+recommend | 60334 CK | 223003 mookeee
+grateful | 54402 CK | 217096 mookeee
+apologize | 259427 CK | 10756630 bunbuku
+congratulate | 260254 CK | 154289 bunbuku
+admire | 16872 CK | 10129770 bunbuku
+impress | 285608 CK | 118056 mookeee
+explain | 632436 CK | 212441 bunbuku
+describe | 71643 CM | 234268 bunbuku
+technology | 273246 CM | 141324 tommy__san
+electric | 3590467 CK | 3589958 tommy_san
+skill | 10143768 ddnktr | 11753224 small_snow
+talent | 2958644 CK | 2976591 tommy_san
+achieve | 303708 CM | 99989 bunbuku
+breathe | 680421 Source_VOA | 2099996 bunbuku
+role | 2199806 CK | 2199779 Blanka_Meduzo
+habit | 7197058 CK | 9202284 bunbuku
+tradition | 57714 CK | 220392 tommy__san
+ancestor | 744529 darinmex | 866725 thyc244
+evidence | 11766570 CK | 10914835 small_snow
+political | 244726 CM | 169760 tommy__san
+fare | 73253 CM | 235872 mookeee
+task | 34669 CM | 1137891 bunbuku
+crowd | 257143 CK | 157390 mookeee
+customer | 29511 CK | 192348 KK_kaku_
+passenger | 318007 CK | 85706 bunbuku
+wander | 20917 CK | 10830377 bunbuku
+probably | 1838047 CK | 1838060 bunbuku
+avoid | 255070 CK | 159453 bunbuku
+solve | 55997 CK | 236868 mookeee
+enable | 287072 CM | 116597 Blanka_Meduzo
+pretend | 322555 Dejo | 81160 mookeee
+behave | 315574 CK | 88133 ITA
+belong | 298987 CK | 104703 KK_kaku_
+include | 319621 CK | 84095 bunbuku
+graduate | 10817939 megamanenm | 11574624 small_snow
+retire | 3395907 CK | 11410808 bunbuku
+imagine | 30713 CK | 5314 bunbuku
+predict | 913535 Scott | 188002 KK_kaku_
+accept | 46065 CK | 1160680 bunbuku
+seem | 264620 CK | 149938 bunbuku
+earthquake | 269399 CK | 145164 mookeee
+polite | 9392892 CK | 9392895 small_snow
+rude | 246709 CM | 167790 mookeee
+lonely | 10870703 ddnktr | 12593366 small_snow
+strict | 33983 CM | 196804 bunbuku
+ugly | 73119 CK | 235739 e4zh1nmcz
+intelligent | 7231503 CK | 10153930 small_snow
+silly | 41558 Swift | 204317 bunbuku
+awake | 7732644 CK | 8697699 small_snow
+advantage | 3003240 CK | 2999835 Fukuko
+appropriate | 57275 CM | 219955 mookeee
+elementary | 10300095 CK | 10574502 small_snow
+lively | 273858 CK | 140715 bunbuku
+pleasant | 268062 CM | 146500 arnab
+awful | 9926883 CK | 9926888 small_snow
+raw | 281206 CK | 122796 arnab
+similar | 277103 CM | 126965 KK_kaku_
+differ | 270280 CM | 144285 bunbuku
+vary | 18604 piksea | 179745 bunbuku
+unusual | 243769 CK | 170712 bunbuku
+opportunity | 272618 CM | 141952 bunbuku
+anniversary | 63620 CK | 226280 arnab
+borrow | 2792348 CK | 156533 bunbuku
+provide | 322669 CK | 81046 mookeee
+garbage | 10204673 Hybrid | 10209104 small_snow
+furniture | 1410969 CK | 220027 bunbuku
+refrigerator | 10098193 CK | 10098196 small_snow
+traffic | 68664 CK | 231297 small_snow
+clothes | 6398102 Hybrid | 11508405 small_snow
+story | 252524 CK | 161991 bunbuku
+cartoon | 10626671 DJ_Saidez | 10685572 small_snow
+vocabulary | 257343 CM | 157190 tommy__san
+rely | 8182262 CK | 2465623 tommy_san
+pray | 7828136 CK | 8654344 small_snow
+weep | 320662 CM | 83054 tommy_san
+hate | 10930407 CK | 10930411 bunbuku
+annoy | 8037789 CK | 8040031 Ninja
+frighten | 6220555 CK | 10919726 SomeHungryBois
+effect | 2114655 CK | 191041 bunbuku
+affect | 1601 CK | 5007 mookeee
+purpose | 54380 CK | 122068 bunbuku
+almost | 1741766 Amastan | 11512772 small_snow
+partly | 27229 CK | 10085295 small_snow
+gradually | 18640 Scott | 179780 bunbuku
+criticize | 7774282 CK | 5258 mookeee
+mention | 3825264 CK | 4213455 User66813
+demonstrate | 274529 CK | 139682 tommy__san
+emphasize | 33531 CK | 82097 mookeee
+analysis | 291350 CM | 112328 bunbuku
+nuclear | 239466 CK | 11276096 bunbuku
+accomplish | 10169226 CK | 10629285 bunbuku
+overcome | 2550143 CK | 185702 tommy__san
+devote | 916661 CK | 86827 tommy__san
+dizzy | 325428 CK | 78289 wat
+appetite | 268793 CM | 145769 KK_kaku_
+disease | 239547 CK | 174920 bunbuku
+stomachache | 10587777 CK | 10587764 Sonata
+ambulance | 19590 CK | 182415 tommy__san
+bleed | 9851490 NurseMeeks | 9851513 bunbuku
+muscle | 72262 CK | 234885 e4zh1nmcz
+gender | 2668529 WestofEden | 2665740 tommy_san
+nationality | 71775 aliene | 234399 bunbuku
+racial | 300140 kebukebu | 103553 KK_kaku_
+global | 275657 CK | 137579 huizi99
+suburb | 246108 jakov | 168384 mookeee
+burden | 7217402 CK | 1206037 bunbuku
+religion | 2724527 Hybrid | 10080114 small_snow
+prosperity | 241370 CM | 173102 bunbuku
+community | 22816 CK | 185684 bunbuku
+immigrant | 33333 CK | 196157 tommy__san
+interact | 1990348 CK | 5093196 Andy_Andy
+abolish | 258024 CM | 156510 mookeee
+impose | 264646 CK | 149912 tommy__san
+elect | 1356015 CK | 235926 mookeee
+profit | 323817 CM | 79900 tommy__san
+tax | 272091 CK | 10559268 bunbuku
+debt | 10533455 CK | 164751 bunbuku
+recession | 318601 CM | 85112 small_snow
+consume | 49228 CK | 211950 bunbuku
+financial | 3598204 Hybrid | 3598459 arnab
+colleague | 8437681 CK | 8437651 small_snow
+structure | 252649 CK | 11124542 bunbuku
+architecture | 9635010 CK | 9635022 small_snow
+construction | 269145 CK | 145418 bunbuku
+aspect | 1601 CK | 5007 mookeee
+thief | 278618 CK | 125375 bunbuku
+motive | 18708 Zifre | 179849 mookeee
+punish | 802739 Source_VOA | 875429 thyc244
+victim | 271051 CK | 1036839 mookeee
+obstacle | 28882 CM | 191719 mookeee
+spectator | 324703 CK | 79014 tommy_san
+clue | 3182056 CK | 3598292 arnab
+restrict | 239796 CK | 174673 bunbuku
+forbid | 33983 CM | 196804 bunbuku
+persuade | 307870 CK | 95835 KK_kaku_
+discourage | 591206 CK | 152100 bunbuku
+obey | 68758 CM | 78045 mookeee
+drag | 1370515 CK | 96675 mookeee
+sneeze | 21841 CK | 184713 bunbuku
+protect | 275049 CK | 138186 bunbuku
+skip | 3820930 CK | 10987718 small_snow
+polish | 35680 CK | 198489 mookeee
+imitate | 245769 CK | 168722 bunbuku
+participate | 254447 CK | 11198657 bunbuku
+exist | 10795966 megamanenm | 11571064 small_snow
+arise | 325610 CM | 78108 mookeee
+require | 58683 CM | 221358 KK_kaku_
+obtain | 38099 CM | 10798120 bunbuku
+logical | 287818 CK | 236814 mookeee
+instruction | 12184436 sundown | 177250 bunbuku
+conclude | 307321 CM | 96384 mookeee
+distinguish | 45622 CK | 208365 bunbuku
+aware | 322009 CK | 81706 bunbuku
+memorize | 1503578 CK | 150276 small_snow
+forgive | 1886202 CK | 2619796 tommy_san
+abandon | 290793 CK | 112883 bunbuku
+environment | 311904 CM | 91808 bunbuku
+agriculture | 1210696 CK | 143075 tommy_san
+soil | 57684 CK | 237403 mookeee
+drown | 295011 CK | 108678 mookeee
+humid | 35033 CK | 1956408 bunbuku
+tropical | 322452 CK | 81263 KK_kaku_
+species | 274867 CM | 138368 KK_kaku_
+extinct | 238459 CM | 176006 bunbuku
+energetic | 7821502 CK | 9846169 Ninja
+greedy | 324948 CM | 78768 mookeee
+brave | 1316522 CK | 236871 mookeee
+generous | 295480 CK | 2252815 bunbuku
+intellectual | 277055 CM | 127035 small_snow
+imaginative | 291588 CK | 112089 tommy__san
+eager | 311059 CK | 92650 mookeee
+selfish | 7231719 CK | 2055116 bunbuku
+cruel | 41370 Swift | 204128 bunbuku
+addicted | 2263525 Hybrid | 2263526 tommy_san
+stubborn | 7316630 CK | 10917259 SomeHungryBois
+bold | 263147 CK | 10697373 bunbuku
+indifferent | 55154 CM | 217844 KK_kaku_
+punctual | 400173 CK | 120224 bunbuku
+coward | 296527 CK | 107159 arnab
+precise | 11814006 CK | 10119760 bunbuku
+accurate | 67894 Eldad | 230527 bunbuku
+proper | 255007 CM | 159516 bunbuku
+complicated | 303470 CK | 100227 bunbuku
+obvious | 7768161 metcaslix | 4214938 User66813
+remarkable | 18643 Zifre | 179784 mookeee
+outstanding | 286901 CM | 116767 tommy__san
+diversity | 239536 CM | 2976531 tommy__san
+marvelous | 308710 CK | 1320026 bunbuku
+active | 68481 CK | 231115 small_snow
+steady | 270347 CK | 11090435 bunbuku
+ripe | 43455 Plodder | 206209 KK_kaku_
+negative | 10288759 ddnktr | 13028880 small_snow
+vague | 1028887 CK | 2690767 tommy_san
+weird | 7197368 CK | 6849934 Sonata
+risky | 17932 wwkudu | 179076 KK_kaku_
+ignorant | 10761328 CM | 88409 small_snow
+brand-new | 37099 mailohilohi | 9933910 bunbuku
+urgent | 30900 darinmex | 10346540 bunbuku
+vacant | 18352 Eldad | 179494 bunbuku
+tend | 267318 CK | 147243 bunbuku
+deserve | 979435 CK | 117282 tommy__san
+fragment | 18925 spockofvulcan | 180065 tommy_san
+typical | 301749 CK | 101944 mookeee
+ordinary | 255483 CK | 1247655 bunbuku
+calculate | 262137 CK | 152413 bunbuku
+shortage | 73261 CK | 235880 e4zh1nmcz
+enormous | 10616298 CK | 10616300 bunbuku
+accidental | 247560 CK | 166942 tommy__san
+temporary | 681716 Source_VOA | 893254 thyc244
+permanent | 681716 Source_VOA | 893254 thyc244
+previous | 300711 CK | 237427 mookeee
+lately | 4014860 CK | 3662072 tommy_san
+deadline | 4494473 CK | 11529304 bunbuku
+decade | 23616 CK | 186480 bunbuku
+envelope | 57290 CK | 219970 arnab
+questionnaire | 61337 CM | 9505202 bunbuku
+fuss | 2713331 CK | 10744689 bunbuku
+farewell | 1222530 CK | 137868 bunbuku
+vending machine | 58868 CK | 221544 bunbuku
+destiny | 3514303 CK | 3555720 arnab
+flavor | 12530942 CK | 11508341 small_snow
+aisle | 448965 Swift | 140325 KK_kaku_
+district | 293388 CK | 110300 arnab
+distant | 25816 CK | 11642668 bunbuku
+occupy | 681606 Source_VOA | 880320 thyc244
+surround | 48461 CK | 211187 bunbuku
+civilization | 272259 CK | 142311 mookeee
+tale | 2278861 CK | 210526 Blanka_Meduzo
+tragedy | 7492925 CK | 123722 bunbuku
+biography | 1356012 CK | 192477 bunbuku
+proverb | 2040566 CK | 3044964 tommy_san
+fluent | 9510626 shekitten | 9510634 small_snow
+literally | 237821 CK | 2758584 bunbuku
+reveal | 314713 CK | 87138 bunbuku
+announce | 273532 CK | 141040 bunbuku
+advertise | 49084 CK | 1619880 mookeee
+amuse | 289438 CK | 114234 bunbuku
+attract | 50349 CK | 10485474 bunbuku
+fascinate | 1386892 Spamster | 1641200 bunbuku
+scare | 7554082 CK | 7554232 Ninja
+amaze | 1023700 CK | 8984743 bunbuku
+irritate | 309871 CK | 93836 bunbuku
+bore | 3975733 CK | 4067673 cojcoj
+disappoint | 254313 CM | 160208 arnab
+embarrass | 257644 CK | 156889 tommy_san
+ashamed | 54719 CM | 217410 mookeee
+uneasy | 267486 CK | 147075 bunbuku
+hesitate | 10535106 CK | 10515947 small_snow
+reluctant | 314713 CK | 87138 bunbuku
+tremble | 267858 CS | 146703 KK_kaku_
+jealous | 316224 CK | 87484 bunbuku
+emotion | 8997425 mccarras | 10135850 small_snow
+courage | 261186 CK | 153357 bunbuku
+passion | 7927558 Hybrid | 8495726 small_snow
+sorrow | 296772 CK | 106914 bunbuku
+ignore | 1065424 CK | 124750 mookeee
+offend | 2282414 Hybrid | 9641272 small_snow
+depress | 7456698 CK | 12115435 bunbuku
+method | 18821 Zifre | 179962 mookeee
+extent | 253759 CK | 160760 bunbuku
+extremely | 35033 CK | 1956408 bunbuku
+moderate | 278714 CM | 125279 mookeee
+somewhat | 327441 CM | 76279 mookeee
+subtle | 50742 CK | 213456 bunbuku
+eventually | 11156781 CK | 11895088 bunbuku
+necessarily | 3010102 CK | 3010095 tommy_san
+frankly | 325406 CM | 78311 mookeee
+regardless | 326800 CM | 76920 mookeee
+bless | 245508 CK | 168979 bunbuku
+imply | 73994 CM | 237569 mookeee
+recite | 1229227 Scott | 1202456 mookeee
+laboratory | 298699 CS | 104990 tommy__san
+oxygen | 931539 CM | 944888 thyc244
+molecule | 270937 CK | 143630 mookeee
+dedicate | 293650 Eldad | 110038 Blanka_Meduzo
+pharmacy | 9241078 DJ_Saidez | 10275131 small_snow
+disorder | 319571 CM | 84144 tommy_san
+pregnant | 281964 CK | 122039 bunbuku
+infect | 2592621 WestofEden | 2515523 tommy_san
+ankle | 2609426 WestofEden | 2609255 tommy_san
+thumb | 294514 CK | 109176 bunbuku
+forehead | 1025309 CK | 1667737 bunbuku
+chin | 483382 Eckhardtgabriel | 1827975 bunbuku
+breast | 4497256 CK | 10225115 small_snow
+lung | 19961 Eldad | 182841 bunbuku
+agenda | 4501245 CK | 11281403 small_snow
+committee | 28247 CK | 10895551 bunbuku
+mankind | 864524 elizabethchan | 174726 mookeee
+insurance | 6932995 JimBreen | 211779 mookeee
+poverty | 276023 CM | 137213 tommy__san
+region | 45152 CM | 207896 bunbuku
+origin | 271879 CK | 142691 tommy__san
+monument | 1222981 CK | 174513 bunbuku
+revolution | 245166 CM | 1802563 bunbuku
+cooperate | 248658 CK | 157213 bunbuku
+found | 262567 CM | 151986 tommy__san
+conservative | 1093415 CK | 1690167 mookeee
+republic | 72161 CM | 234784 mookeee
+empire | 269694 CM | 144870 mookeee
+aid | 272767 CM | 141803 tommy__san
+reform | 19128 qdii | 180351 KK_kaku_
+editor | 320355 CK | 83361 tommy__san
+relevant | 17091 Zifre | 178239 tommy__san
+prison | 3204784 CK | 8970897 bunbuku
+military | 807594 Source_VOA | 2205072 bunbuku
+defend | 23555 CK | 186418 huizi99
+deprive | 297181 CK | 106505 bunbuku
+hazard | 55988 CK | 11790922 bunbuku
+orphan | 325656 qdii | 78062 mookeee
+fade | 263854 CM | 150703 KK_kaku_
+modify | 953232 CK | 2298524 tommy_san
+revise | 264082 CK | 150475 small_snow
+voyage | 41214 CK | 203972 bunbuku
+ensure | 324850 CM | 78866 mookeee
+mend | 296781 Zifre | 106905 arihato
+react | 681849 Source_VOA | 1092016 bunbuku
+endure | 388303 CK | 87836 mookeee
+bind | 446117 blay_paul | 104455 KK_kaku_
+undergo | 21982 CK | 184853 bunbuku
+incorporate | 49041 CK | 211764 tommy__san
+generate | 20931 CK | 183807 bunbuku
+possess | 270274 CM | 144291 mookeee
+semester | 73192 CK | 235813 e4zh1nmcz
+biology | 315365 CK | 88342 bunbuku
+geography | 9354246 DJ_Saidez | 9458362 small_snow
+concept | 11211710 CK | 11212015 ITA
+option | 1449 Zifre | 4866 bunbuku
+prospect | 308850 CK | 94857 bunbuku
+intend | 11843786 CK | 3890542 bunbuku
+acknowledge | 16026 Swift | 10836919 bunbuku
+breeze | 8647386 AlanF_US | 8647424 small_snow
+fog | 29277 CK | 192114 mookeee
+damp | 10992530 CK | 10987707 small_snow
+path | 7836329 CK | 7838828 Ninja
+habitat | 2327359 Hybrid | 5093270 Andy_Andy
+volcano | 49237 CK | 10289494 bunbuku
+mosquito | 1140992 CK | 8823666 small_snow
+cattle | 275534 CM | 1897883 bunbuku
+kitten | 9233536 shekitten | 9365736 small_snow
+beast | 327345 CM | 76375 mookeee
+ape | 36323 CM | 199124 mookeee
+diligent | 10118239 CM | 10123499 small_snow
+definite | 35182 CK | 80702 bunbuku
+evident | 284336 CM | 119327 KK_kaku_
+marked | 275534 CM | 1897883 bunbuku
+rational | 325364 CM | 78352 mookeee
+loyal | 292738 CK | 110948 bunbuku
+horrible | 56610 CK | 219294 bunbuku
+miserable | 388314 CK | 1167069 bunbuku
+nasty | 31630 CK | 154037 mookeee
+insane | 859019 piksea | 3455742 tomo
+ridiculous | 12068861 CK | 198854 bunbuku
+rotten | 1327526 CK | 84291 bunbuku
+huge | 682377 Source_VOA | 1827971 bunbuku
+tiny | 11179204 CK | 11140981 small_snow
+intense | 19176 Dejo | 180444 small_snow
+inevitable | 265243 CM | 149315 bunbuku
+supreme | 243948 CK | 1616262 bunbuku
+resemble | 303333 CK | 100365 mookeee
+category | 939738 CM | 1827988 bunbuku
+scope | 7910868 CM | 3559188 tommy_san
+sufficient | 10284752 CK | 81669 KK_kaku_
+numerous | 18314 CM | 179456 mookeee
+unit | 33066 CM | 195891 KK_kaku_
+diameter | 45106 CK | 207849 tommy__san
+arithmetic | 10778438 sundown | 11637656 small_snow
+quantity | 27341 CK | 190184 mookeee
+maximum | 243950 CK | 9029376 bunbuku
+bunch | 10336779 AlanF_US | 10472541 small_snow
+lessen | 278312 CK | 125680 bunbuku
+eternal | 3621377 gaialoro | 3591603 tommy_san
+souvenir | 33370 CK | 196194 KK_kaku_
+mischief | 68326 CK | 230959 KK_kaku_
+storage | 1892652 CK | 2132474 bunbuku
+canal | 35122 CK | 197933 bunbuku
+incident | 254362 CK | 160159 bunbuku
+circumstance | 8699057 chanchan | 2702388 tommy_san
+fetch | 325959 CM | 77759 mookeee
+sculpture | 9472055 DJ_Saidez | 9472058 small_snow
+encyclopedia | 325021 CK | 78695 mookeee
+funeral | 287039 CK | 116629 bunbuku
+priest | 245508 CK | 168979 bunbuku
+sacred | 1556532 brymck | 1529765 CHNO
+divine | 20868 Eldad | 2478110 tommy__san
+usage | 26139 CK | 188992 mookeee
+pronoun | 544637 CK | 4715122 anhgosho
+ambition | 1316893 CK | 1151806 bunbuku
+affection | 317433 CM | 3402671 arnab
+enthusiasm | 65903 CK | 228545 mookeee
+incredible | 8000645 CK | 8002423 Ninja
+dare | 29970 CM | 192805 small_snow
+tempt | 48633 CM | 211358 bunbuku
+scold | 1046544 CK | 9642743 bunbuku
+oppress | 1151889 mookeee | 188491 mookeee
+procedure | 34784 CK | 9279750 bunbuku
+overwhelming | 271232 darinmex | 143335 KK_kaku_
+tremendous | 7787718 Adelpa | 10919709 SomeHungryBois
+approximately | 11862188 CK | 235825 mookeee
+frequently | 5260034 pinkfreud | 5185697 aoi0913
+nevertheless | 261396 CM | 2256974 tommy_san
+assert | 305876 CK | 97828 mookeee
+sue | 64269 xtofu80 | 435160 mookeee
+evolution | 262804 CM | 151751 tommy__san
+innovation | 266794 CM | 147766 small_snow
+hypothesis | 55284 CK | 217975 Blanka_Meduzo
+toxic | 10629724 verdantyuu | 10627169 small_snow
+therapy | 43459 CK | 11344288 bunbuku
+injection | 11586374 CK | 11586399 small_snow
+dose | 73078 CK | 235698 mookeee
+tumor | 2956820 CK | 3450184 arnab
+stroke | 19409 CK | 182199 bunbuku
+agony | 3272579 CM | 8406092 Shigure
+fatigue | 317834 CM | 236846 mookeee
+diagnosis | 4140577 AlanF_US | 11317177 small_snow
+chronic | 1037192 GPHemsley | 1038401 thyc244
+immune | 8692027 Hybrid | 8692037 small_snow
+paralyze | 317436 Swift | 86275 arnab
+appalling | 11645141 CK | 86268 arnab
+flesh | 29843 CM | 192679 KK_kaku_
+limb | 67763 CK | 230396 bunbuku
+suck | 554939 darinmex | 3576068 arnab
+compensate | 40445 CK | 9804105 small_snow
+bias | 5646231 CK | 11480829 small_snow
+privilege | 23233 Swift | 186099 bunbuku
+conference | 22478 CK | 185372 bunbuku
+treaty | 805486 Source_VOA | 1783172 bunbuku
+tribe | 67567 CM | 230202 wat
+pension | 267586 CK | 146762 bunbuku
+ethnic | 322706 CM | 81009 wat
+anonymous | 3313139 CK | 11459453 bunbuku
+flourish | 73322 CK | 235941 mookeee
+conform | 16218 CK | 177368 bunbuku
+legislation | 271232 darinmex | 143335 KK_kaku_
+jury | 282536 CM | 11195442 bunbuku
+corruption | 241165 CM | 237342 mookeee
+candidate | 288866 TheDQN | 114805 bunbuku
+diplomat | 288865 CM | 2126232 Blanka_Meduzo
+refugee | 1315796 CK | 101549 mookeee
+federal | 326308 CM | 77411 mookeee
+revenue | 271487 CM | 143081 tommy__san
+deficit | 280343 Dejo | 123653 KK_kaku_
+subsidy | 1075510 CM | 1075143 mookeee
+bankrupt | 286521 CK | 117145 bunbuku
+corporation | 285932 CK | 117732 tommy__san
+headquarters | 7140693 CK | 10285638 bunbuku
+undertake | 47592 CM | 210326 bunbuku
+identical | 10625528 CK | 11453671 bunbuku
+random | 317882 CK | 85830 tommy_san
+troop | 321209 CM | 82507 KK_kaku_
+interfere | 297389 CK | 106296 tommy__san
+collide | 286756 CK | 116911 bunbuku
+nephew | 25708 CK | 188563 KK_kaku_
+infant | 324801 CK | 78915 bunbuku
+heir | 37965 CM | 200763 Ianagisacos
+flee | 288390 CM | 115281 mookeee
+alter | 313382 CK | 90332 bunbuku
+overtake | 299052 CK | 1179152 bunbuku
+wither | 1008799 AOCinJAPAN | 145988 KK_kaku_
+descend | 245059 CK | 2680856 tommy_san
+accelerate | 299052 CK | 104638 bunbuku
+fluctuate | 18609 CK | 10970895 bunbuku
+distort | 27234 CK | 190078 bunbuku
+transition | 19106 CK | 180315 tommy__san
+undermine | 317834 CM | 236846 mookeee
+cope | 254703 CK | 10790121 bunbuku
+tackle | 9456715 sundown | 12526726 bunbuku
+demolish | 7451681 Hybrid | 10075599 small_snow
+designate | 57918 CM | 220596 KK_kaku_
+refrain | 69504 CM | 11648597 bunbuku
+prohibit | 1055373 CK | 78010 mookeee
+stimulate | 278710 CK | 125283 bunbuku
+worsen | 5856435 CK | 2706831 tommy_san
+pose | 72061 CM | 234683 bunbuku
+disregard | 2609414 WestofEden | 2609354 tommy_san
+smash | 10314841 CK | 149040 small_snow
+compile | 264908 Eldad | 2418232 tommy_san
+slap | 806765 BraveSentry | 869839 thyc244
+embark | 306333 CM | 97369 mookeee
+intrude | 321185 CK | 82531 KK_kaku_
+utilize | 326041 CM | 77677 mookeee
+allocate | 918062 Scott | 918043 bunbuku
+blink | 9242229 AlanF_US | 11254427 small_snow
+scramble | 10527119 CK | 10527130 bunbuku
+vanish | 2456551 CK | 2456544 tommy_san
+cease | 690956 Scott | 893270 thyc244
+haste | 59680 CM | 222353 bunbuku
+conceal | 1867728 CK | 2056746 bunbuku
+deceive | 292984 CK | 110702 mookeee
+evacuate | 13572395 CK | 1180855 bunbuku
+inspect | 265626 CK | 148932 bunbuku
+astronomy | 278982 CS | 125011 bunbuku
+archaeologist | 2909053 CK | 9840089 KK_kaku_
+dormitory | 6224350 CK | 11337822 bunbuku
+foresee | 25147 CK | 188008 small_snow
+deem | 299974 CM | 103719 mookeee
+ponder | 2643928 CK | 10008428 Sim5634
+assure | 275738 CM | 137498 KK_kaku_
+assess | 69828 CK | 2758594 bunbuku
+cognitive | 10773514 CK | 10771383 small_snow
+illusion | 26422 CK | 173603 KK_kaku_
+criterion | 997088 CK | 1598454 bunbuku
+tolerate | 10907912 CM | 10907930 SomeHungryBois
+misunderstand | 7217696 CK | 231929 bunbuku
+wheat | 7352547 AlanF_US | 9171199 small_snow
+deforestation | 2327359 Hybrid | 5093270 Andy_Andy
+drought | 243067 CM | 171408 bunbuku
+altitude | 47720 CM | 10060187 small_snow
+catastrophe | 318611 CM | 85102 arnab
+flame | 325501 CM | 78217 mookeee
+galaxy | 27043 CK | 189887 KK_kaku_
+inhabit | 44727 CM | 207474 mookeee
+owl | 34366 CK | 197184 bunbuku
+instinct | 317054 CS | 86657 bunbuku
+mammal | 9768188 CK | 176014 mookeee
+hybrid | 1094184 CK | 8599777 small_snow
+competent | 3699690 CK | 9842049 MsFixer
+optimistic | 7168410 CK | 8751074 small_snow
+naughty | 12342044 CK | 11859228 bunbuku
+arrogant | 5747768 CM | 8879365 bunbuku
+eligible | 8429056 CK | 9846182 Ninja
+resilient | 2203278 CK | 10324280 small_snow
+flaw | 13541180 CK | 136815 mookeee
+trait | 476197 CM | 109401 small_snow
+indispensable | 270822 CK | 143744 small_snow
+crucial | 10463186 CK | 10463185 bunbuku
+vital | 72921 CM | 235542 e4zh1nmcz
+profound | 68655 CM | 231288 bunbuku
+grim | 239487 CM | 174980 bunbuku
+harsh | 273584 CM | 1143857 bunbuku
+ambiguous | 57232 CK | 76725 mookeee
+neat | 289208 CM | 114463 bunbuku
+decent | 301622 CK | 102071 bunbuku
+swift | 270589 CK | 143977 bunbuku
+wit | 295087 CM | 108599 KK_kaku_
+adverse | 319813 CM | 83903 small_snow
+clumsy | 299185 CK | 104506 bunbuku
+shabby | 44241 Zifre | 206991 bunbuku
+absurd | 42030 CM | 10545895 bunbuku
+fragile | 7065940 AlanF_US | 8532906 small_snow
+innate | 10118914 AlanF_US | 2472587 tommy_san
+universal | 1522144 LittleBoy | 2142171 Blanka_Meduzo
+spontaneous | 304961 CM | 98739 bunbuku
+vertical | 239504 Zifre | 174963 tommy__san
+ongoing | 4500349 CK | 207774 wakatyann630
+mandatory | 4495187 CK | 8769339 bunbuku
+exceed | 2734388 CK | 143315 bunbuku
+abundant | 281588 CM | 122710 arnab
+ample | 73104 CM | 235724 e4zh1nmcz
+infinite | 272244 CK | 142326 KK_kaku_
+simultaneous | 6339542 CK | 9594314 small_snow
+medieval | 251320 CK | 163192 tommy_san
+expire | 250466 CK | 10085270 bunbuku
+postpone | 10138457 CK | 878454 thyc244
+domain | 7802749 Hybrid | 11255941 small_snow
+boundary | 325941 CK | 77777 mookeee
+endow | 291120 CM | 112557 small_snow
+inherit | 8545693 CK | 8545665 small_snow
+hospitality | 242668 CK | 171807 tommy_san
+certificate | 30578 CK | 193413 bunbuku
+brochure | 28396 CK | 9544146 bunbuku
+accommodation | 72400 CK | 235023 e4zh1nmcz
+haven | 254231 CM | 10969586 bunbuku
+intersection | 280381 CK | 123616 KK_kaku_
+pavement | 239345 CM | 175121 tommy__san
+pedestrian | 264526 CK | 11256700 bunbuku
+excursion | 30927 Eldad | 193759 small_snow
+shipping | 11188052 CK | 11187870 bunbuku
+intake | 13565309 CK | 143631 bunbuku
+precede | 26371 Zifre | 189224 KK_kaku_
+phase | 240295 CM | 174175 bunbuku
+priority | 7819771 CK | 9414427 bunbuku
+tomb | 246262 CK | 168231 bunbuku
+masterpiece | 40802 CM | 203564 arnab
+sin | 953999 CK | 8817382 bunbuku
+carve | 1428412 CK | 77435 mookeee
+murmur | 44656 CS | 207404 bunbuku
+linguistic | 296105 CM | 107580 bunbuku
+metaphor | 73590 CM | 236214 mookeee
+manuscript | 302502 CK | 1173497 bunbuku
+slang | 475757 darinmex | 1118909 mookeee
+riddle | 44652 CK | 207400 bunbuku
+tease | 8429104 CK | 8429796 Ninja
+astonish | 18880 CK | 180022 tommy_san
+console | 293133 CM | 110553 bunbuku
+arouse | 287012 CM | 116656 KK_kaku_
+startle | 1370512 CK | 112455 bunbuku
+humiliate | 7800300 CK | 172620 bunbuku
+adore | 300796 CK | 102898 bunbuku
+resent | 1153379 Scott | 98484 mookeee
+long | 2947375 CK | 2948407 tommy_san
+bewilder | 1487683 marshmallowcat | 1139324 mookeee
+despise | 269880 CM | 1631830 mookeee
+willing | 295048 CK | 108641 bunbuku
+furious | 3320892 patgfisher | 3321060 Tadafumi
+conscience | 237674 CM | 176788 wat
+compassion | 5090710 CK | 8337047 Nishikigoi
+impulse | 1096161 CK | 2033361 bunbuku
+aspiration | 302995 CM | 100702 mookeee
+grief | 263854 CM | 150703 KK_kaku_
+contempt | 254205 CK | 10808956 bunbuku
+nuisance | 323491 CM | 80226 small_snow
+outcome | 273533 CK | 141039 bunbuku
+factor | 370590 saeb | 1251870 mookeee
+thorough | 291350 CM | 112328 bunbuku
+adequate | 72682 CM | 235303 mookeee
+ultimate | 23432 CK | 186296 tommy__san
+slight | 1459075 CK | 10016581 small_snow
+trivial | 41564 CK | 204321 small_snow
+abruptly | 7969547 CK | 7989451 Ninja
+roam | 324129 CM | 79589 bunbuku
+stroll | 7733689 CK | 8663732 small_snow
+deteriorate | 3265987 patgfisher | 2706934 tommy_san
+evaporate | 270934 CK | 11072559 bunbuku
+frown | 308461 CK | 1174299 bunbuku
+hatch | 684022 jakov | 148682 small_snow
+cling | 10564943 auxitt | 8658143 small_snow
+adhere | 298746 CM | 104943 bunbuku
+endorse | 246536 shanghainese | 167960 tomo
+disclose | 1951480 CK | 2167638 bunbuku
+improvise | 9236399 CK | 10919732 SomeHungryBois
+transcend | 2457491 CM | 2278659 tommy_san
+flatter | 667976 CK | 3573942 arnab
+kidnap | 1140958 CK | 11205168 small_snow
+hinder | 251099 CM | 163413 arnab
+expel | 6772369 CK | 9540330 small_snow
+discard | 48499 CM | 211225 KK_kaku_
+restrain | 301885 CM | 101808 mookeee
+hamper | 4251351 patgfisher | 6037203 atmarksharp
+reassure | 28104 CK | 190944 mookeee
+provoke | 10119979 CK | 10125476 small_snow
+refine | 11129756 CK | 9634700 small_snow
+enlighten | 2210615 CK | 7577104 Unagi
+prolong | 1543504 JimBreen | 179523 bunbuku
+grind | 681104 Source_VOA | 869549 thyc244
+withstand | 1495984 CK | 163953 bunbuku
+exert | 8382122 CM | 80914 KK_kaku_
+pierce | 276757 CM | 11746224 bunbuku
+contemplate | 310822 CK | 92887 bunbuku
+verify | 2951605 CK | 2988652 Fukuko
+pledge | 3754734 patgfisher | 8750568 small_snow
+perplex | 454104 saasmath | 869813 thyc244
+friction | 241718 CM | 172756 bunbuku
+heredity | 23061 CK | 185929 bunbuku
+veterinarian | 11761009 end | 11584139 small_snow
+veterinarian | 9736640 CK | 164757 bunbuku
+epidemic | 10098010 CK | 10099888 small_snow
+epidemic | 269511 Eldad | 145052 bunbuku
+dementia | 6772039 Hybrid | 10252812 small_snow
+dehydration | 12418631 CK | 11582435 small_snow
+kidney | 4828586 salpfish | 2760671 tommy_san
+famine | 20074 CM | 182953 bunbuku
+riot | 321209 CM | 82507 KK_kaku_
+riot | 321200 CK | 82516 bunbuku
+prefecture | 542890 blay_paul | 10616216 small_snow
+delegation | 325611 CM | 78107 mookeee
+congress | 326308 CM | 77411 mookeee
+census | 9039699 CK | 9039668 small_snow
+expertise | 8763863 Hybrid | 8764383 small_snow
+quota | 38370 CM | 237498 mookeee
+warehouse | 273976 CK | 140597 small_snow
+peasant | 327949 CM | 75769 mookeee
+peasant | 6873075 CK | 153068 bunbuku
+clash | 72832 CM | 235454 arnab
+bribe | 326581 CK | 77138 mookeee
+bribe | 887103 CK | 1041563 mookeee
+hostage | 1316522 CK | 236871 mookeee
+hostage | 1961450 CK | 2134017 bunbuku
+threshold | 1877462 CK | 2087129 bunbuku
+geometry | 323404 CK | 80313 small_snow
+internship | 239645 CM | 174823 mookeee
+Antarctic | 276707 CM | 127377 KK_kaku_
+Antarctic | 307261 CK | 96444 tommy__san
+odor | 32266 CM | 195092 bunbuku
+meadow | 8596724 CM | 78849 small_snow
+meteor | 326654 CM | 77065 mookeee
+eclipse | 3552568 CK | 3552358 tommy_san
+peninsula | 277825 CK | 126167 KK_kaku_
+hemisphere | 1008611 CK | 1008336 mookeee
+lump | 21664 CK | 11224335 bunbuku
+primate | 326115 CM | 77603 mookeee
+sibling | 7729290 CK | 8794940 small_snow
+extrovert | 5371441 Hybrid | 8634683 small_snow
+cuisine | 60333 CM | 223002 bunbuku
+scenario | 13573975 CK | 4776 bunbuku
+autograph | 515648 CK | 219772 bunbuku
+prophet | 324792 CK | 78924 mookeee
+token | 21050 Swift | 183924 mookeee
+token | 55838 CK | 10499812 bunbuku
+cue | 276932 CK | 127157 bunbuku
+contagious | 2248449 CK | 8701456 bunbuku
+numb | 252071 CK | 162443 bunbuku
+unprecedented | 279829 CM | 124165 bunbuku
+drastic | 2064965 CK | 8946580 bunbuku
+masculine | 10470963 DJ_Saidez | 10330598 small_snow
+juvenile | 268073 CM | 146489 KK_kaku_
+dairy | 953588 CK | 1490490 bunbuku
+stray | 8412767 CK | 8611459 bunbuku
+comprehensive | 2242186 CM | 2242226 tommy_san
+edible | 10777131 ddnktr | 11839616 small_snow
+perishable | 8173456 Hybrid | 10038534 small_snow
+naive | 41798 CK | 204557 bunbuku
+timid | 282881 CK | 121126 small_snow
+obstinate | 3184005 CK | 3591860 arnab
+obstinate | 313230 CK | 90483 bunbuku
+skeptical | 1230620 CK | 934515 thyc244
+accustomed | 315867 CM | 87840 bunbuku
+obsessed | 10688699 CK | 84720 small_snow
+preoccupied | 2359219 CK | 5068124 Andy_Andy
+prone | 327545 CM | 76173 mookeee
+apt | 55774 CK | 218463 small_snow
+susceptible | 12781889 CK | 11669173 small_snow
+splendid | 42723 CK | 205479 small_snow
+intriguing | 1379 CK | 4799 bunbuku
+ingenious | 325324 CM | 78393 mookeee
+conspicuous | 52361 CM | 215065 bunbuku
+proficient | 262844 CK | 10662077 bunbuku
+reckless | 322821 CM | 80894 small_snow
+wicked | 28200 CK | 10794461 bunbuku
+monotonous | 259386 CM | 155153 mookeee
+monotonous | 315358 CK | 88349 mookeee
+extravagant | 326645 CM | 77074 mookeee
+obsolete | 2187226 CK | 2394739 Blanka_Meduzo
+devoid | 44243 CM | 206993 KK_kaku_
+scarce | 45152 CM | 207896 bunbuku
+solemn | 63938 CM | 226594 bunbuku
+tangible | 9662946 DJ_Saidez | 10179172 small_snow
+viable | 8180292 CK | 9883288 small_snow
+
+Princeton WordNet 3.0 / 日本語ワードネット
+https://wordnet.princeton.edu/　https://bond-lab.github.io/wnja/
+次の文例はWordNetと日本語ワードネットの対訳用例から抜粋したものです。
+見出し語 | WordNet synset | 用例番号（0始まり）
+therefore | 00043003-r | 0
+controversial | 00601783-a | 2
+endanger | 02697120-v | 0
+emit | 02767308-v | 0
+boost | 01211339-n | 0
+outweigh | 02645597-v | 0
+flexible | 01022064-a | 0
+passive | 02513101-a | 0
+dialect | 07155661-n | 0
+clarify | 00939857-v | 0
+despair | 01810933-v | 0
+ironically | 00382620-r | 0
+moreover | 00029367-r | 1
+radiation | 14308472-n | 0
+gene | 05436752-n | 0
+clinical | 02885529-a | 1
+isolation | 01239717-n | 0
+council | 08309409-n | 0
+unify | 00367685-v | 0
+dominate | 02646931-v | 0
+enhance | 00230033-v | 0
+enrich | 02318648-v | 0
+uncover | 01339505-v | 0
+retain | 00610010-v | 0
+detect | 02154508-v | 0
+ecology | 14513062-n | 0
+evaluate | 00670261-v | 1
+reef | 01973636-v | 0
+organism | 08436036-n | 0
+notorious | 01984411-a | 0
+conventional | 00611281-a | 1
+deficiency | 14449405-n | 1
+subsequent | 00122626-a | 0
+garment | 03419014-n | 0
+instance | 07308889-n | 1
+outline | 01006421-v | 0
+mourn | 01797051-v | 0
+cite | 01023071-v | 0
+refute | 00814850-v | 0
+doom | 00890855-v | 0
+respiratory | 03110322-a | 0
+spinal | 02884456-a | 1
+prestige | 14435809-n | 0
+feat | 00036762-n | 0
+dignity | 04886881-n | 0
+hygiene | 14495080-n | 0
+primitive | 00818175-a | 2
+metropolitan | 02865172-a | 0
+comply | 02542280-v | 1
+testimony | 06732710-n | 0
+municipal | 01038580-a | 0
+transaction | 01106808-n | 0
+component | 03081021-n | 1
+excel | 02673965-v | 0
+consensus | 13971901-n | 1
+inequality | 04752221-n | 0
+compatible | 00507464-a | 1
+slaughter | 01322854-v | 0
+disrupt | 00554298-v | 0
+drift | 01902783-v | 3
+dispatch | 05059830-n | 0
+reinforce | 00787660-v | 0
+impair | 00262881-v | 0
+compel | 02506546-v | 0
+overshadow | 02158196-v | 0
+detach | 01299758-v | 0
+manipulate | 02536329-v | 0
+intervene | 02538765-v | 0
+embed | 01089423-v | 0
+coordinate | 02437905-v | 2
+sustain | 01184625-v | 0
+outbreak | 07435273-n | 0
+concede | 01117609-v | 0
+comprehend | 00588221-v | 0
+instill | 02325042-v | 0
+intuition | 05919034-n | 0
+stereotype | 05927586-n | 0
+subjective | 01615925-a | 0
+wilderness | 08683548-n | 0
+erosion | 13475944-n | 0
+thermal | 01250565-a | 0
+fertile | 01081340-a | 0
+contaminate | 00493259-v | 0
+mill | 01457825-v | 0
+defect | 14464203-n | 1
+analogy | 00651176-n | 0
+misleading | 01224253-a | 3
+mighty | 01826575-a | 0
+explicit | 00940437-a | 1
+authentic | 02465115-a | 0
+barren | 01242750-a | 1
+tiresome | 01345307-a | 7
+outrageous | 01534282-a | 2
+static | 02719009-a | 0
+transparent | 00431774-a | 5
+coherent | 00053384-a | 0
+underlying | 00941940-a | 1
+collective | 02112701-a | 1
+texture | 04946877-n | 0
+indigenous | 01036383-a | 3
+array | 06888174-n | 1
+realm | 05997814-n | 2
+ornament | 02749247-v | 0
+verbal | 02230581-a | 1
+narrative | 07221094-n | 0
+paradox | 06724559-n | 0
+portray | 00988890-v | 0
+depict | 01686956-v | 0
+exclaim | 00912048-v | 0
+immerse | 00601043-v | 0
+potent | 01826979-a | 0
+likewise | 00138060-r | 1
+virtually | 00073033-r | 7
+exclusively | 00008600-r | 2
+hence | 00043521-r | 0
+circulate | 02042404-v | 0
+wane | 00433778-v | 0
+backfire | 02378950-v | 0
+collaborate | 02416751-v | 0
+encompass | 02629793-v | 0
+entangle | 01462928-v | 0
+entail | 02634808-v | 0
+herald | 10171219-n | 0
+surpass | 02051694-v | 2
+enact | 02427916-v | 1
+amend | 00996328-v | 0
+smuggle | 02345856-v | 0
+convict | 00906367-v | 0
+inhibit | 02451679-v | 1
+lure | 00782527-v | 0
+unleash | 01475415-v | 0
+mitigate | 00198850-v | 0
+harness | 01163495-v | 0
+excavate | 02143539-v | 0
+evade | 02369811-v | 0
+embody | 02740352-v | 0
+scrutinize | 02153387-v | 0
+conjecture | 05891783-n | 1
+gauge | 00919424-v | 0
+lament | 01802219-v | 0
+evoke | 00930368-v | 0
+posture | 05002822-n | 0
+hierarchy | 08377806-n | 0
+monopoly | 14444326-n | 1
+correlation | 06032246-n | 0
+divergence | 01004072-n | 0
+onset | 07325990-n | 0
+momentum | 05035820-n | 0
+deterrent | 01764543-a | 0
+paradigm | 06210171-n | 0
+calamity | 07314838-n | 0
+precipitation | 13772653-n | 0
+offspring | 10373998-n | 0
+plight | 14408646-n | 1
+digit | 13741022-n | 0
+bulk | 05122557-n | 1
+longevity | 05051734-n | 1
+salvation | 00179380-n | 1
+quest | 05770391-n | 2
+melancholy | 01362684-a | 2
+precaution | 00822970-n | 0
+scorn | 01774799-v | 1
+menace | 00012137-v | 0
+plausible | 01799457-a | 0
+sensory | 02796425-a | 0
+bilateral | 01946012-a | 0
+imperial | 02747036-a | 1
+complementary | 02381963-a | 0
+intrinsic | 01348258-a | 0
+tentative | 02130672-a | 0
+pervasive | 00468795-a | 2
+exponential | 02965274-a | 0
+intact | 00681268-a | 0
+dormant | 00034032-a | 0
+delinquent | 00755220-a | 0
+skeptical | 00647247-a | 0
+empirical | 00858917-a | 3
+pivotal | 00656507-a | 0
+intriguing | 01344684-a | 0
+immense | 01387319-a | 6
+unanimous | 00553732-a | 0
+futile | 01866812-a | 1
+arbitrary | 00718924-a | 3
+robust | 02397234-a | 3
+tangible | 02391455-a | 0
+superficial | 01873406-a | 4
+spatial | 02841066-a | 0
+homogeneous | 01199751-a | 0
+
+WordNet Release 3.0
+
+This software and database is being provided to you, the LICENSEE, by
+Princeton University under the following license.  By obtaining, using
+and/or copying this software and database, you agree that you have
+read, understood, and will comply with these terms and conditions.:
+
+Permission to use, copy, modify and distribute this software and
+database and its documentation for any purpose and without fee or
+royalty is hereby granted, provided that you agree to comply with
+the following copyright notice and statements, including the disclaimer,
+and that the same appear on ALL copies of the software, database and
+documentation, including modifications that you make for internal
+use or for distribution.
+
+WordNet 3.0 Copyright 2006 by Princeton University.  All rights reserved.
+
+THIS SOFTWARE AND DATABASE IS PROVIDED "AS IS" AND PRINCETON
+UNIVERSITY MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, PRINCETON
+UNIVERSITY MAKES NO REPRESENTATIONS OR WARRANTIES OF MERCHANT-
+ABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE USE
+OF THE LICENSED SOFTWARE, DATABASE OR DOCUMENTATION WILL NOT
+INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR
+OTHER RIGHTS.
+
+The name of Princeton University or Princeton may not be used in
+advertising or publicity pertaining to distribution of the software
+and/or database.  Title to copyright in this software, database and
+any associated documentation shall at all times remain with
+Princeton University and LICENSEE agrees to preserve same.
+
+Copyright: 2009, 2010 NICT
+
+Japanese WordNet
+
+This software and database is being provided to you, the LICENSEE, by
+the National Institute of Information and Communications Technology
+under the following license.  By obtaining, using and/or copying this
+software and database, you agree that you have read, understood, and
+will comply with these terms and conditions:
+
+  Permission to use, copy, modify and distribute this software and
+  database and its documentation for any purpose and without fee or
+  royalty is hereby granted, provided that you agree to comply with
+  the following copyright notice and statements, including the
+  disclaimer, and that the same appear on ALL copies of the software,
+  database and documentation, including modifications that you make
+  for internal use or for distribution.
+
+Japanese WordNet Copyright 2009 by the National Institute of
+Information and Communications Technology (NICT).  All rights
+reserved.
+
+THIS SOFTWARE AND DATABASE IS PROVIDED "AS IS" AND NICT MAKES NO
+REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED.  BY WAY OF EXAMPLE,
+BUT NOT LIMITATION, NICT MAKES NO REPRESENTATIONS OR WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE USE
+OF THE LICENSED SOFTWARE, DATABASE OR DOCUMENTATION WILL NOT INFRINGE
+ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+
+The name of the National Institute of Information and Communications
+Technology may not be used in advertising or publicity pertaining to
+distribution of the software and/or database.  Title to copyright in
+this software, database and any associated documentation shall at all
+times remain with National Institute of Information and Communications
+Technology and LICENSEE agrees to preserve same.
