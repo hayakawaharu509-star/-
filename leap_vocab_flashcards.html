@@ -1887,7 +1887,105 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
 <div id="root"></div>
 <script>
 function _extends(){return _extends=Object.assign?Object.assign.bind():function(n){for(var e=1;e<arguments.length;e++){var t=arguments[e];for(var r in t)({}).hasOwnProperty.call(t,r)&&(n[r]=t[r]);}return n;},_extends.apply(null,arguments);}const{useState,useMemo,useEffect,useRef}=React;// ---- persistence: works standalone (outside claude.ai artifacts) via localStorage ----
-const CLAUDE_API_KEY_STORAGE_KEY='leap_claude_api_key_v1';function getClaudeApiKey(){try{const current=sessionStorage.getItem(CLAUDE_API_KEY_STORAGE_KEY)||'';if(current)return current;const legacy=localStorage.getItem(CLAUDE_API_KEY_STORAGE_KEY)||'';if(legacy){sessionStorage.setItem(CLAUDE_API_KEY_STORAGE_KEY,legacy);localStorage.removeItem(CLAUDE_API_KEY_STORAGE_KEY);}return legacy;}catch(e){return'';}}function setClaudeApiKey(key){try{localStorage.removeItem(CLAUDE_API_KEY_STORAGE_KEY);if(key)sessionStorage.setItem(CLAUDE_API_KEY_STORAGE_KEY,key);else sessionStorage.removeItem(CLAUDE_API_KEY_STORAGE_KEY);}catch(e){window.dispatchEvent(new CustomEvent('leap-storage-error'));}}// prompt には文字列のほか、コンテンツブロックの配列（画像＋テキストなど）も渡せる。
+const CLAUDE_API_KEY_STORAGE_KEY='leap_claude_api_key_v1';
+const CLAUDE_DEVICE_KEY='leap_claude_api_key_device_v1';
+function keyStorage(name) { return name==='localStorage' ? localStorage : sessionStorage; }
+function readKeyFrom(storageName, slot) {
+  try { return keyStorage(storageName).getItem(slot) || ''; } catch { return ''; }
+}
+function readClaudeCredential() {
+  const deviceKey=readKeyFrom('localStorage',CLAUDE_DEVICE_KEY);
+  if (deviceKey) {
+    // A duplicated tab can inherit a session copy before the user enables device storage.
+    if (readKeyFrom('sessionStorage',CLAUDE_API_KEY_STORAGE_KEY)===deviceKey) {
+      try { sessionStorage.removeItem(CLAUDE_API_KEY_STORAGE_KEY); } catch {}
+    }
+    return {key:deviceKey,mode:'device'};
+  }
+  const tabKey=readKeyFrom('sessionStorage',CLAUDE_API_KEY_STORAGE_KEY);
+  if (tabKey) {
+    if (readKeyFrom('localStorage',CLAUDE_API_KEY_STORAGE_KEY)) {
+      try { localStorage.removeItem(CLAUDE_API_KEY_STORAGE_KEY); }
+      catch { return {key:tabKey,mode:'legacy'}; }
+    }
+    return {key:tabKey,mode:'tab'};
+  }
+  // Older versions kept this entry in local storage before migrating it to this tab.
+  const legacy=readKeyFrom('localStorage',CLAUDE_API_KEY_STORAGE_KEY);
+  if (legacy) {
+    try {
+      sessionStorage.setItem(CLAUDE_API_KEY_STORAGE_KEY,legacy);
+      localStorage.removeItem(CLAUDE_API_KEY_STORAGE_KEY);
+      return {key:legacy,mode:'tab'};
+    } catch { return {key:legacy,mode:'legacy'}; }
+  }
+  return {key:'',mode:'none'};
+}
+function getClaudeApiKey() { return readClaudeCredential().key; }
+function removeKeyFrom(storageName,slot) {
+  keyStorage(storageName).removeItem(slot);
+}
+function storeClaudeCredential(key,remember) {
+  if (!key) {
+    let error;
+    for (const [storage,slot] of [['localStorage',CLAUDE_DEVICE_KEY],['localStorage',CLAUDE_API_KEY_STORAGE_KEY],['sessionStorage',CLAUDE_API_KEY_STORAGE_KEY]]) {
+      try { removeKeyFrom(storage,slot); } catch (cause) { error=cause; }
+    }
+    if (error) throw error;
+    return;
+  }
+  if (remember) {
+    localStorage.setItem(CLAUDE_DEVICE_KEY,key);
+    removeKeyFrom('sessionStorage',CLAUDE_API_KEY_STORAGE_KEY);
+  } else {
+    sessionStorage.setItem(CLAUDE_API_KEY_STORAGE_KEY,key);
+    removeKeyFrom('localStorage',CLAUDE_DEVICE_KEY);
+  }
+  removeKeyFrom('localStorage',CLAUDE_API_KEY_STORAGE_KEY);
+}
+function AiKeySettings() {
+  const h=React.createElement;
+  const [mode,setMode]=React.useState(()=>readClaudeCredential().mode);
+  const [remember,setRemember]=React.useState(mode==='device');
+  const [draft,setDraft]=React.useState(''),[message,setMessage]=React.useState('');
+  React.useEffect(()=>{
+    function refresh(event) {
+      if (event.type==='storage' && event.key!==null && event.key!==CLAUDE_DEVICE_KEY && event.key!==CLAUDE_API_KEY_STORAGE_KEY) return;
+      const next=readClaudeCredential().mode;
+      setMode(next);setRemember(next==='device');setMessage('');
+    }
+    window.addEventListener('storage',refresh);
+    window.addEventListener('pageshow',refresh);
+    return ()=>{window.removeEventListener('storage',refresh);window.removeEventListener('pageshow',refresh);};
+  },[]);
+  function save(remove) {
+    const key=remove?'':draft.trim() || getClaudeApiKey();
+    if (!key && !remove) {setMessage('APIキーを入力してください。');return;}
+    try {
+      storeClaudeCredential(key,remember);
+      const next=readClaudeCredential().mode;
+      setMode(next);setRemember(next==='device');setDraft('');
+      setMessage(remove?'保存したキーを削除しました。':'保存しました。');
+    } catch {
+      setMode(readClaudeCredential().mode);
+      setMessage(remove?'削除できませんでした。ブラウザのサイトデータ設定を確認してください。':'保存を完了できませんでした。ブラウザのサイトデータ設定を確認してください。');
+    }
+  }
+  const hasKey=mode!=='none';
+  const status={device:'このブラウザに保存済み',tab:'このタブに保存済み',legacy:'以前の保存データにキーがあります',none:'APIキーは未設定です。'}[mode];
+  return h('form',{className:'mb-3 p-3 rounded-xl border border-gray-200 bg-white text-sm space-y-2',onSubmit:e=>{e.preventDefault();save(false);}},
+    h('label',{htmlFor:'leap-api-key-input',className:'block font-medium'},'Anthropic APIキー'),
+    h('div',{className:'flex gap-2'},
+      h('input',{id:'leap-api-key-input',type:'password',autoComplete:'off',autoCapitalize:'none',autoCorrect:'off',spellCheck:false,
+        value:draft,onChange:e=>{setDraft(e.target.value);setMessage('');},placeholder:hasKey?'変更する場合は新しいキーを入力':'sk-ant-…',className:'flex-1 border border-gray-200 rounded-lg px-2 py-2'}),
+      h('button',{type:'submit',disabled:!draft.trim()&&(!hasKey||(remember===(mode==='device')&&mode!=='legacy')),className:'px-3 py-2 rounded-lg bg-blue-600 text-white font-medium disabled:opacity-50'},'保存')),
+    h('label',{className:'flex items-center gap-2 min-h-11'},h('input',{type:'checkbox',checked:remember,onChange:e=>{setRemember(e.target.checked);setMessage('');}}),'このブラウザにAPIキーを保存する'),
+    h('p',{className:'text-xs text-gray-600'},'自分専用の端末でオンにすると、次回も使えます。オフで保存すると、このタブを開いている間だけ使えます。'),
+    h('p',{className:'text-xs text-gray-600'},'AIを使うときにキーをAnthropicへ送信します。キーは学習データのバックアップ対象外です。'),
+    h('p',{role:'status',className:'text-sm'},status,message&&'　'+message),
+    hasKey&&h('button',{type:'button',onClick:()=>save(true),className:'min-h-11 text-red-600 underline'},'保存したキーを削除'));
+}
+// prompt には文字列のほか、コンテンツブロックの配列（画像＋テキストなど）も渡せる。
 // 写真から単語帳を作る機能は [{type:'image',...},{type:'text',...}] の形で渡してくる。
 // Model IDs and adaptive-thinking support verified against the Claude API docs.
 const AI_MODELS=[
@@ -1895,13 +1993,32 @@ const AI_MODELS=[
  {id:'claude-sonnet-5-5',name:'Claude Sonnet 5.5',label:'Claude Sonnet 5.5 · 速さ・費用重視'}
 ];
 function selectedAiModel(id){return AI_MODELS.find(model=>model.id===id)||AI_MODELS[0];}
-function getAiModel(){return selectedAiModel(readLearning().prefs.aiModel);}
-function AiModelPicker({learning,setLearning}){
- const h=React.createElement,model=selectedAiModel(learning.prefs.aiModel);
+const AI_MODEL_KEY='leap_ai_model_v1';
+function getAiModel(learning){
+ try{const id=localStorage.getItem(AI_MODEL_KEY);if(id)return selectedAiModel(id);}catch{}
+ return selectedAiModel((learning||readLearning()).prefs?.aiModel);
+}
+function withCurrentAiModel(learning){
+ return {...learning,prefs:{...learning.prefs,aiModel:getAiModel(learning).id}};
+}
+function AiModelPicker(){
+ const h=React.createElement,[model,setModel]=React.useState(getAiModel),[status,setStatus]=React.useState('');
+ React.useEffect(()=>{
+  const sync=e=>{
+   if(!e||e.key===AI_MODEL_KEY||e.key===LEARNING_KEY||e.key===null)setModel(getAiModel());
+   if(e&&(e.key===AI_MODEL_KEY||e.key===null))setStatus('');
+  };
+  window.addEventListener('storage',sync);sync();return ()=>window.removeEventListener('storage',sync);
+ },[]);
+ const choose=id=>{
+  const next=selectedAiModel(id);
+  try{localStorage.setItem(AI_MODEL_KEY,next.id);setModel(next);setStatus(next.name+' を保存しました。');}
+  catch{setStatus('モデル設定を保存できませんでした。ブラウザの保存設定を確認してください。');}
+ };
  return h('div',{className:'ai-model-picker'},
   h('label',{htmlFor:'ai-model-select'},'学習をサポートするAI'),
-  h('select',{id:'ai-model-select',value:model.id,onChange:e=>{const aiModel=selectedAiModel(e.target.value).id;setLearning(s=>({...s,prefs:{...s.prefs,aiModel}}));}},AI_MODELS.map(m=>h('option',{key:m.id,value:m.id},m.label))),
-  h('p',null,'単語・熟語の解説、類義語の比較、写真やファイルからの単語帳作成に使います。APIの利用料金は選んだモデルと利用量で変わります。'),
+  h('select',{id:'ai-model-select',value:model.id,onChange:e=>choose(e.target.value)},AI_MODELS.map(m=>h('option',{key:m.id,value:m.id},m.label))),
+  status&&h('p',{role:'status'},status),h('p',null,'単語・熟語の解説、類義語の比較、写真やファイルからの単語帳作成に使います。APIの利用料金は選んだモデルと利用量で変わります。'),
   h('a',{href:'https://platform.claude.com/docs/en/models/overview',target:'_blank',rel:'noopener noreferrer'},'モデルの仕様・料金を見る'));
 }
 async function claudeFetch(prompt,maxTokens,externalSignal,options={}){
@@ -2785,12 +2902,18 @@ function validateLearningBackup(text){
   }if(!Object.keys(data).length)throw new Error('単語帳のバックアップが見つかりません。');return data;
 }
 function restoreLearningBackup(data){
+  if(data[LEARNING_KEY]!==undefined){
+    const restored=JSON.parse(data[LEARNING_KEY]);
+    const model=AI_MODELS.find(m=>m.id===restored.prefs?.aiModel);
+    if(model)data={...data,[AI_MODEL_KEY]:model.id};
+    else data={...data,[LEARNING_KEY]:JSON.stringify({...restored,prefs:{...restored.prefs,aiModel:getAiModel().id}})};
+  }
   const before={};for(const k of Object.keys(data))before[k]=localStorage.getItem(k);
   try{for(const[k,v]of Object.entries(data))localStorage.setItem(k,v);}catch(e){for(const[k,v]of Object.entries(before)){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch{}}throw new Error('保存容量が不足しています。復元を中止しました。');}
 }
 function BackupPanel(){
   const h=React.createElement,[text,setText]=React.useState(''),[pending,setPending]=React.useState(null),[msg,setMsg]=React.useState('');
-  const dump=()=>JSON.stringify(Object.fromEntries(LEARNING_BACKUP_KEYS.map(k=>[k,localStorage.getItem(k)])),null,2);
+  const dump=()=>JSON.stringify(Object.fromEntries(LEARNING_BACKUP_KEYS.map(k=>[k,k===LEARNING_KEY?JSON.stringify(withCurrentAiModel(JSON.parse(localStorage.getItem(k)||'{}'))):localStorage.getItem(k)])),null,2);
   return h('details',{className:'learn-tool'},h('summary',null,'学習データのバックアップ'),h('p',{className:'learn-muted'},'単語帳・学習記録・苦手ノート・メモ・設定を保存します。APIキーは含みません。'),
     h('button',{type:'button',className:'learn-wide',onClick:()=>{try{const value=dump();setText(value);const url=URL.createObjectURL(new Blob([value],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`leap-backup-${learningDay()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);setMsg('バックアップを作成しました。下のテキストもコピーできます。');}catch{setMsg('ファイルを保存できませんでした。下のテキストをコピーしてください。');}}},'バックアップを保存'),
     h('label',null,'バックアップファイルを選択',h('input',{type:'file',accept:'.json,application/json',onChange:async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>10000000){setMsg('10MB以内のファイルを選んでください。');return;}try{setText(await f.text());setPending(null);setMsg('ファイルを読み込みました。内容を確認して復元してください。');}catch{setMsg('ファイルを読み込めませんでした。');}}})),
@@ -6152,7 +6275,7 @@ useEffect(()=>{setLearning(s=>({...s,prefs:{...s.prefs,menu}}));},[menu]);
 const[studyLabel,setStudyLabel]=useState('');
 const[cardDone,setCardDone]=useState(false);
 const cardRatingLock=useRef(null);
-useEffect(()=>{try{localStorage.setItem(LEARNING_KEY,JSON.stringify(learning));}catch{window.dispatchEvent(new CustomEvent('leap-storage-error'));}},[learning]);
+useEffect(()=>{try{localStorage.setItem(LEARNING_KEY,JSON.stringify(withCurrentAiModel(learning)));}catch{window.dispatchEvent(new CustomEvent('leap-storage-error'));}},[learning]);
 const[reviewMode,setReviewMode]=useState(false);const[reviewKeys,setReviewKeys]=useState([]);const[excludeKnown,setExcludeKnown]=useState(false);const[knownSnap,setKnownSnap]=useState({});const[loaded,setLoaded]=useState(false);// dict mode
 const[query,setQuery]=useState('');const[stack,setStack]=useState([]);// dictionary page history (word keys)
 const current=stack.length?stack[stack.length-1]:null;const openWord=k=>setStack(s=>s[s.length-1]===k?s:[...s,k]);const readerFromCard=useRef(false);
@@ -6200,7 +6323,7 @@ const cancelAiLookup=()=>{const job=aiLookupJob.current;aiLookupJob.current=null
 useEffect(()=>{setAiState('idle');setAiErr('');return()=>{const job=aiLookupJob.current;aiLookupJob.current=null;job?.controller.abort();};},[query,mode,current]);
 const[confirmDelWord,setConfirmDelWord]=useState(null);// AI settings panel: lets the user paste their own Anthropic API key so AI lookups
 // work when this file is opened standalone (outside a claude.ai artifact frame)
-const[apiKeyInput,setApiKeyInput]=useState(()=>getClaudeApiKey());const[hasApiKey,setHasApiKey]=useState(()=>!!getClaudeApiKey());// データ引っ越し（バックアップ）用：書き出したJSON文字列／貼り付け欄の内容
+// データ引っ越し（バックアップ）用：書き出したJSON文字列／貼り付け欄の内容
 const[backupText,setBackupText]=useState('');const[backupMsg,setBackupMsg]=useState('');// AI collocation lookup（前置詞コロケーション専用のAI検索。aiLookupとは別物）
 // key: 単語の小文字。value: コロケーション配列（成功時） or undefined（未検索）
 const[aiCollocResults,setAiCollocResults]=useState({});// key: 単語の小文字。value: 'loading' | 'error'（成功したら削除してaiCollocResults側に移す）
@@ -6452,7 +6575,7 @@ loaded&&React.createElement(AiStudyChat,{words:allWords,savedReading:savedWordRe
 React.createElement('main',{id:'study-page-settings',className:'leap-menu-page study-settings-stack',hidden:menu!=='settings','aria-label':'設定の画面'},
 React.createElement(StudyPreferences,{learning,setLearning}),React.createElement(BackupPanel,null),
 React.createElement('p',{className:'reader-credit'},React.createElement('a',{href:'./leap_vocab_sources.txt',target:'_blank',rel:'noopener'},'追加した英語教材の出典・ライセンス')),
-React.createElement('details',{className:'study-api-settings'},React.createElement('summary',null,'AI機能の設定（任意）'),React.createElement(AiModelPicker,{learning,setLearning}),/*#__PURE__*/React.createElement("div",{className:"mb-3 p-3 rounded-xl border border-gray-200 bg-white text-xs space-y-2"},/*#__PURE__*/React.createElement("p",{className:"text-gray-500"},"AI\u3067\u5358\u8A9E\u30FB\u719F\u8A9E\u3092\u8ABF\u3079\u308B\u6A5F\u80FD\u3092\u4F7F\u3046\u306B\u306F Anthropic \u306E API \u30AD\u30FC\u304C\u5FC5\u8981\u3067\u3059\u3002 \u5165\u529B\u3057\u305F\u30AD\u30FC\u306F\u3053\u306E\u30BF\u30D6\u5185\uFF08\u30BF\u30D6\u3092\u9589\u3058\u308B\u3068\u6D88\u53BB\uFF09\u306B\u306E\u307F\u4FDD\u5B58\u3055\u308C\u3001\u3053\u306E\u30DA\u30FC\u30B8\u304B\u3089\u76F4\u63A5 api.anthropic.com \u3078\u9001\u3089\u308C\u308B\u3060\u3051\u3067\u3001\u4ED6\u6240\u306B\u306F\u9001\u4FE1\u3055\u308C\u307E\u305B\u3093\u3002"),/*#__PURE__*/React.createElement("div",{className:"flex gap-2"},/*#__PURE__*/React.createElement("input",{type:"password",autoCapitalize:"none",autoCorrect:"off",spellCheck:false,"aria-label":"Anthropic APIキー",value:apiKeyInput,onChange:e=>setApiKeyInput(e.target.value),placeholder:"sk-ant-...",className:"flex-1 border border-gray-200 rounded-lg px-2 py-1.5 text-xs"}),/*#__PURE__*/React.createElement("button",{onClick:()=>{setClaudeApiKey(apiKeyInput.trim());setHasApiKey(!!apiKeyInput.trim());},className:"px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-medium"},"\u4FDD\u5B58")),hasApiKey?/*#__PURE__*/React.createElement("p",{className:"text-emerald-600"},"\u2713 API\u30AD\u30FC\u304C\u4FDD\u5B58\u3055\u308C\u3066\u3044\u307E\u3059"):/*#__PURE__*/React.createElement("p",{className:"text-gray-400"},"\u672A\u8A2D\u5B9A\uFF08AI\u691C\u7D22\u30DC\u30BF\u30F3\u306F\u62BC\u305B\u307E\u3059\u304C\u3001\u30AD\u30FC\u304C\u7121\u3044\u3068\u30A8\u30E9\u30FC\u306B\u306A\u308A\u307E\u3059\uFF09"),hasApiKey&&/*#__PURE__*/React.createElement("button",{onClick:()=>{setClaudeApiKey('');setApiKeyInput('');setHasApiKey(false);},className:"text-red-500 underline"},"\u4FDD\u5B58\u3057\u305F\u30AD\u30FC\u3092\u524A\u9664"))))),mode==='quiz'&&studyLabel&&React.createElement('p',{className:'learn-session-label'},studyLabel),(mode==='card'||mode==='quiz')&&!started&&/*#__PURE__*/React.createElement(React.Fragment,null,!reviewMode&&React.createElement(React.Fragment,null,/*#__PURE__*/React.createElement("div",{className:"flex gap-2 mb-2"},/*#__PURE__*/React.createElement("select",{"aria-label":"学習する単語帳・Part",value:part,onChange:e=>{setPart(e.target.value);setExamScope('all');setGroup('全部');setStartPos('');setEndPos('');setConfirmDel(false);setRenamingDeck(false);setDeckEditMode(false);},className:inputCls},React.createElement('optgroup',{label:'マイ単語帳'},
+React.createElement('details',{className:'study-api-settings'},React.createElement('summary',null,'AI機能の設定（任意）'),React.createElement(AiModelPicker,null),React.createElement(AiKeySettings,null)))),mode==='quiz'&&studyLabel&&React.createElement('p',{className:'learn-session-label'},studyLabel),(mode==='card'||mode==='quiz')&&!started&&/*#__PURE__*/React.createElement(React.Fragment,null,!reviewMode&&React.createElement(React.Fragment,null,/*#__PURE__*/React.createElement("div",{className:"flex gap-2 mb-2"},/*#__PURE__*/React.createElement("select",{"aria-label":"学習する単語帳・Part",value:part,onChange:e=>{setPart(e.target.value);setExamScope('all');setGroup('全部');setStartPos('');setEndPos('');setConfirmDel(false);setRenamingDeck(false);setDeckEditMode(false);},className:inputCls},React.createElement('optgroup',{label:'マイ単語帳'},
 React.createElement('option',{value:FINAL_PART},FINAL_PART+'（'+FINAL_KEYS.length+'項目）'),
 React.createElement('option',{value:IMPORTANT_PART},IMPORTANT_PART+'（'+IMPORTANT_KEYS.length+'項目）'),
 React.createElement('option',{value:EXAM_PART},EXAM_PART+'（'+EXAM_KEYS.length+'項目）'),
